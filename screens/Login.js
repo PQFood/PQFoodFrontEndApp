@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, TextInput } from 'react-native';
 
@@ -12,7 +12,11 @@ import axios from 'axios';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+
+
 function Login() {
+
+
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar style="light" />
@@ -22,8 +26,8 @@ function Login() {
             </View>
 
             <View style={styles.form}>
-            <FontAwesome5 name="lock" size={24} color="black" style={styles.iconLock} />
-            <FontAwesome5 name="user-alt" size={24} color="black" style={styles.iconUser}/>
+                <FontAwesome5 name="lock" size={24} color="black" style={styles.iconLock} />
+                <FontAwesome5 name="user-alt" size={24} color="black" style={styles.iconUser} />
                 <TextInput
                     style={styles.inputText}
                     placeholder="Tên đăng nhập"
@@ -39,6 +43,24 @@ function Login() {
 
                 <TouchableOpacity
                     style={styles.buttonLogin}
+                    onPress={() => {
+                        
+                        axios({
+                            method: 'post',
+                            url: '/login',
+                            data: {
+                                    user: 'nhanvien1',
+                                    password: 'nhanvien1'
+                            }
+                        })
+                            .then(response => {
+                                console.log(response.data)
+                            })
+                            .catch(error => {
+                                console.log(error)
+                            })
+
+                    }}
                 >
                     <Text style={{ ...TEXT }}>Đăng nhập</Text>
                 </TouchableOpacity>
