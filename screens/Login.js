@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, TextInput } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, TextInput, Alert, RefreshControl } from 'react-native';
 
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Dimensions } from 'react-native';
@@ -12,12 +12,48 @@ import axios from 'axios';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+import { Formik } from 'formik';
 
 
 function Login() {
 
+    const [refreshPage, setRefreshPage] = useState("");
 
     return (
+        <Formik
+            initialValues={{ user: "", password: "" }}
+            onSubmit={values => {
+                axios({
+                    method: 'post',
+                    url: '/login',
+                    data: {
+                        user: values.user,
+                        password: values.password
+                    }
+                })
+                    .then(response => {
+                        if (response.data === "Thất bại") {
+                            Alert.alert(
+                                'Thông báo',
+                                'Đăng nhập thất bại! Vui lòng đăng nhập lại!',
+                                [{
+                                    text: 'Ok',
+                                    onPress: () => {
+                                        window.location.reload();
+                                }
+                                }]
+                            )
+            }
+                        else {
+                            alert('thành công')
+            }
+                    })
+                    .catch (error => {
+    console.log(error)
+})
+            }}
+        >
+    {({ handleChange, handleBlur, handleSubmit, values }) => (
         <SafeAreaView style={styles.container}>
             <StatusBar style="light" />
             <View style={styles.content}>
@@ -32,6 +68,9 @@ function Login() {
                     style={styles.inputText}
                     placeholder="Tên đăng nhập"
                     autoFocus={true}
+                    onChangeText={handleChange('user')}
+                    onBlur={handleBlur('user')}
+                    value={values.user}
                 />
 
                 <TextInput
@@ -39,33 +78,24 @@ function Login() {
                     placeholder="Mật khẩu"
                     // keyboardType="numeric"
                     secureTextEntry={true}
+                    onChangeText={handleChange('password')}
+                    onBlur={handleBlur('password')}
+                    value={values.password}
                 />
 
                 <TouchableOpacity
                     style={styles.buttonLogin}
-                    onPress={() => {
-                        
-                        axios({
-                            method: 'post',
-                            url: '/login',
-                            data: {
-                                    user: 'nhanvien1',
-                                    password: 'nhanvien1'
-                            }
-                        })
-                            .then(response => {
-                                console.log(response.data)
-                            })
-                            .catch(error => {
-                                console.log(error)
-                            })
-
-                    }}
+                    onPress={handleSubmit}
                 >
                     <Text style={{ ...TEXT }}>Đăng nhập</Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
+    )}
+
+
+        </Formik >
+
     )
 }
 
