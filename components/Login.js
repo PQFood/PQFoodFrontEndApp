@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, TextInput } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, TextInput, Alert, RefreshControl } from 'react-native';
 
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Dimensions } from 'react-native';
@@ -11,39 +11,134 @@ import Constants from 'expo-constants';
 import axios from 'axios';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
 
-function Login() {
+import HomeShipper from '../screens/HomeShipper'
+import HomeChef from '../screens/HomeChef'
+import HomeWaiter from '../screens/HomeWaiter'
+import HomeAdmin from '../screens/HomeAdmin'
+
+
+function Login(props) {
+    
+
+    const { navigation } = props;
+
+
+    const LoginSchema = Yup.object().shape({
+        user: Yup.string()
+            .required('Vui lòng nhập vào tên đăng nhập!'),
+        password: Yup.string()
+            .required('Vui lòng nhập vào mật khẩu!'),
+    });
+
     return (
-        <SafeAreaView style={styles.container}>
-            <StatusBar style="light" />
-            <View style={styles.content}>
-                <Text style={styles.inHi}>Đăng nhập</Text>
+        <>
 
-            </View>
+            <Formik
+                enableReinitialize={true}
+                initialValues={{ user: "", password: "" }}
+                validationSchema={LoginSchema}
+                onSubmit={values => {
+                    axios({
+                        method: 'post',
+                        url: '/login',
+                        data: {
+                            user: values.user,
+                            password: values.password
+                        }
+                    })
+                        .then(response => {
+                            if (response.data === "Thất bại") {
+                                Alert.alert(
+                                    'Thông báo',
+                                    'Đăng nhập thất bại! Vui lòng đăng nhập lại!',
+                                    [{
+                                        text: 'Ok',
+                                        onPress: () => {
+                                            // values.user = '';
+                                            // values.password = '';
+                                            // RNRestart.Restart();
+                                        }
+                                    }]
+                                )
+                            }
+                            else {
+                                if (response.data.position === "Chủ quán") {
+                                    navigation.navigate('HomeAdmin',{ data: response.data })
+                                }
+                                else if (response.data.position === "Phục vụ") {
+                                    navigation.navigate('HomeWaiter',{ data: response.data })
+                                }
+                                else if (response.data.position === "Shipper") {
+                                    navigation.navigate('HomeShipper',{ data: response.data })
+                                }
+                                else {
+                                    navigation.navigate('HomeChef',{ data: response.data })
+                                }
+                            }
+                        })
+                        .catch(error => {
+                            console.log(error)
+                        })
+                }}
+            >
+                {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+                    <SafeAreaView style={styles.container}>
+                        <StatusBar style="light" />
+                        <View style={styles.content}>
+                            <Text style={styles.inHi}>Đăng nhập</Text>
 
-            <View style={styles.form}>
-            <FontAwesome5 name="lock" size={24} color="black" style={styles.iconLock} />
-            <FontAwesome5 name="user-alt" size={24} color="black" style={styles.iconUser}/>
-                <TextInput
-                    style={styles.inputText}
-                    placeholder="Tên đăng nhập"
-                    autoFocus={true}
-                />
+                        </View>
 
-                <TextInput
-                    style={styles.inputText}
-                    placeholder="Mật khẩu"
-                    // keyboardType="numeric"
-                    secureTextEntry={true}
-                />
+                        <View style={styles.form}>
 
-                <TouchableOpacity
-                    style={styles.buttonLogin}
-                >
-                    <Text style={{ ...TEXT }}>Đăng nhập</Text>
-                </TouchableOpacity>
-            </View>
-        </SafeAreaView>
+                            <View style={{ position: "relative" }}>
+                                <FontAwesome5 name="user-alt" size={24} color="black" style={styles.iconUser} />
+                                <TextInput
+                                    style={styles.inputText}
+                                    placeholder="Tên đăng nhập"
+                                    autoFocus={true}
+                                    onChangeText={handleChange('user')}
+                                    onBlur={handleBlur('user')}
+                                    value={values.user}
+                                />
+                                {errors.user && touched.user ? (
+                                    <Text style={{ color: 'red', textAlign: "center" }}>{errors.user}</Text>
+                                ) : null}
+                            </View>
+                            <View style={{ position: "relative" }}>
+                                <TextInput
+                                    style={styles.inputText}
+                                    placeholder="Mật khẩu"
+                                    // keyboardType="numeric"
+                                    secureTextEntry={true}
+                                    onChangeText={handleChange('password')}
+                                    onBlur={handleBlur('password')}
+                                    value={values.password}
+                                />
+                                {errors.password && touched.password ? (
+                                    <Text style={{ color: 'red', textAlign: "center" }}>{errors.password}</Text>
+                                ) : null}
+                                <FontAwesome5 name="lock" size={24} color="black" style={styles.iconLock} />
+
+                            </View>
+                            <TouchableOpacity
+                                style={styles.buttonLogin}
+                                onPress={handleSubmit}
+                            >
+                                <Text style={{ ...TEXT }}>Đăng nhập</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </SafeAreaView>
+                )}
+
+            </Formik >
+
+        </>
+
+
     )
 }
 
@@ -97,7 +192,7 @@ const styles = StyleSheet.create({
     },
     iconLock: {
         position: "absolute",
-        top: 90,
+        top: 20,
         left: 70,
         zIndex: 100,
     },
