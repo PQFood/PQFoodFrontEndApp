@@ -11,17 +11,29 @@ import Constants from 'expo-constants';
 import axios from 'axios';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 function HomeShipper({ navigation, route }) {
-    return (
-      <View style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-      }}>
-        <Text>Hello, {route.params.data.position}!</Text>
-      </View>
-    );
+  const [user, setUser] = useState('')
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('user')
+      await setUser(value)
+    } catch (e) {
+      // error reading value
+    }
   }
+  getData()
+  return (
+    <View style={{
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center'
+    }}>
+      <Text>Hello {user}, {route.params.data.position}!</Text>
+    </View>
+  );
+}
 
-  export default HomeShipper;
+export default HomeShipper;

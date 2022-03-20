@@ -11,17 +11,31 @@ import Constants from 'expo-constants';
 import axios from 'axios';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
 
 function HomeAdmin({ navigation, route }) {
-    return (
-      <View style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-      }}>
-        <Text>Hello, {route.params.data.userName}!</Text>
-      </View>
-    );
+  const [user, setUser] = useState('')
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('user')
+      await setUser(value)
+    } catch(e) {
+      // error reading value
+    }
   }
+  getData()
 
-  export default HomeAdmin;
+  return (
+    <View style={{
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center'
+    }}>
+      <Text>Hello {user}, {route.params.data.userName}!</Text>
+    </View>
+  );
+}
+
+export default HomeAdmin;

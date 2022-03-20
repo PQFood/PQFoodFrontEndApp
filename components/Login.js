@@ -18,7 +18,7 @@ import HomeShipper from '../screens/HomeShipper'
 import HomeChef from '../screens/HomeChef'
 import HomeWaiter from '../screens/HomeWaiter'
 import HomeAdmin from '../screens/HomeAdmin'
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function Login(props) {
     
@@ -32,6 +32,14 @@ function Login(props) {
         password: Yup.string()
             .required('Vui lòng nhập vào mật khẩu!'),
     });
+
+    const storeData = async (value) => {
+        try {
+          await AsyncStorage.setItem('user', value)
+        } catch (e) {
+          console.log(e)
+        }
+      }
 
     return (
         <>
@@ -66,15 +74,19 @@ function Login(props) {
                             }
                             else {
                                 if (response.data.position === "Chủ quán") {
+                                    storeData(response.data.userName)
                                     navigation.navigate('HomeAdmin',{ data: response.data })
                                 }
                                 else if (response.data.position === "Phục vụ") {
+                                    storeData(response.data.userName)
                                     navigation.navigate('HomeWaiter',{ data: response.data })
                                 }
                                 else if (response.data.position === "Shipper") {
+                                    storeData(response.data.userName)
                                     navigation.navigate('HomeShipper',{ data: response.data })
                                 }
                                 else {
+                                    storeData(response.data.userName)
                                     navigation.navigate('HomeChef',{ data: response.data })
                                 }
                             }

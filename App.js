@@ -7,7 +7,7 @@ import Login from './screens/Login'
 
 
 import axios from 'axios';
-axios.defaults.baseURL = 'http://192.168.0.104:8000';
+axios.defaults.baseURL = 'http://192.168.1.7:8000';
 
 export default function App() {
 
