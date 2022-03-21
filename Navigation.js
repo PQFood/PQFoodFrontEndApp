@@ -11,7 +11,8 @@ import Constants from 'expo-constants';
 import axios from 'axios';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-// import { createDrawerNavigator } from '@react-navigation/drawer';
+import 'react-native-gesture-handler'
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import { Formik } from 'formik';
 
 import Login from './screens/Login'
@@ -22,27 +23,29 @@ import HomeAdmin from './screens/HomeAdmin'
 import WaiterAddOrder from './screens/WaiterAddOrder'
 import WaiterDetailOrder from './screens/WaiterDetailOrder'
 import WaiterPayOrder from './screens/WaiterPayOrder'
-
+import Test from './screens/Test'
 
 function Navigation(props) {
 
     const Stack = createNativeStackNavigator();
-    // const WaiterDrawer = createDrawerNavigator();
+    const WaiterDrawer = createDrawerNavigator();
 
-    // const HomeWaiterA = () => {
-    //     return (
-    //         <DrawerWaiter.Navigator initialRouteName="Home">
-    //             <DrawerWaiter.Screen name="Home" component={HomeWaiter} />
-    //         </DrawerWaiter.Navigator>
-    //     );
-    // }
+    const HomeWaiterDrawer = () => {
+        return (
+            <WaiterDrawer.Navigator initialRouteName="Home">
+                <WaiterDrawer.Screen name="Home" component={HomeWaiter} options={{ title: "Home", headerStyle: { backgroundColor: '#ffcc66',}, headerTitleAlign: "center",  }}/>
+                <WaiterDrawer.Screen name="Test" component={Test} />
+
+            </WaiterDrawer.Navigator>
+        );
+    }
     return (
         <NavigationContainer>
             <Stack.Navigator initialRouteName='Login'>
                 <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
                 <Stack.Screen name="HomeAdmin" component={HomeAdmin} options={{ headerShown: false }} />
                 <Stack.Screen name="HomeShipper" component={HomeShipper} options={{ headerShown: false }} />
-                <Stack.Screen name="HomeWaiter" component={HomeWaiter} options={{ headerShown: false }} />
+                <Stack.Screen name="HomeWaiter" component={HomeWaiterDrawer} options={{ headerShown: false }} />
                 <Stack.Screen name="HomeChef" component={HomeChef} options={{ headerShown: false }} />
                 <Stack.Screen name="WaiterDetailOrder" component={WaiterDetailOrder} options={{ title: "Chi Tiết Hóa Đơn", headerStyle: { backgroundColor: '#ffcc66' }, headerTitleAlign: "center" }} />
                 <Stack.Screen name="WaiterPayOrder" component={WaiterPayOrder} options={{ title: "Thanh Toán Hóa Đơn", headerStyle: { backgroundColor: '#99ff66' }, headerTitleAlign: "center" }} />

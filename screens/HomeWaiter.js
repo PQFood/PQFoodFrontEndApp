@@ -83,6 +83,7 @@ function HomeWaiter(props) {
         keyExtractor={(item) => item.slug}
         extraData={selectedId}
       />
+      
     </View>
   );
 
@@ -93,7 +94,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: StatusBar.currentHeight || 50,
+    marginTop: 20,
   },
   item: {
     padding: 40,
@@ -101,7 +102,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
   },
   title: {
-    fontSize: 30,
+    fontSize: 20,
   },
 });
 export default HomeWaiter;

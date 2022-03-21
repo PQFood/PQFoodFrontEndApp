@@ -15,7 +15,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
-function HomeAdmin(props) {
+function WaiterDetailOrder(props) {
   const [user, setUser] = useState('')
   const getData = async () => {
     try {
@@ -38,4 +38,4 @@ function HomeAdmin(props) {
   );
 }
 
-export default HomeAdmin;
+export default WaiterDetailOrder;

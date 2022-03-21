@@ -15,7 +15,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
-function WaiterPayOrder(props) {
+function Test(props) {
   const [user, setUser] = useState('')
   const getData = async () => {
     try {
@@ -33,9 +33,9 @@ function WaiterPayOrder(props) {
       justifyContent: 'center',
       alignItems: 'center'
     }}>
-      <Text>pay</Text>
+      <Text>add</Text>
     </View>
   );
 }
 
-export default WaiterPayOrder;
+export default Test;
