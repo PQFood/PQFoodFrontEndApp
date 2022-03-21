@@ -13,9 +13,19 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 
-function HomeWaiter({ navigation, route }) {
+function HomeWaiter(props) {
+
+  const { navigation, route } = props;
+
+  const Item = ({ item, onPress, backgroundColor, textColor }) => (
+    <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
+      <Text style={[styles.title, textColor]}>{item.nameTable}</Text>
+    </TouchableOpacity>
+  );
 
   const [dinnerTable, setDinnerTable] = useState(null)
+  const [selectedId, setSelectedId] = useState(null);
+
   const getdinnerTable = () => {
     axios({
       method: 'get',
@@ -28,25 +38,70 @@ function HomeWaiter({ navigation, route }) {
         console.log(error)
       })
   }
+  if (dinnerTable === null) getdinnerTable()
 
-  const renderItem = ({ item }) => (
-    <Text>avc</Text>
-  );
-  
+  const renderItem = ({ item }) => {
+    var backgroundColor = ""
+    if (item.color === "Orange") {
+      backgroundColor = "#ffcc66"
+    }
+    else if (item.color === "Green") {
+      backgroundColor = "#99ff66"
+
+    }
+    else {
+      backgroundColor = "#ffffff"
+
+    }
+
+    return (
+      <Item
+        item={item}
+        onPress={() => {
+          if (item.color === "Orange") {
+            navigation.navigate('WaiterDetailOrder')
+          }
+          else if (item.color === "Green") {
+            navigation.navigate('WaiterPayOrder')
+          }
+          else {
+            navigation.navigate('WaiterAddOrder')
+      
+          }
+        }}
+        backgroundColor={{ backgroundColor }}
+      />
+    );
+  };
+
   return (
-    <View style={{
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center'
-    }}>
-      <Text>Hello, {route.params.data.position}!</Text>
+    <View style={styles.container}>
       <FlatList
         data={dinnerTable}
+        numColumns={2}
         renderItem={renderItem}
-        keyExtractor={item => item.slug}
+        keyExtractor={(item) => item.slug}
+        extraData={selectedId}
       />
     </View>
   );
+
 }
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: StatusBar.currentHeight || 50,
+  },
+  item: {
+    padding: 40,
+    marginVertical: 8,
+    marginHorizontal: 16,
+  },
+  title: {
+    fontSize: 30,
+  },
+});
 export default HomeWaiter;

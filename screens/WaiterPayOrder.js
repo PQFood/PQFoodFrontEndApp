@@ -14,27 +14,28 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-function HomeShipper(props) {
-  const { navigation, route } = props;
+
+function HomeAdmin(props) {
   const [user, setUser] = useState('')
   const getData = async () => {
     try {
       const value = await AsyncStorage.getItem('user')
       await setUser(value)
-    } catch (e) {
+    } catch(e) {
       // error reading value
     }
   }
   getData()
+
   return (
     <View style={{
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center'
     }}>
-      <Text>Hello {user}, {route.params.data.position}!</Text>
+      <Text>pay</Text>
     </View>
   );
 }
 
-export default HomeShipper;
+export default HomeAdmin;

@@ -15,7 +15,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
-function HomeAdmin({ navigation, route }) {
+function HomeAdmin(props) {
+  const { navigation, route } = props;
   const [user, setUser] = useState('')
   const getData = async () => {
     try {

@@ -3,25 +3,18 @@ import { StatusBar } from 'expo-status-bar';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Login from './screens/Login'
+import Navigation from './Navigation'
 
 
 import axios from 'axios';
-axios.defaults.baseURL = 'http://192.168.1.7:8000';
+axios.defaults.baseURL = 'http://192.168.1.19:8000';
 
 export default function App() {
 
 
 
   return (
-    <Login />
+    <Navigation />
 
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-});

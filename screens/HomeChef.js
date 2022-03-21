@@ -12,7 +12,10 @@ import axios from 'axios';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-function HomeChef({ navigation, route }) {
+function HomeChef(props) {
+
+  const { navigation, route } = props;
+
     return (
       <View style={{
         flex: 1,
