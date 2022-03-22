@@ -29,7 +29,7 @@ function HomeWaiter(props) {
   const getdinnerTable = () => {
     axios({
       method: 'get',
-      url: '/homeWaiter',
+      url: '/waiter/homeWaiter',
     })
       .then(response => {
         setDinnerTable(response.data)
@@ -65,7 +65,7 @@ function HomeWaiter(props) {
             navigation.navigate('WaiterPayOrder')
           }
           else {
-            navigation.navigate('WaiterAddOrder')
+            navigation.navigate('WaiterAddOrder',{nameTable: item.nameTable, slug: item.slug})
       
           }
         }}
@@ -81,7 +81,6 @@ function HomeWaiter(props) {
         numColumns={2}
         renderItem={renderItem}
         keyExtractor={(item) => item.slug}
-        extraData={selectedId}
       />
       
     </View>
@@ -97,7 +96,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   item: {
-    padding: 40,
+    padding: 50,
     marginVertical: 8,
     marginHorizontal: 16,
   },
