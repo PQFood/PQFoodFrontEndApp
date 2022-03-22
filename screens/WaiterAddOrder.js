@@ -43,7 +43,7 @@ function WaiterAddOrder(props) {
   }
 
   const toggleSwitch = (slug) => {
-    setSelected({slug: slug})
+    setSelected()
     // alert(slug)
     console.log(selected)
   }
