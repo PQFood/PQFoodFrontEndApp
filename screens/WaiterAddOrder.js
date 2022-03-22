@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, Image, FlatList, ScrollView, SafeAreaView, Button } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image, FlatList, ScrollView,Switch, SafeAreaView, Button } from 'react-native';
 
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Dimensions } from 'react-native';
@@ -12,7 +12,7 @@ import axios from 'axios';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import CurrencyFormat from 'react-currency-format';
 
 
 function WaiterAddOrder(props) {
@@ -23,7 +23,7 @@ function WaiterAddOrder(props) {
   const [total, setTotal] = useState(0)
 
 
-  const [selectedId, setSelectedId] = useState(null);
+  const [selected, setSelected] = useState({});
 
   const getmenu = () => {
     axios({
@@ -38,7 +38,15 @@ function WaiterAddOrder(props) {
         console.log(error)
       })
   }
-  if (food === null || drink === null) getmenu()
+  if (food === null || drink === null) {
+    getmenu()
+  }
+
+  const toggleSwitch = (slug) => {
+    setSelected({slug: slug})
+    // alert(slug)
+    console.log(selected)
+  }
 
 
   const renderItem = ({ item }) => {
@@ -54,16 +62,47 @@ function WaiterAddOrder(props) {
         </View>
         <View style={styles.infoItem}>
           <View style={styles.groupInfo}>
-            <View><Text >{item.name}</Text></View>
-            <View><Text >abc</Text></View>
+            <View><Text style={{ fontWeight: "bold" }}>{item.name}</Text></View>
+            <View><Text >0</Text></View>
           </View>
           <View style={styles.groupInfo}>
-            <View><Text ></Text></View>
-            <View><Text >abc</Text></View>
+            <View>
+            <Switch
+                trackColor={{ false: "#767577", true: "#81b0ff" }}
+                // thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={() => toggleSwitch(item.slug)}
+                value={false}
+              />
+            </View>
+            <View style={{flex: 1, flexDirection: "row", justifyContent: "flex-end", alignItems: "center"}}>
+              <TouchableOpacity style={styles.changeQuantity}>
+                <Text style={styles.textChangeQuantity}>-</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.changeQuantity}>
+                <Text style={styles.textChangeQuantity}>+</Text>
+              </TouchableOpacity>
+            </View>
           </View>
           <View style={styles.groupInfo}>
-            <View><Text >abc</Text></View>
-            <View><Text >{item.price}</Text></View>
+            <View>
+            <CurrencyFormat 
+              value={item.price} 
+              displayType={'text'} 
+              thousandSeparator={true} 
+              suffix={' đ'} 
+              renderText={value => <Text>{value}</Text>}
+              />
+            </View>
+            <View>
+              <CurrencyFormat 
+              value={2456981} 
+              displayType={'text'} 
+              thousandSeparator={true} 
+              suffix={' đ'} 
+              renderText={value => <Text>{value}</Text>}
+              />
+            </View>
           </View>
         </View>
 
@@ -74,6 +113,8 @@ function WaiterAddOrder(props) {
   const setTotalFun = () => {
     setTotal(10800)
   }
+
+
 
   return (
     <>
@@ -88,7 +129,7 @@ function WaiterAddOrder(props) {
                 ListHeaderComponent={<Text style={styles.ul}>Danh Sách Thức Uống</Text>}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.slug}
-              />   
+              />
             </>
           }
           ListHeaderComponent={
@@ -105,11 +146,17 @@ function WaiterAddOrder(props) {
       <View style={styles.footer}>
         <View style={styles.footer2}>
           <Text style={styles.textBold}>Tổng Tiền: </Text>
-          <Text style={styles.textBold}>{total}</Text>
+          <CurrencyFormat 
+              value={total} 
+              displayType={'text'} 
+              thousandSeparator={true} 
+              suffix={' đ'} 
+              renderText={value => <Text style={styles.textBold}>{value}</Text>}
+              />
         </View>
         <View>
           <TouchableOpacity style={{ backgroundColor: "#ffcc66", alignItems: "center", height: 40 }}
-            onPress={setTotalFun}
+            // onPress={setTotalFun}
 
           >
             <Text style={[styles.textBold, { lineHeight: 40 }]}>Lập hóa đơn</Text>
@@ -159,10 +206,6 @@ const styles = StyleSheet.create({
   },
   footer: {
     height: windowHeight * 0.1,
-
-    // flex: 2,
-    // flexDirection: "row",
-    // justifyContent: "space-between",
   },
   footer2: {
     flex: 1,
@@ -176,6 +219,18 @@ const styles = StyleSheet.create({
   textBold: {
     fontWeight: "bold",
     fontSize: 20
+  },
+  textChangeQuantity: {
+    color: "white",
+    fontSize: 18,
+    fontWeight: "bold"
+  },
+  changeQuantity: {
+    backgroundColor: "#ff6600",
+    marginLeft: 10,
+    paddingHorizontal: 15,
+    paddingVertical: 4,
+    borderRadius: 10
   }
 });
 
