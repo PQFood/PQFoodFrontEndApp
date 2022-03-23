@@ -38,7 +38,13 @@ function HomeWaiter(props) {
         console.log(error)
       })
   }
-  if (dinnerTable === null) getdinnerTable()
+  // if (dinnerTable === null) getdinnerTable()
+  useEffect(() => {
+    getdinnerTable()
+  }, [])
+  // // if(route.params.reload) getdinnerTable()
+  // console.log('================')
+  // getdinnerTable()
 
   const renderItem = ({ item }) => {
     var backgroundColor = ""

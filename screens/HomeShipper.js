@@ -22,7 +22,7 @@ function HomeShipper(props) {
       const value = await AsyncStorage.getItem('user')
       await setUser(value)
     } catch (e) {
-      // error reading value
+      console.log(e)
     }
   }
   getData()

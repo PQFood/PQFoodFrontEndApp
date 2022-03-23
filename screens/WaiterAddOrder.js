@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, Image, FlatList, ScrollView,Switch, SafeAreaView, Button } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image, FlatList, TextInput, Switch, SafeAreaView, Button } from 'react-native';
 
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Dimensions } from 'react-native';
@@ -13,6 +13,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CurrencyFormat from 'react-currency-format';
+import { set } from 'react-native-reanimated';
 
 
 function WaiterAddOrder(props) {
@@ -21,10 +22,22 @@ function WaiterAddOrder(props) {
   const [food, setFood] = useState(null)
   const [drink, setDrink] = useState(null)
   const [total, setTotal] = useState(0)
-
-
-  const [selected, setSelected] = useState({});
-
+  const [loading, setLoading] = useState(true)
+  const [foodCheck, setFoodCheck] = useState(true)
+  const [drinkCheck, setDrinkCheck] = useState(true)
+  const [foodState, setFoodState] = useState(null)
+  const [drinkState, setDrinkState] = useState(null)
+  const [note, setNote] = useState('')
+  const [user, setUser] = useState('')
+  const getUser = async () => {
+    try {
+      const value = await AsyncStorage.getItem('user')
+      await setUser(value)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+  if(user === '') getUser()
   const getmenu = () => {
     axios({
       method: 'get',
@@ -33,23 +46,142 @@ function WaiterAddOrder(props) {
       .then(response => {
         setFood(response.data.food)
         setDrink(response.data.drink)
+        setFoodState(response.data.foodState)
+        setDrinkState(response.data.drinkState)
+        setLoading(false)
       })
       .catch(error => {
         console.log(error)
       })
   }
-  if (food === null || drink === null) {
-    getmenu()
+  // useEffect(() => {
+  //   getmenu()
+  // }, [])
+  if (loading) getmenu()
+
+  const toggleSwitchFood = (item, value, index) => {
+
+    setFoodState(() => {
+      var result = foodState
+      result[index].value = value
+      return result
+    })
+    if (value) {
+      setTotal(() => {
+        return total + item.price * foodState[index].quantity
+      })
+    }
+    else {
+      setTotal(() => {
+        return total - item.price * foodState[index].quantity
+      })
+    }
+    setFoodCheck(!foodCheck)
+
+  }
+  const toggleSwitchDrink = (item, value, index) => {
+
+    setDrinkState(() => {
+      var result = drinkState
+      result[index].value = value
+      return result
+    })
+    if (value) {
+      setTotal(() => {
+        return total + item.price * drinkState[index].quantity
+      })
+    }
+    else {
+      setTotal(() => {
+        return total - item.price * drinkState[index].quantity
+      })
+    }
+    setDrinkCheck(!drinkCheck)
   }
 
-  const toggleSwitch = (slug) => {
-    setSelected()
-    // alert(slug)
-    console.log(selected)
+  const decreaseFood = (item, index) => {
+    if (foodState[index].quantity > 1) {
+      setFoodState(() => {
+        var result = foodState
+        result[index].value = true
+        result[index].quantity = result[index].quantity - 1
+        return result
+      })
+      setTotal(() => {
+        return total - item.price
+      })
+      setFoodCheck(!foodCheck)
+    }
   }
 
+  const increaseFood = (item, index) => {
+    if (foodState[index].value === false) {
+      setFoodState(() => {
+        var result = foodState
+        result[index].value = true
+        result[index].quantity = result[index].quantity + 1
+        return result
+      })
+      setTotal(() => {
+        return total + item.price * foodState[index].quantity
+      })
+      setFoodCheck(!foodCheck)
+    }
+    else {
+      setFoodState(() => {
+        var result = foodState
+        result[index].quantity = result[index].quantity + 1
+        return result
+      })
+      setTotal(() => {
+        return total + item.price
+      })
+      setFoodCheck(!foodCheck)
+    }
+  }
 
-  const renderItem = ({ item }) => {
+  const decreaseDrink = (item, index) => {
+    if (drinkState[index].quantity > 1) {
+      setDrinkState(() => {
+        var result = drinkState
+        result[index].value = true
+        result[index].quantity = result[index].quantity - 1
+        return result
+      })
+      setTotal(() => {
+        return total - item.price
+      })
+      setFoodCheck(!drinkCheck)
+    }
+  }
+
+  const increaseDrink = (item, index) => {
+    if (drinkState[index].value === false) {
+      setDrinkState(() => {
+        var result = drinkState
+        result[index].value = true
+        result[index].quantity = result[index].quantity + 1
+        return result
+      })
+      setTotal(() => {
+        return total + item.price * drinkState[index].quantity
+      })
+      setDrinkCheck(!drinkCheck)
+    }
+    else {
+      setDrinkState(() => {
+        var result = drinkState
+        result[index].quantity = result[index].quantity + 1
+        return result
+      })
+      setTotal(() => {
+        return total + item.price
+      })
+      setDrinkCheck(!drinkCheck)
+    }
+  }
+
+  const renderItemFood = ({ item, index }) => {
     return (
       <SafeAreaView style={styles.item}>
         <View>
@@ -63,44 +195,123 @@ function WaiterAddOrder(props) {
         <View style={styles.infoItem}>
           <View style={styles.groupInfo}>
             <View><Text style={{ fontWeight: "bold" }}>{item.name}</Text></View>
-            <View><Text >0</Text></View>
           </View>
           <View style={styles.groupInfo}>
             <View>
-            <Switch
+              <Switch
                 trackColor={{ false: "#767577", true: "#81b0ff" }}
                 // thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
                 ios_backgroundColor="#3e3e3e"
-                onValueChange={() => toggleSwitch(item.slug)}
-                value={false}
+                value={foodState[index].value}
+                onValueChange={(value) => { toggleSwitchFood(item, value, index) }}
               />
             </View>
-            <View style={{flex: 1, flexDirection: "row", justifyContent: "flex-end", alignItems: "center"}}>
-              <TouchableOpacity style={styles.changeQuantity}>
+            <View style={{ flex: 1, flexDirection: "row", justifyContent: "flex-end", alignItems: "center" }}>
+              <TouchableOpacity style={styles.changeQuantity}
+                onPress={() => {
+                  decreaseFood(item, index)
+                }}
+              >
                 <Text style={styles.textChangeQuantity}>-</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.changeQuantity}>
+              <View><Text style={{ marginLeft: 10 }}>{foodState[index].quantity}</Text></View>
+
+              <TouchableOpacity style={styles.changeQuantity}
+                onPress={() => {
+                  increaseFood(item, index)
+                }}
+              >
                 <Text style={styles.textChangeQuantity}>+</Text>
               </TouchableOpacity>
             </View>
           </View>
           <View style={styles.groupInfo}>
             <View>
-            <CurrencyFormat 
-              value={item.price} 
-              displayType={'text'} 
-              thousandSeparator={true} 
-              suffix={' đ'} 
-              renderText={value => <Text>{value}</Text>}
+              <CurrencyFormat
+                value={item.price}
+                displayType={'text'}
+                thousandSeparator={true}
+                suffix={' đ'}
+                renderText={value => <Text>{value}</Text>}
               />
             </View>
             <View>
-              <CurrencyFormat 
-              value={2456981} 
-              displayType={'text'} 
-              thousandSeparator={true} 
-              suffix={' đ'} 
-              renderText={value => <Text>{value}</Text>}
+              <CurrencyFormat
+                value={item.price * foodState[index].quantity}
+                displayType={'text'}
+                thousandSeparator={true}
+                suffix={' đ'}
+                renderText={value => <Text>{value}</Text>}
+              />
+            </View>
+          </View>
+        </View>
+
+      </SafeAreaView>
+    );
+  };
+
+  const renderItemDrink = ({ item, index }) => {
+    return (
+      <SafeAreaView style={styles.item}>
+        <View>
+          <Image
+            style={styles.tinyLogo}
+            source={{
+              uri: item.image
+            }}
+          />
+        </View>
+        <View style={styles.infoItem}>
+          <View style={styles.groupInfo}>
+            <View><Text style={{ fontWeight: "bold" }}>{item.name}</Text></View>
+          </View>
+          <View style={styles.groupInfo}>
+            <View>
+              <Switch
+                trackColor={{ false: "#767577", true: "#81b0ff" }}
+                // thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
+                ios_backgroundColor="#3e3e3e"
+                value={drinkState[index].value}
+                onValueChange={(value) => { toggleSwitchDrink(item, value, index) }}
+              />
+            </View>
+            <View style={{ flex: 1, flexDirection: "row", justifyContent: "flex-end", alignItems: "center" }}>
+              <TouchableOpacity style={styles.changeQuantity}
+                onPress={() => {
+                  decreaseDrink(item, index)
+                }}
+              >
+                <Text style={styles.textChangeQuantity}>-</Text>
+              </TouchableOpacity>
+              <View><Text style={{ marginLeft: 10 }}>{drinkState[index].quantity}</Text></View>
+
+              <TouchableOpacity style={styles.changeQuantity}
+                onPress={() => {
+                  increaseDrink(item, index)
+                }}
+              >
+                <Text style={styles.textChangeQuantity}>+</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={styles.groupInfo}>
+            <View>
+              <CurrencyFormat
+                value={item.price}
+                displayType={'text'}
+                thousandSeparator={true}
+                suffix={' đ'}
+                renderText={value => <Text>{value}</Text>}
+              />
+            </View>
+            <View>
+              <CurrencyFormat
+                value={item.price * drinkState[index].quantity}
+                displayType={'text'}
+                thousandSeparator={true}
+                suffix={' đ'}
+                renderText={value => <Text>{value}</Text>}
               />
             </View>
           </View>
@@ -115,56 +326,110 @@ function WaiterAddOrder(props) {
   }
 
 
-
-  return (
-    <>
+  if (loading) {
+    return (
       <View style={styles.container}>
-        <Text style={styles.title}>{route.params.nameTable}</Text>
-
-        <FlatList
-          ListFooterComponent={
-            <>
-              <FlatList
-                data={drink}
-                ListHeaderComponent={<Text style={styles.ul}>Danh Sách Thức Uống</Text>}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.slug}
-              />
-            </>
-          }
-          ListHeaderComponent={
-            <Text style={styles.ul}>Danh Sách Thức Ăn</Text>
-          }
-          data={food}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.slug}
-        />
-
-
-
+        <Text style={{
+          fontSize: 20,
+          fontWeight: "bold",
+          color: "#ff6600"
+        }}>Đang tải...</Text>
       </View>
-      <View style={styles.footer}>
-        <View style={styles.footer2}>
-          <Text style={styles.textBold}>Tổng Tiền: </Text>
-          <CurrencyFormat 
-              value={total} 
-              displayType={'text'} 
-              thousandSeparator={true} 
-              suffix={' đ'} 
+
+    )
+  }
+  else {
+
+    return (
+      <>
+        <View style={styles.container}>
+          <Text style={styles.title}>{route.params.nameTable}</Text>
+
+          <FlatList
+            ListFooterComponent={
+              <>
+                <FlatList
+                  data={drink}
+                  ListHeaderComponent={<Text style={styles.ul}>Danh Sách Thức Uống</Text>}
+                  renderItem={renderItemDrink}
+                  keyExtractor={(item) => item.slug}
+                  ListFooterComponent={
+                    <TextInput
+                      style={{
+                        backgroundColor: "#ffffff",
+                        borderWidth: 1,
+                        paddingLeft: 10,
+                        borderRadius: 10,
+                      }}
+                      multiline
+                      numberOfLines={4}
+                      onChangeText={(text) => setNote(text)}
+                      value={note}
+                      placeholder="Ghi chú"
+                    />
+                  }
+                />
+              </>
+            }
+            ListHeaderComponent={
+              <Text style={styles.ul}>Danh Sách Thức Ăn</Text>
+            }
+            data={food}
+            renderItem={renderItemFood}
+            keyExtractor={(item) => item.slug}
+          />
+        </View>
+        <View style={styles.footer}>
+          <View style={styles.footer2}>
+            <Text style={styles.textBold}>Tổng Tiền: </Text>
+            <CurrencyFormat
+              value={total}
+              displayType={'text'}
+              thousandSeparator={true}
+              suffix={' đ'}
               renderText={value => <Text style={styles.textBold}>{value}</Text>}
-              />
-        </View>
-        <View>
-          <TouchableOpacity style={{ backgroundColor: "#ffcc66", alignItems: "center", height: 40 }}
-            // onPress={setTotalFun}
+            />
+          </View>
+          <View>
+            <TouchableOpacity style={{ backgroundColor: "#ffcc66", alignItems: "center", height: 40 }}
+              onPress={() => {
+                if(total > 0){
+                  axios({
+                    method: 'post',
+                    url: '/waiter/addOrder',
+                    data: {
+                      food: foodState,
+                      drink: drinkState,
+                      total: total,
+                      nameTable: route.params.nameTable,
+                      slugTable: route.params.slug,
+                      note: note,
+                      staff: user
 
-          >
-            <Text style={[styles.textBold, { lineHeight: 40 }]}>Lập hóa đơn</Text>
-          </TouchableOpacity>
+                    }
+                  })
+                    .then(response => {
+                      if (response.data === "ok") navigation.navigate('HomeWaiter',{reload: true})
+                      else alert("Đặt đơn không thành công")
+                    })
+                    .catch(error => {
+                      console.log(error)
+                    })
+                }
+                else {
+                  alert('Vui lòng chọn ít nhất một món!')
+                }
+                
+              }}
+
+            >
+              <Text style={[styles.textBold, { lineHeight: 40 }]}>Lập hóa đơn</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-    </>
-  );
+      </>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
