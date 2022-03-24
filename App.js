@@ -7,11 +7,9 @@ import Navigation from './Navigation'
 import 'react-native-gesture-handler'
 
 import axios from 'axios';
-axios.defaults.baseURL = 'http://192.168.1.9:8002';
+axios.defaults.baseURL = 'http://192.168.1.8:8002';
 
 export default function App() {
-
-
 
   return (
     <Navigation />

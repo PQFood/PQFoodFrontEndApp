@@ -54,10 +54,9 @@ function WaiterAddOrder(props) {
         console.log(error)
       })
   }
-  // useEffect(() => {
-  //   getmenu()
-  // }, [])
-  if (loading) getmenu()
+  useEffect(async() => {
+    await getmenu()
+  }, [])
 
   const toggleSwitchFood = (item, value, index) => {
 
@@ -321,9 +320,7 @@ function WaiterAddOrder(props) {
     );
   };
 
-  const setTotalFun = () => {
-    setTotal(10800)
-  }
+
 
 
   if (loading) {
@@ -409,7 +406,7 @@ function WaiterAddOrder(props) {
                     }
                   })
                     .then(response => {
-                      if (response.data === "ok") navigation.navigate('HomeWaiter',{reload: true})
+                      if (response.data === "ok") navigation.navigate('HomeWaiter')
                       else alert("Đặt đơn không thành công")
                     })
                     .catch(error => {

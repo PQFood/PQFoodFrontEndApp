@@ -11,7 +11,7 @@ import Constants from 'expo-constants';
 import axios from 'axios';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
+import { useIsFocused } from '@react-navigation/native'
 
 function HomeWaiter(props) {
 
@@ -24,8 +24,7 @@ function HomeWaiter(props) {
   );
 
   const [dinnerTable, setDinnerTable] = useState(null)
-  const [selectedId, setSelectedId] = useState(null);
-
+  const isFocused = useIsFocused()
   const getdinnerTable = () => {
     axios({
       method: 'get',
@@ -38,13 +37,13 @@ function HomeWaiter(props) {
         console.log(error)
       })
   }
-  // if (dinnerTable === null) getdinnerTable()
+
+ 
+
   useEffect(() => {
     getdinnerTable()
-  }, [])
-  // // if(route.params.reload) getdinnerTable()
-  // console.log('================')
-  // getdinnerTable()
+  }, [isFocused])
+
 
   const renderItem = ({ item }) => {
     var backgroundColor = ""
@@ -57,7 +56,6 @@ function HomeWaiter(props) {
     }
     else {
       backgroundColor = "#ffffff"
-
     }
 
     return (
@@ -65,14 +63,14 @@ function HomeWaiter(props) {
         item={item}
         onPress={() => {
           if (item.color === "Orange") {
-            navigation.navigate('WaiterDetailOrder')
+            navigation.navigate('WaiterDetailOrder',{ nameTable: item.nameTable, slug: item.slug })
           }
           else if (item.color === "Green") {
             navigation.navigate('WaiterPayOrder')
           }
           else {
-            navigation.navigate('WaiterAddOrder',{nameTable: item.nameTable, slug: item.slug})
-      
+            navigation.navigate('WaiterAddOrder', { nameTable: item.nameTable, slug: item.slug })
+
           }
         }}
         backgroundColor={{ backgroundColor }}
@@ -88,7 +86,7 @@ function HomeWaiter(props) {
         renderItem={renderItem}
         keyExtractor={(item) => item.slug}
       />
-      
+
     </View>
   );
 
