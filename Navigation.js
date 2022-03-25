@@ -24,6 +24,9 @@ import WaiterAddOrder from './screens/WaiterAddOrder'
 import WaiterDetailOrder from './screens/WaiterDetailOrder'
 import WaiterPayOrder from './screens/WaiterPayOrder'
 import Test from './screens/Test'
+import WaiterCompleteFood from './screens/WaiterCompleteFood';
+import WaiterEditOrder from './screens/WaiterEditOrder'
+import ChefPayOrder from './screens/ChefPayOrder'
 
 function Navigation(props) {
 
@@ -35,21 +38,33 @@ function Navigation(props) {
             <WaiterDrawer.Navigator initialRouteName="Home">
                 <WaiterDrawer.Screen name="Home" component={HomeWaiter} options={{ title: "Home", headerStyle: { backgroundColor: '#ffcc66',}, headerTitleAlign: "center",  }}/>
                 <WaiterDrawer.Screen name="Test" component={Test} />
-
             </WaiterDrawer.Navigator>
         );
     }
+
+    const HomeChefDrawer = () => {
+        return (
+            <WaiterDrawer.Navigator initialRouteName="Home">
+                <WaiterDrawer.Screen name="Home" component={HomeChef} options={{ title: "Home", headerStyle: { backgroundColor: '#ffcc66',}, headerTitleAlign: "center",  }}/>
+                <WaiterDrawer.Screen name="Test" component={Test} />
+            </WaiterDrawer.Navigator>
+        );
+    }
+
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName='HomeWaiter'>
+            <Stack.Navigator initialRouteName='HomeChef'>
                 <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
                 <Stack.Screen name="HomeAdmin" component={HomeAdmin} options={{ headerShown: false }} />
                 <Stack.Screen name="HomeShipper" component={HomeShipper} options={{ headerShown: false }} />
                 <Stack.Screen name="HomeWaiter" component={HomeWaiterDrawer} options={{ headerShown: false }} />
-                <Stack.Screen name="HomeChef" component={HomeChef} options={{ headerShown: false }} />
+                <Stack.Screen name="HomeChef" component={HomeChefDrawer} options={{ headerShown: false }} />
                 <Stack.Screen name="WaiterDetailOrder" component={WaiterDetailOrder} options={{ title: "Chi Tiết Hóa Đơn", headerStyle: { backgroundColor: '#ffcc66' }, headerTitleAlign: "center" }} />
                 <Stack.Screen name="WaiterPayOrder" component={WaiterPayOrder} options={{ title: "Thanh Toán Hóa Đơn", headerStyle: { backgroundColor: '#99ff66' }, headerTitleAlign: "center" }} />
                 <Stack.Screen name="WaiterAddOrder" component={WaiterAddOrder} options={{ title: "Thêm Hóa Đơn", headerTitleAlign: "center" }} />
+                <Stack.Screen name="WaiterCompleteFood" component={WaiterCompleteFood} options={{ title: "Hoàn thành món", headerTitleAlign: "center" }} />
+                <Stack.Screen name="WaiterEditOrder" component={WaiterEditOrder} options={{ title: "Cập nhật phiếu gọi món", headerTitleAlign: "center" }} />
+                <Stack.Screen name="ChefPayOrder" component={ChefPayOrder} options={{ title: "Chờ thanh Toán", headerTitleAlign: "center" }} />
 
             </Stack.Navigator>
         </NavigationContainer>

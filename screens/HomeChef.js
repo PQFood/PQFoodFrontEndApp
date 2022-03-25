@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, TextInput, Alert, RefreshControl } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, TextInput, Alert, FlatList } from 'react-native';
 
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Dimensions } from 'react-native';
@@ -11,20 +11,111 @@ import Constants from 'expo-constants';
 import axios from 'axios';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useIsFocused } from '@react-navigation/native'
 
 function HomeChef(props) {
 
   const { navigation, route } = props;
 
-    return (
-      <View style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-      }}>
-        <Text>Hello, {route.params.data.position}!</Text>
-      </View>
-    );
+  const Item = ({ item, onPress, backgroundColor, textColor }) => (
+    <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
+      <Text style={[styles.title, textColor]}>{item.nameTable}</Text>
+    </TouchableOpacity>
+  );
+
+  const [dinnerTable, setDinnerTable] = useState(null)
+  const isFocused = useIsFocused()
+  const getdinnerTable = () => {
+    axios({
+      method: 'get',
+      url: '/chef/homeChef',
+    })
+      .then(response => {
+        setDinnerTable(response.data)
+      })
+      .catch(error => {
+        console.log(error)
+      })
   }
 
-  export default HomeChef;
+
+
+  useEffect(() => {
+    getdinnerTable()
+    const intervalId = setInterval(() => {
+      getdinnerTable()
+    }, 60000)
+
+    return () => clearInterval(intervalId);
+
+  }, [isFocused])
+
+
+  const renderItem = ({ item }) => {
+    var backgroundColor = ""
+    if (item.color === "Orange") {
+      backgroundColor = "#ffcc66"
+    }
+    else if (item.color === "Green") {
+      backgroundColor = "#99ff66"
+    }
+    else if (item.color === "Blue") {
+      backgroundColor = "#0099ff"
+    }
+    else {
+      backgroundColor = "#ffffff"
+    }
+
+    return (
+      <Item
+        item={item}
+        onPress={() => {
+          if (item.color === "Orange") {
+            navigation.navigate('WaiterDetailOrder', { nameTable: item.nameTable, slug: item.slug })
+          }
+          else if (item.color === "Green") {
+            navigation.navigate('ChefPayOrder',{ nameTable: item.nameTable, slug: item.slug })
+          }
+          else if (item.color === "Blue") {
+            navigation.navigate('WaiterCompleteFood', { nameTable: item.nameTable, slug: item.slug })
+          }
+          else {
+            alert('Bàn trống')
+          }
+        }}
+        backgroundColor={{ backgroundColor }}
+      />
+    );
+  };
+
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={dinnerTable}
+        numColumns={2}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.slug}
+      />
+
+    </View>
+  );
+
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 20,
+  },
+  item: {
+    padding: 50,
+    marginVertical: 8,
+    marginHorizontal: 16,
+  },
+  title: {
+    fontSize: 20,
+  },
+});
+export default HomeChef;

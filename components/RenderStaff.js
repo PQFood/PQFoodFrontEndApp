@@ -14,6 +14,9 @@ const RenderStaff = ({ item }) => {
             <View>
                <Text>{item.position}</Text>
             </View>
+            <View>
+               <Text>{item.act}</Text>
+            </View>
         </SafeAreaView>
     );
 };

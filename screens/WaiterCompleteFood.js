@@ -16,7 +16,7 @@ import CurrencyFormat from 'react-currency-format';
 import RenderItemOrder from '../components/RenderItemOrder';
 import RenderStaff from '../components/RenderStaff';
 
-function WaiterDetailOrder(props) {
+function WaiterCompleteFood(props) {
 
   const { navigation, route } = props;
   const [user, setUser] = useState('')
@@ -47,7 +47,7 @@ function WaiterDetailOrder(props) {
         console.log(error)
       })
   }
-  useEffect(async() => {
+  useEffect(async () => {
     await getOrder()
   }, [])
   // console.log(order.staff)
@@ -65,56 +65,56 @@ function WaiterDetailOrder(props) {
   else {
     return (
       <>
-      <View style={styles.container}>
-        <Text style={styles.title}>{route.params.nameTable}</Text>
+        <View style={styles.container}>
+          <Text style={styles.title}>{route.params.nameTable}</Text>
 
-        <FlatList
-          ListFooterComponent={
-            <>
-              <FlatList
-                data={order.staff}
-                ListHeaderComponent={<Text style={styles.ul}>Nhân viên xử lý</Text>}
-                renderItem={RenderStaff}
-                keyExtractor={(item) => item.id}
-                ListFooterComponent={
-                  <TextInput
-                    style={{
-                      backgroundColor: "#ffffff",
-                      borderWidth: 1,
-                      paddingLeft: 10,
-                      borderRadius: 10,
-                    }}
-                    multiline
-                    numberOfLines={4}
-                    value={order.note}
-                    editable={false}
-                    selectTextOnFocus={false}
-                  />
-                }
-              />
-            </>
-          }
-          ListHeaderComponent={
-            <Text style={styles.ul}>Món gọi</Text>
-          }
-          data={order.order}
-          renderItem={RenderItemOrder}
-          keyExtractor={(item) => item.slug}
-        />
-      </View>
-      <View style={styles.footer}>
-        <View style={styles.footer2}>
-          <Text style={styles.textBold}>Tổng Tiền: </Text>
-          <CurrencyFormat
-            value={order.total}
-            displayType={'text'}
-            thousandSeparator={true}
-            suffix={' đ'}
-            renderText={value => <Text style={styles.textBold}>{value}</Text>}
+          <FlatList
+            ListFooterComponent={
+              <>
+                <FlatList
+                  data={order.staff}
+                  ListHeaderComponent={<Text style={styles.ul}>Nhân viên xử lý</Text>}
+                  renderItem={RenderStaff}
+                  keyExtractor={(item) => item.id}
+                  ListFooterComponent={
+                    <TextInput
+                      style={{
+                        backgroundColor: "#ffffff",
+                        borderWidth: 1,
+                        paddingLeft: 10,
+                        borderRadius: 10,
+                      }}
+                      multiline
+                      numberOfLines={4}
+                      value={order.note}
+                      editable={false}
+                      selectTextOnFocus={false}
+                    />
+                  }
+                />
+              </>
+            }
+            ListHeaderComponent={
+              <Text style={styles.ul}>Món gọi</Text>
+            }
+            data={order.order}
+            renderItem={RenderItemOrder}
+            keyExtractor={(item) => item.slug}
           />
         </View>
-        <View>
-          <TouchableOpacity style={{ backgroundColor: "#ffcc66", alignItems: "center", height: 40 }}
+        <View style={styles.footer}>
+          <View style={styles.footer2}>
+            <Text style={styles.textBold}>Tổng Tiền: </Text>
+            <CurrencyFormat
+              value={order.total}
+              displayType={'text'}
+              thousandSeparator={true}
+              suffix={' đ'}
+              renderText={value => <Text style={styles.textBold}>{value}</Text>}
+            />
+          </View>
+          <View style={styles.footerPage}>
+            <TouchableOpacity
             // onPress={() => {
             //     axios({
             //       method: 'post',
@@ -139,12 +139,15 @@ function WaiterDetailOrder(props) {
             //       })
             //   }
             // }
-          >
-            <Text style={[styles.textBold, { lineHeight: 40 }]}>Cập nhật phiếu gọi món</Text>
-          </TouchableOpacity>
+            >
+              <Text style={[styles.textBold, styles.btnFooter]}>Cập nhật</Text>
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Text style={[styles.textBold, styles.btnFooter]}>Hoàn Thành</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-    </>
+      </>
 
     );
   }
@@ -188,12 +191,13 @@ const styles = StyleSheet.create({
     width: windowWidth * 0.6
   },
   footer: {
-    height: windowHeight * 0.1,
+    height: windowHeight * 0.12,
   },
   footer2: {
     flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: 'center',
     paddingHorizontal: 40,
     paddingVertical: 6,
     backgroundColor: "#ccffcc"
@@ -214,7 +218,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 4,
     borderRadius: 10
+  },
+  footerPage: {
+    // backgroundColor: "#ffcc66", 
+    alignItems: "center", 
+    height: 45, 
+    flex: 1, 
+    flexDirection: "row", 
+    justifyContent: "space-between",
+  },
+  btnFooter: {
+    lineHeight: 45, 
+    backgroundColor: "#ffcc66", 
+    width: windowWidth*0.495,
+    textAlign: "center",
   }
 });
 
-export default WaiterDetailOrder;
+export default WaiterCompleteFood;

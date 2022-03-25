@@ -16,7 +16,7 @@ import CurrencyFormat from 'react-currency-format';
 import RenderItemOrder from '../components/RenderItemOrder';
 import RenderStaff from '../components/RenderStaff';
 
-function WaiterDetailOrder(props) {
+function ChefPayOrder(props) {
 
   const { navigation, route } = props;
   const [user, setUser] = useState('')
@@ -113,36 +113,7 @@ function WaiterDetailOrder(props) {
             renderText={value => <Text style={styles.textBold}>{value}</Text>}
           />
         </View>
-        <View>
-          <TouchableOpacity style={{ backgroundColor: "#ffcc66", alignItems: "center", height: 40 }}
-            // onPress={() => {
-            //     axios({
-            //       method: 'post',
-            //       url: '/waiter/addOrder',
-            //       data: {
-            //         food: foodState,
-            //         drink: drinkState,
-            //         total: total,
-            //         nameTable: route.params.nameTable,
-            //         slugTable: route.params.slug,
-            //         note: note,
-            //         staff: user
-
-            //       }
-            //     })
-            //       .then(response => {
-            //         if (response.data === "ok") navigation.navigate('HomeWaiter')
-            //         else alert("Đặt đơn không thành công")
-            //       })
-            //       .catch(error => {
-            //         console.log(error)
-            //       })
-            //   }
-            // }
-          >
-            <Text style={[styles.textBold, { lineHeight: 40 }]}>Cập nhật phiếu gọi món</Text>
-          </TouchableOpacity>
-        </View>
+        
       </View>
     </>
 
@@ -188,12 +159,13 @@ const styles = StyleSheet.create({
     width: windowWidth * 0.6
   },
   footer: {
-    height: windowHeight * 0.1,
+    height: windowHeight * 0.07,
   },
   footer2: {
     flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: 40,
     paddingVertical: 6,
     backgroundColor: "#ccffcc"
@@ -217,4 +189,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default WaiterDetailOrder;
+export default ChefPayOrder;

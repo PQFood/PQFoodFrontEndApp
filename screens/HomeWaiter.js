@@ -42,6 +42,12 @@ function HomeWaiter(props) {
 
   useEffect(() => {
     getdinnerTable()
+    const intervalId = setInterval(() => {  
+      getdinnerTable()
+    }, 60000)
+  
+    return () => clearInterval(intervalId);
+    
   }, [isFocused])
 
 
@@ -52,7 +58,9 @@ function HomeWaiter(props) {
     }
     else if (item.color === "Green") {
       backgroundColor = "#99ff66"
-
+    }
+    else if (item.color === "Blue") {
+      backgroundColor = "#0099ff"
     }
     else {
       backgroundColor = "#ffffff"
@@ -67,6 +75,9 @@ function HomeWaiter(props) {
           }
           else if (item.color === "Green") {
             navigation.navigate('WaiterPayOrder')
+          }
+          else if (item.color === "Blue") {
+            navigation.navigate('WaiterCompleteFood',{ nameTable: item.nameTable, slug: item.slug })
           }
           else {
             navigation.navigate('WaiterAddOrder', { nameTable: item.nameTable, slug: item.slug })
