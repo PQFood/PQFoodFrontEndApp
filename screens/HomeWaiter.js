@@ -12,10 +12,40 @@ import axios from 'axios';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useIsFocused } from '@react-navigation/native'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
+import { io } from "socket.io-client";
 
 function HomeWaiter(props) {
-
+  
   const { navigation, route } = props;
+
+  const [user, setUser] = useState('')
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('user')
+      await setUser(value)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+  useEffect(()=>{getData()},[])
+  const [socket,setSocket] = useState(null)
+
+  useEffect(() => {
+    setSocket(io("http://192.168.1.6:5000"));    
+  },[])
+
+  useEffect(()=>{
+    socket?.emit("newUser",user)
+  },[])
+  useEffect(()=>{
+    socket?.on("getNotification",data=>{
+      setTest(data)
+    })
+  },[])
+
 
   const Item = ({ item, onPress, backgroundColor, textColor }) => (
     <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
@@ -37,8 +67,6 @@ function HomeWaiter(props) {
         console.log(error)
       })
   }
-
- 
 
   useEffect(() => {
     getdinnerTable()
@@ -89,17 +117,30 @@ function HomeWaiter(props) {
     );
   };
 
-  return (
-    <View style={styles.container}>
-      <FlatList
-        data={dinnerTable}
-        numColumns={2}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.slug}
-      />
+    return (
+      <View style={styles.container}>
+        <FlatList
+          data={dinnerTable}
+          numColumns={2}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.slug}
+        />
+        <TouchableOpacity
+        onPress={()=>{
+          socket.emit("sendNotification",{
+            senderName: user,
+          })
+        }
+        }
+        >
+          <Text>nhap vao</Text>
+        </TouchableOpacity>
+  
+      </View>
+    );
+  
 
-    </View>
-  );
+  
 
 }
 
@@ -119,4 +160,5 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
 });
+
 export default HomeWaiter;

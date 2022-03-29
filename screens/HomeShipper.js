@@ -16,24 +16,29 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function HomeShipper(props) {
   const { navigation, route } = props;
-  const [user, setUser] = useState('')
-  const getData = async () => {
-    try {
-      const value = await AsyncStorage.getItem('user')
-      await setUser(value)
-    } catch (e) {
-      console.log(e)
-    }
-  }
-  getData()
+  const numbers = [1, 2, 3, 4, 5];
   return (
+    <>
+    <View>
+      { numbers ? 
+      (
+        
+        numbers.map((number)=>{
+          <Text>abc</Text>
+        })
+      // <Text>abs</Text>
+      ) 
+      : null}
+      </View>
+    
     <View style={{
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center'
     }}>
-      <Text>Hello {user}, {route.params.data.position}!</Text>
+      <Text>Hello shipper!</Text>
     </View>
+    </>
   );
 }
 

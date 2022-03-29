@@ -53,7 +53,7 @@ function Navigation(props) {
 
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName='HomeChef'>
+            <Stack.Navigator initialRouteName='HomeShipper'>
                 <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
                 <Stack.Screen name="HomeAdmin" component={HomeAdmin} options={{ headerShown: false }} />
                 <Stack.Screen name="HomeShipper" component={HomeShipper} options={{ headerShown: false }} />
