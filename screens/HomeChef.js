@@ -1,21 +1,61 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, TextInput, Alert, FlatList } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, TextInput, Alert, FlatList, ToastAndroid } from 'react-native';
 
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Dimensions } from 'react-native';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 import Constants from 'expo-constants';
+import { useToast } from "react-native-toast-notifications";
 
 import axios from 'axios';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useIsFocused } from '@react-navigation/native'
+import Toast from 'react-native-toast-message';
+import { io } from "socket.io-client";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import URL from '../components/UrlSocketIO';
 
 function HomeChef(props) {
 
   const { navigation, route } = props;
+  const [user, setUser] = useState('')
+  const [socket,setSocket] = useState(null)
+
+  const toast = useToast();
+
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('user')
+      await setUser(value)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+  useEffect(()=>{
+    getData()
+  },[])
+  useEffect(() => {
+    setSocket(io(URL));    
+  },[])
+  useEffect(()=>{
+    if(user!=='')
+      socket?.emit("newUser",{user,position:2})
+  },[socket,user])
+
+  useEffect(()=>{
+    socket?.on("getNotification",data=>{
+      toast.show(data, {
+        type: "success",
+        placement: "top",
+        duration: 30000,
+        offset: 30,
+        animationType: "slide-in",
+      });
+    })
+  },[socket])
 
   const Item = ({ item, onPress, backgroundColor, textColor }) => (
     <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
@@ -66,6 +106,16 @@ function HomeChef(props) {
       backgroundColor = "#ffffff"
     }
 
+    const showToast = ()=>{
+      ToastAndroid.show(
+        "Bàn trống",
+        ToastAndroid.SHORT,
+        ToastAndroid.BOTTOM,
+        25,
+        50
+      )
+    }
+
     return (
       <Item
         item={item}
@@ -80,7 +130,7 @@ function HomeChef(props) {
             navigation.navigate('WaiterCompleteFood', { nameTable: item.nameTable, slug: item.slug })
           }
           else {
-            alert('Bàn trống')
+            showToast()
           }
         }}
         backgroundColor={{ backgroundColor }}
@@ -89,7 +139,9 @@ function HomeChef(props) {
   };
 
   return (
-    <View style={styles.container}>
+    <>
+      
+      <View style={styles.container}>
       <FlatList
         data={dinnerTable}
         numColumns={2}
@@ -98,6 +150,8 @@ function HomeChef(props) {
       />
 
     </View>
+    </>
+    
   );
 
 }

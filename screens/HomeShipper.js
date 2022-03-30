@@ -7,29 +7,37 @@ import { Dimensions } from 'react-native';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 import Constants from 'expo-constants';
+import { useToast } from "react-native-toast-notifications";
+import Toast from 'react-native-toast-message';
 
 import axios from 'axios';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-
 function HomeShipper(props) {
   const { navigation, route } = props;
-  const numbers = [1, 2, 3, 4, 5];
+  
+  const toast = useToast();
+  // console.log(toast)
+  useEffect(() => {
+    toast.show("Task finished successfully",
+    {
+      type: "success",
+      placement: "top",
+      duration: 20000,
+      offset: 30,
+      animationType: "slide-in",
+    });
+  }, []);
+  useEffect(()=>{
+    Toast.show({
+      type: 'success',
+      text1: 'Hello abc',
+      text2: 'This is some something 👋',
+      visibilityTime: 10000
+    });
+  },[])
   return (
-    <>
-    <View>
-      { numbers ? 
-      (
-        
-        numbers.map((number)=>{
-          <Text>abc</Text>
-        })
-      // <Text>abs</Text>
-      ) 
-      : null}
-      </View>
     
     <View style={{
       flex: 1,
@@ -37,8 +45,8 @@ function HomeShipper(props) {
       alignItems: 'center'
     }}>
       <Text>Hello shipper!</Text>
+      <Toast />
     </View>
-    </>
   );
 }
 

@@ -12,28 +12,40 @@ import axios from 'axios';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-
+import URL from '../components/UrlSocketIO';
+import { io } from "socket.io-client";
+import { LogBox } from 'react-native';
 
 function WaiterPayOrder(props) {
+  // console.log(URL)
+  const { navigation, route } = props;
   const [user, setUser] = useState('')
-  const getData = async () => {
-    try {
-      const value = await AsyncStorage.getItem('user')
-      await setUser(value)
-    } catch(e) {
-      // error reading value
-    }
-  }
-  getData()
-
+  const [socket, setSocket] = useState(null)
+  LogBox.ignoreLogs([
+    'Non-serializable values were found in the navigation state',
+  ]);
+  useEffect(() => {
+    setUser(route.params.user)
+    setSocket(route.params.socket);
+  }, [])
+  // console.log(route.params.socket)
   return (
     <View style={{
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center'
     }}>
-      <Text>pay</Text>
+      <TouchableOpacity
+        onPress={
+          ()=>{
+            socket.emit("sendNotification",{
+              senderName: user,
+            })
+          }
+        }
+      >
+        <Text>pay {route.params.user}</Text>
+      </TouchableOpacity>
     </View>
   );
 }

@@ -13,15 +13,21 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useIsFocused } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ToastProvider } from 'react-native-toast-notifications'
+import { useToast } from "react-native-toast-notifications";
+import URL from '../components/UrlSocketIO';
 
 
 import { io } from "socket.io-client";
 
 function HomeWaiter(props) {
+
+  const toast = useToast();
   
   const { navigation, route } = props;
-
   const [user, setUser] = useState('')
+  const [socket,setSocket] = useState(null)
+
   const getData = async () => {
     try {
       const value = await AsyncStorage.getItem('user')
@@ -30,21 +36,29 @@ function HomeWaiter(props) {
       console.log(e)
     }
   }
-  useEffect(()=>{getData()},[])
-  const [socket,setSocket] = useState(null)
+  useEffect(()=>{
+    getData()
+  },[])
 
   useEffect(() => {
-    setSocket(io("http://192.168.1.6:5000"));    
+    setSocket(io(URL));    
   },[])
 
   useEffect(()=>{
-    socket?.emit("newUser",user)
-  },[])
+    if(user!=='')
+      socket?.emit("newUser",{user,position:1})
+  },[socket,user])
   useEffect(()=>{
     socket?.on("getNotification",data=>{
-      setTest(data)
+      toast.show("Task finished successfully", {
+        type: "success",
+        placement: "top",
+        duration: 30000,
+        offset: 30,
+        animationType: "slide-in",
+      });
     })
-  },[])
+  },[socket])
 
 
   const Item = ({ item, onPress, backgroundColor, textColor }) => (
@@ -99,10 +113,10 @@ function HomeWaiter(props) {
         item={item}
         onPress={() => {
           if (item.color === "Orange") {
-            navigation.navigate('WaiterDetailOrder',{ nameTable: item.nameTable, slug: item.slug })
+            navigation.navigate('WaiterDetailOrder',{ nameTable: item.nameTable, slug: item.slug, user:user })
           }
           else if (item.color === "Green") {
-            navigation.navigate('WaiterPayOrder')
+            navigation.navigate('WaiterPayOrder', { nameTable: item.nameTable, slug: item.slug, user: user, socket: socket })
           }
           else if (item.color === "Blue") {
             navigation.navigate('WaiterCompleteFood',{ nameTable: item.nameTable, slug: item.slug })
@@ -127,9 +141,7 @@ function HomeWaiter(props) {
         />
         <TouchableOpacity
         onPress={()=>{
-          socket.emit("sendNotification",{
-            senderName: user,
-          })
+          socket.disconnect()
         }
         }
         >

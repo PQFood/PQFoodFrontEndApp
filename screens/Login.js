@@ -14,18 +14,23 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
-import HomeShipper from '../screens/HomeShipper'
-import HomeChef from '../screens/HomeChef'
-import HomeWaiter from '../screens/HomeWaiter'
-import HomeAdmin from '../screens/HomeAdmin'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Entypo } from '@expo/vector-icons';
+import { useIsFocused } from '@react-navigation/native'
 
 function Login(props) {
-    
+
 
     const { navigation } = props;
-
-
+    const isFocused = useIsFocused()
+    const [pass, SetPass] = useState(true)
+    const [userState, setUserState] = useState({
+        user: "",
+        password: ""
+    })
+    useEffect(() => {
+        SetPass(true)
+    }, [isFocused])
     const LoginSchema = Yup.object().shape({
         user: Yup.string()
             .required('Vui lòng nhập vào tên đăng nhập!'),
@@ -35,20 +40,20 @@ function Login(props) {
 
     const storeData = async (value) => {
         try {
-          await AsyncStorage.setItem('user', value)
+            await AsyncStorage.setItem('user', value)
         } catch (e) {
-          console.log(e)
+            console.log(e)
         }
-      }
+    }
 
     return (
         <>
 
             <Formik
                 enableReinitialize={true}
-                initialValues={{ user: "", password: "" }}
+                initialValues={userState}
                 validationSchema={LoginSchema}
-                onSubmit={values => {
+                onSubmit={(values,{resetForm}) => {
                     axios({
                         method: 'post',
                         url: '/login',
@@ -64,36 +69,35 @@ function Login(props) {
                                     'Đăng nhập thất bại! Vui lòng đăng nhập lại!',
                                     [{
                                         text: 'Ok',
-                                        onPress: () => {
-                                            // values.user = '';
-                                            // values.password = '';
-                                            // RNRestart.Restart();
-                                        }
                                     }]
                                 )
                             }
                             else {
                                 if (response.data.position === "Chủ quán") {
                                     storeData(response.data.userName)
-                                    navigation.navigate('HomeAdmin',{ data: response.data })
+                                    navigation.navigate('HomeAdmin', { data: response.data })
                                 }
                                 else if (response.data.position === "Phục vụ") {
                                     storeData(response.data.userName)
-                                    navigation.navigate('HomeWaiter',{ data: response.data })
+                                    navigation.navigate('HomeWaiter', { data: response.data })
                                 }
                                 else if (response.data.position === "Shipper") {
                                     storeData(response.data.userName)
-                                    navigation.navigate('HomeShipper',{ data: response.data })
+                                    navigation.navigate('HomeShipper', { data: response.data })
                                 }
                                 else {
                                     storeData(response.data.userName)
-                                    navigation.navigate('HomeChef',{ data: response.data })
+                                    navigation.navigate('HomeChef', { data: response.data })
                                 }
                             }
                         })
                         .catch(error => {
                             console.log(error)
                         })
+                        resetForm({values: {
+                            user: values.user,
+                            password: ""
+                        }})
                 }}
             >
                 {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
@@ -125,7 +129,7 @@ function Login(props) {
                                     style={styles.inputText}
                                     placeholder="Mật khẩu"
                                     // keyboardType="numeric"
-                                    secureTextEntry={true}
+                                    secureTextEntry={pass}
                                     onChangeText={handleChange('password')}
                                     onBlur={handleBlur('password')}
                                     value={values.password}
@@ -134,6 +138,15 @@ function Login(props) {
                                     <Text style={{ color: 'red', textAlign: "center" }}>{errors.password}</Text>
                                 ) : null}
                                 <FontAwesome5 name="lock" size={24} color="black" style={styles.iconLock} />
+                                <TouchableOpacity
+                                    style={styles.iconShowHidden}
+                                    onPress={() => {
+                                        SetPass(!pass)
+                                    }}
+                                >
+                                    {pass ? (<Entypo name="eye" size={28} color="black" />) : (<Entypo name="eye-with-line" size={28} color="black" />)}
+
+                                </TouchableOpacity>
 
                             </View>
                             <TouchableOpacity
@@ -205,13 +218,19 @@ const styles = StyleSheet.create({
     iconLock: {
         position: "absolute",
         top: 20,
-        left: 70,
+        left: windowWidth*0.18,
         zIndex: 100,
     },
     iconUser: {
         position: "absolute",
         top: 20,
-        left: 70,
+        left: windowWidth*0.18,
+        zIndex: 100,
+    },
+    iconShowHidden: {
+        position: "absolute",
+        top: 20,
+        left: windowWidth*0.74,
         zIndex: 100,
     }
 })

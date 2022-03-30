@@ -5,13 +5,29 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Navigation from './Navigation'
 import 'react-native-gesture-handler'
-
 import axios from 'axios';
-axios.defaults.baseURL = 'http://192.168.1.6:8002';
+import { Dimensions } from 'react-native';
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+import { MaterialIcons } from '@expo/vector-icons';
+axios.defaults.baseURL = 'http://192.168.1.16:8002';
+import { ToastProvider } from 'react-native-toast-notifications'
+import Constants from 'expo-constants';
 
 export default function App() {
 
   return (
-    <Navigation />
+    <ToastProvider
+    swipeEnabled={true}
+    icon={<MaterialIcons name="restaurant" size={24} color="black" />}
+    offsetTop={Constants.statusBarHeight}
+    textStyle={{ 
+      fontSize: 15,
+      paddingHorizontal: windowWidth*0.06
+     }}
+    //  successColor="#00e64d"
+    >
+      <Navigation />
+    </ToastProvider>
   );
 }
