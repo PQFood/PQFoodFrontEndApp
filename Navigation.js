@@ -24,9 +24,10 @@ import WaiterAddOrder from './screens/WaiterAddOrder'
 import WaiterDetailOrder from './screens/WaiterDetailOrder'
 import WaiterPayOrder from './screens/WaiterPayOrder'
 import Test from './screens/Test'
-import WaiterCompleteFood from './screens/WaiterCompleteFood';
+import WaiterCompleteFood from './screens/WaiterCompleteFood'
 import WaiterEditOrder from './screens/WaiterEditOrder'
 import ChefPayOrder from './screens/ChefPayOrder'
+import ChefDetailOrder from './screens/ChefDetailOrder';
 
 function Navigation(props) {
 
@@ -65,6 +66,7 @@ function Navigation(props) {
                 <Stack.Screen name="WaiterCompleteFood" component={WaiterCompleteFood} options={{ title: "Hoàn thành món", headerTitleAlign: "center" }} />
                 <Stack.Screen name="WaiterEditOrder" component={WaiterEditOrder} options={{ title: "Cập nhật phiếu gọi món", headerTitleAlign: "center" }} />
                 <Stack.Screen name="ChefPayOrder" component={ChefPayOrder} options={{ title: "Chờ thanh Toán", headerTitleAlign: "center" }} />
+                <Stack.Screen name="ChefDetailOrder" component={ChefDetailOrder} options={{ title: "Chi Tiết Hóa Đơn",headerStyle: { backgroundColor: '#ffcc66' }, headerTitleAlign: "center" }} />
 
             </Stack.Navigator>
         </NavigationContainer>

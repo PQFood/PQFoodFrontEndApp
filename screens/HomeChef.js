@@ -22,47 +22,9 @@ function HomeChef(props) {
 
   const { navigation, route } = props;
   const [user, setUser] = useState('')
-  const [socket,setSocket] = useState(null)
-
+  const [name, setName] = useState('')
+  const [socket, setSocket] = useState(null)
   const toast = useToast();
-
-  const getData = async () => {
-    try {
-      const value = await AsyncStorage.getItem('user')
-      await setUser(value)
-    } catch (e) {
-      console.log(e)
-    }
-  }
-  useEffect(()=>{
-    getData()
-  },[])
-  useEffect(() => {
-    setSocket(io(URL));    
-  },[])
-  useEffect(()=>{
-    if(user!=='')
-      socket?.emit("newUser",{user,position:2})
-  },[socket,user])
-
-  useEffect(()=>{
-    socket?.on("getNotification",data=>{
-      toast.show(data, {
-        type: "success",
-        placement: "top",
-        duration: 30000,
-        offset: 30,
-        animationType: "slide-in",
-      });
-    })
-  },[socket])
-
-  const Item = ({ item, onPress, backgroundColor, textColor }) => (
-    <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
-      <Text style={[styles.title, textColor]}>{item.nameTable}</Text>
-    </TouchableOpacity>
-  );
-
   const [dinnerTable, setDinnerTable] = useState(null)
   const isFocused = useIsFocused()
   const getdinnerTable = () => {
@@ -78,17 +40,59 @@ function HomeChef(props) {
       })
   }
 
-
-
   useEffect(() => {
     getdinnerTable()
     const intervalId = setInterval(() => {
       getdinnerTable()
     }, 60000)
-
     return () => clearInterval(intervalId);
-
   }, [isFocused])
+
+
+  const getData = async () => {
+    try {
+      const value1 = await AsyncStorage.getItem('user')
+      const value2 = await AsyncStorage.getItem('name')
+      await setUser(value1)
+      await setName(value2)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+  useEffect(() => {
+    getData()
+  }, [])
+  useEffect(() => {
+    setSocket(io(URL));
+  }, [])
+  useEffect(() => {
+    socket?.emit("newUser", { position: 2 })
+  }, [socket])
+
+  useEffect(() => {
+    socket?.on("getNotificationAddOrder", data => {
+      getdinnerTable()
+      toast.show(data, {
+        type: "success",
+        placement: "top",
+        duration: 60000,
+        offset: 30,
+        animationType: "slide-in",
+      });
+    })
+  }, [socket])
+  useEffect(() => {
+    socket?.on("getNotificationUpdate", data => {
+      getdinnerTable()
+    })
+  }, [socket])
+
+  const Item = ({ item, onPress, backgroundColor, textColor }) => (
+    <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
+      <Text style={[styles.title, textColor]}>{item.nameTable}</Text>
+    </TouchableOpacity>
+  );
+
 
 
   const renderItem = ({ item }) => {
@@ -106,7 +110,7 @@ function HomeChef(props) {
       backgroundColor = "#ffffff"
     }
 
-    const showToast = ()=>{
+    const showToast = () => {
       ToastAndroid.show(
         "Bàn trống",
         ToastAndroid.SHORT,
@@ -121,10 +125,10 @@ function HomeChef(props) {
         item={item}
         onPress={() => {
           if (item.color === "Orange") {
-            navigation.navigate('WaiterDetailOrder', { nameTable: item.nameTable, slug: item.slug })
+            navigation.navigate('ChefDetailOrder', { nameTable: item.nameTable, slug: item.slug, user: user, name: name, socket: socket })
           }
           else if (item.color === "Green") {
-            navigation.navigate('ChefPayOrder',{ nameTable: item.nameTable, slug: item.slug })
+            navigation.navigate('ChefPayOrder', { nameTable: item.nameTable, slug: item.slug })
           }
           else if (item.color === "Blue") {
             navigation.navigate('WaiterCompleteFood', { nameTable: item.nameTable, slug: item.slug })
@@ -140,18 +144,18 @@ function HomeChef(props) {
 
   return (
     <>
-      
-      <View style={styles.container}>
-      <FlatList
-        data={dinnerTable}
-        numColumns={2}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.slug}
-      />
 
-    </View>
+      <View style={styles.container}>
+        <FlatList
+          data={dinnerTable}
+          numColumns={2}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.slug}
+        />
+
+      </View>
     </>
-    
+
   );
 
 }

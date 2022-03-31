@@ -45,6 +45,13 @@ function Login(props) {
             console.log(e)
         }
     }
+    const storeName = async (value) => {
+        try {
+            await AsyncStorage.setItem('name', value)
+        } catch (e) {
+            console.log(e)
+        }
+    }
 
     return (
         <>
@@ -79,14 +86,17 @@ function Login(props) {
                                 }
                                 else if (response.data.position === "Phục vụ") {
                                     storeData(response.data.userName)
+                                    storeName(response.data.name)
                                     navigation.navigate('HomeWaiter', { data: response.data })
                                 }
                                 else if (response.data.position === "Shipper") {
                                     storeData(response.data.userName)
+                                    storeName(response.data.name)
                                     navigation.navigate('HomeShipper', { data: response.data })
                                 }
                                 else {
                                     storeData(response.data.userName)
+                                    storeName(response.data.name)
                                     navigation.navigate('HomeChef', { data: response.data })
                                 }
                             }

@@ -38,7 +38,7 @@ function WaiterPayOrder(props) {
       <TouchableOpacity
         onPress={
           ()=>{
-            socket.emit("sendNotification",{
+            socket.emit("sendNotificationAddOrder",{
               senderName: user,
             })
           }

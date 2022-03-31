@@ -10,7 +10,7 @@ import { Dimensions } from 'react-native';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 import { MaterialIcons } from '@expo/vector-icons';
-axios.defaults.baseURL = 'http://192.168.1.16:8002';
+axios.defaults.baseURL = 'http://192.168.1.21:8002';
 import { ToastProvider } from 'react-native-toast-notifications'
 import Constants from 'expo-constants';
 
@@ -25,7 +25,7 @@ export default function App() {
       fontSize: 15,
       paddingHorizontal: windowWidth*0.06
      }}
-    //  successColor="#00e64d"
+     successColor="#00e64d"
     >
       <Navigation />
     </ToastProvider>

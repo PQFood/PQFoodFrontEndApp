@@ -14,6 +14,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CurrencyFormat from 'react-currency-format';
 import { set } from 'react-native-reanimated';
+import { LogBox } from 'react-native';
 
 
 function WaiterAddOrder(props) {
@@ -29,15 +30,16 @@ function WaiterAddOrder(props) {
   const [drinkState, setDrinkState] = useState(null)
   const [note, setNote] = useState('')
   const [user, setUser] = useState('')
-  const getUser = async () => {
-    try {
-      const value = await AsyncStorage.getItem('user')
-      await setUser(value)
-    } catch (e) {
-      console.log(e)
-    }
-  }
-  if(user === '') getUser()
+  const [name, setName] = useState('')
+  const [socket, setSocket] = useState(null)
+  LogBox.ignoreLogs([
+    'Non-serializable values were found in the navigation state',
+  ]);
+  useEffect(() => {
+    setUser(route.params.user);
+    setName(route.params.name);
+    setSocket(route.params.socket);
+  }, [])
   const getmenu = () => {
     axios({
       method: 'get',
@@ -54,7 +56,7 @@ function WaiterAddOrder(props) {
         console.log(error)
       })
   }
-  useEffect(async() => {
+  useEffect(async () => {
     await getmenu()
   }, [])
 
@@ -390,7 +392,7 @@ function WaiterAddOrder(props) {
           <View>
             <TouchableOpacity style={{ backgroundColor: "#ffcc66", alignItems: "center", height: 40 }}
               onPress={() => {
-                if(total > 0){
+                if (total > 0) {
                   axios({
                     method: 'post',
                     url: '/waiter/addOrder',
@@ -406,7 +408,13 @@ function WaiterAddOrder(props) {
                     }
                   })
                     .then(response => {
-                      if (response.data === "ok") navigation.navigate('HomeWaiter')
+                      if (response.data === "ok") {
+                        socket.emit("sendNotificationAddOrder", {
+                          senderName: name,
+                          table: route.params.nameTable
+                        })
+                        navigation.navigate('HomeWaiter')
+                      }
                       else alert("Đặt đơn không thành công")
                     })
                     .catch(error => {
@@ -416,7 +424,7 @@ function WaiterAddOrder(props) {
                 else {
                   alert('Vui lòng chọn ít nhất một món!')
                 }
-                
+
               }}
 
             >

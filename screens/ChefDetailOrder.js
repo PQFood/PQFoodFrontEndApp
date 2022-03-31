@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, ScrollView, FlatList, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, ScrollView, FlatList, SafeAreaView, Alert } from 'react-native';
 
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Dimensions } from 'react-native';
@@ -15,22 +15,24 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import CurrencyFormat from 'react-currency-format';
 import RenderItemOrder from '../components/RenderItemOrder';
 import RenderStaff from '../components/RenderStaff';
+import { LogBox } from 'react-native';
 
-function WaiterDetailOrder(props) {
+function ChefDetailOrder(props) {
 
   const { navigation, route } = props;
   const [user, setUser] = useState('')
+  const [name, setName] = useState('')
   const [order, SetOrder] = useState(null)
   const [loading, setLoading] = useState(true)
-  const getUser = async () => {
-    try {
-      const value = await AsyncStorage.getItem('user')
-      await setUser(value)
-    } catch (e) {
-      console.log(e)
-    }
-  }
-  if (user === '') getUser()
+  const [socket, setSocket] = useState(null)
+  LogBox.ignoreLogs([
+    'Non-serializable values were found in the navigation state',
+  ]);
+  useEffect(() => {
+    setUser(route.params.user);
+    setName(route.params.name);
+    setSocket(route.params.socket);
+  }, [])
   const getOrder = () => {
     axios({
       method: 'get',
@@ -50,7 +52,6 @@ function WaiterDetailOrder(props) {
   useEffect(async () => {
     await getOrder()
   }, [])
-  // console.log(order.staff)
   if (loading) {
     return (
       <View style={styles.container}>
@@ -115,34 +116,72 @@ function WaiterDetailOrder(props) {
           </View>
           <View style={styles.footerPage}>
             <TouchableOpacity
-            // onPress={() => {
-            //     axios({
-            //       method: 'post',
-            //       url: '/waiter/addOrder',
-            //       data: {
-            //         food: foodState,
-            //         drink: drinkState,
-            //         total: total,
-            //         nameTable: route.params.nameTable,
-            //         slugTable: route.params.slug,
-            //         note: note,
-            //         staff: user
-
-            //       }
-            //     })
-            //       .then(response => {
-            //         if (response.data === "ok") navigation.navigate('HomeWaiter')
-            //         else alert("Đặt đơn không thành công")
-            //       })
-            //       .catch(error => {
-            //         console.log(error)
-            //       })
-            //   }
-            // }
+              onPress={() => {
+                axios({
+                  method: 'get',
+                  url: '/chef/ConfirmOrder',
+                  params: {
+                    table: route.params.slug,
+                    user: user,
+                  }
+                })
+                  .then(response => {
+                    if (response.data === "ok") {
+                      socket.emit("sendNotificationUpdate", {
+                        senderName: name,
+                        table: route.params.nameTable,
+                        act: 1
+                      })
+                      navigation.navigate('HomeChef')
+                    }
+                    else alert("Không thể xác nhận hóa đơn")
+                  })
+                  .catch(error => {
+                    console.log(error)
+                  })
+              }}
             >
-              <Text style={[styles.textBold, styles.btnFooter]}>Cập nhật</Text>
+              <Text style={[styles.textBold, styles.btnFooter]}>Xác nhận</Text>
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                Alert.alert(
+                  "Cảnh báo",
+                  "Bạn có chắc muốn hủy hóa đơn này?",
+                  [
+                    {
+                      text: "Bỏ qua",
+                    },
+                    { text: "Xác nhận", onPress: () => {
+                      axios({
+                        method: 'get',
+                        url: '/chef/deleteOrder',
+                        params: {
+                          table: route.params.slug,
+                          user: user
+                        }
+                      })
+                        .then(response => {
+                          if (response.data === "ok") {
+                            socket.emit("sendNotificationUpdate", {
+                              senderName: name,
+                              table: route.params.nameTable,
+                              act: 2
+                            })
+                            navigation.navigate('HomeChef')
+                          }
+                          else alert("Không thể xóa hóa đơn")
+                        })
+                        .catch(error => {
+                          console.log(error)
+                        })
+                     
+                    } }
+                  ]
+                );
+
+              }}
+            >
               <Text style={[styles.textBold, styles.btnFooter]}>Hủy</Text>
             </TouchableOpacity>
           </View>
@@ -221,18 +260,18 @@ const styles = StyleSheet.create({
   },
   footerPage: {
     // backgroundColor: "#ffcc66", 
-    alignItems: "center", 
-    height: 45, 
-    flex: 1, 
-    flexDirection: "row", 
+    alignItems: "center",
+    height: 45,
+    flex: 1,
+    flexDirection: "row",
     justifyContent: "space-between",
   },
   btnFooter: {
-    lineHeight: 45, 
-    backgroundColor: "#ffcc66", 
-    width: windowWidth*0.495,
+    lineHeight: 45,
+    backgroundColor: "#ffcc66",
+    width: windowWidth * 0.495,
     textAlign: "center",
   }
 });
 
-export default WaiterDetailOrder;
+export default ChefDetailOrder;
