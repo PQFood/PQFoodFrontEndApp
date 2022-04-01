@@ -1,22 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, TextInput, Alert, FlatList, ToastAndroid } from 'react-native';
-
-import { FontAwesome5 } from '@expo/vector-icons';
-import { Dimensions } from 'react-native';
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
-import Constants from 'expo-constants';
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, RefreshControl } from 'react-native';
 import { useToast } from "react-native-toast-notifications";
-
 import axios from 'axios';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useIsFocused } from '@react-navigation/native'
-import Toast from 'react-native-toast-message';
 import { io } from "socket.io-client";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import URL from '../components/UrlSocketIO';
+import showToast from '../components/ShowToast';
 
 function HomeChef(props) {
 
@@ -27,6 +17,8 @@ function HomeChef(props) {
   const toast = useToast();
   const [dinnerTable, setDinnerTable] = useState(null)
   const isFocused = useIsFocused()
+  const [refreshing, setRefreshing] = React.useState(false);
+
   const getdinnerTable = () => {
     axios({
       method: 'get',
@@ -42,10 +34,10 @@ function HomeChef(props) {
 
   useEffect(() => {
     getdinnerTable()
-    const intervalId = setInterval(() => {
-      getdinnerTable()
-    }, 60000)
-    return () => clearInterval(intervalId);
+    // const intervalId = setInterval(() => {
+    //   getdinnerTable()
+    // }, 60000)
+    // return () => clearInterval(intervalId);
   }, [isFocused])
 
 
@@ -86,12 +78,33 @@ function HomeChef(props) {
       getdinnerTable()
     })
   }, [socket])
-
+  useEffect(() => {
+    socket?.on("getNotificationWaiterUpdate", data => {
+      getdinnerTable()
+      toast.show(data.message, {
+        type: data.type,
+        placement: "top",
+        duration: 60000,
+        offset: 30,
+        animationType: "slide-in",
+      });
+    })
+  }, [socket])
   const Item = ({ item, onPress, backgroundColor, textColor }) => (
     <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
       <Text style={[styles.title, textColor]}>{item.nameTable}</Text>
     </TouchableOpacity>
   );
+
+  const wait = (timeout) => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+  }
+
+  const onRefresh = () => {
+    getdinnerTable();
+    setRefreshing(true);
+    wait(1200).then(() => setRefreshing(false));
+  };
 
 
 
@@ -110,16 +123,6 @@ function HomeChef(props) {
       backgroundColor = "#ffffff"
     }
 
-    const showToast = () => {
-      ToastAndroid.show(
-        "Bàn trống",
-        ToastAndroid.SHORT,
-        ToastAndroid.BOTTOM,
-        25,
-        50
-      )
-    }
-
     return (
       <Item
         item={item}
@@ -131,10 +134,10 @@ function HomeChef(props) {
             navigation.navigate('ChefPayOrder', { nameTable: item.nameTable, slug: item.slug })
           }
           else if (item.color === "Blue") {
-            navigation.navigate('WaiterCompleteFood', { nameTable: item.nameTable, slug: item.slug })
+            navigation.navigate('ChefCompleteFood', { nameTable: item.nameTable, slug: item.slug, user: user, name: name, socket: socket })
           }
           else {
-            showToast()
+            showToast("Bàn trống")
           }
         }}
         backgroundColor={{ backgroundColor }}
@@ -147,6 +150,13 @@ function HomeChef(props) {
 
       <View style={styles.container}>
         <FlatList
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              colors={["#ffcc66", "green", "blue"]}
+            />
+          }
           data={dinnerTable}
           numColumns={2}
           renderItem={renderItem}

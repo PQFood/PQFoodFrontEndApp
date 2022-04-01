@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, TextInput, Alert, RefreshControl } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, TextInput, Alert } from 'react-native';
 
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Dimensions } from 'react-native';
@@ -9,8 +9,6 @@ const windowHeight = Dimensions.get('window').height;
 import Constants from 'expo-constants';
 
 import axios from 'axios';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 

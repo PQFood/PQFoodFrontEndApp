@@ -15,6 +15,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import URL from '../components/UrlSocketIO';
 import { io } from "socket.io-client";
 import { LogBox } from 'react-native';
+import styles from '../components/styles';
+
 
 function WaiterPayOrder(props) {
   // console.log(URL)

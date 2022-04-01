@@ -13,9 +13,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CurrencyFormat from 'react-currency-format';
-import { set } from 'react-native-reanimated';
 import { LogBox } from 'react-native';
-
+import showToast from '../components/ShowToast';
+import styles from '../components/styles';
 
 function WaiterAddOrder(props) {
 
@@ -113,6 +113,9 @@ function WaiterAddOrder(props) {
       })
       setFoodCheck(!foodCheck)
     }
+    else{
+      showToast("Không thể giảm tiếp!")
+    }
   }
 
   const increaseFood = (item, index) => {
@@ -153,6 +156,9 @@ function WaiterAddOrder(props) {
         return total - item.price
       })
       setFoodCheck(!drinkCheck)
+    }
+    else{
+      showToast("Không thể giảm tiếp!")
     }
   }
 
@@ -354,12 +360,7 @@ function WaiterAddOrder(props) {
                   keyExtractor={(item) => item.slug}
                   ListFooterComponent={
                     <TextInput
-                      style={{
-                        backgroundColor: "#ffffff",
-                        borderWidth: 1,
-                        paddingLeft: 10,
-                        borderRadius: 10,
-                      }}
+                      style={styles.noteStyle}
                       multiline
                       numberOfLines={4}
                       onChangeText={(text) => setNote(text)}
@@ -428,7 +429,7 @@ function WaiterAddOrder(props) {
               }}
 
             >
-              <Text style={[styles.textBold, { lineHeight: 40 }]}>Lập phiếu gọi món</Text>
+              <Text style={[styles.textBold, { lineHeight: 40 }]}>Lập hóa đơn</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -437,71 +438,5 @@ function WaiterAddOrder(props) {
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  title: {
-    fontSize: 20,
-    color: "#ff6600",
-    marginVertical: 6
-  },
-  ul: {
-    fontSize: 18,
-    color: "#ff6600",
-    textAlign: "center"
-  },
-  tinyLogo: {
-    width: 80,
-    height: 80,
-  },
-  item: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: windowWidth * 0.9,
-    marginVertical: 8,
-    backgroundColor: "#ffffff",
-    padding: 10,
-    borderRadius: 10
-  },
-  groupInfo: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: windowWidth * 0.6
-  },
-  footer: {
-    height: windowHeight * 0.1,
-  },
-  footer2: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingHorizontal: 40,
-    paddingVertical: 6,
-    backgroundColor: "#ccffcc"
-  }
-  ,
-  textBold: {
-    fontWeight: "bold",
-    fontSize: 20
-  },
-  textChangeQuantity: {
-    color: "white",
-    fontSize: 18,
-    fontWeight: "bold"
-  },
-  changeQuantity: {
-    backgroundColor: "#ff6600",
-    marginLeft: 10,
-    paddingHorizontal: 15,
-    paddingVertical: 4,
-    borderRadius: 10
-  }
-});
 
 export default WaiterAddOrder;

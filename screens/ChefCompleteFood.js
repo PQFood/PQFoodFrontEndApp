@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, Alert, FlatList, RefreshControl } from 'react-native';
-
-import { FontAwesome5 } from '@expo/vector-icons';
-import { Dimensions } from 'react-native';
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
-import Constants from 'expo-constants';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, RefreshControl, FlatList } from 'react-native';
 
 import axios from 'axios';
 import CurrencyFormat from 'react-currency-format';
@@ -14,8 +7,8 @@ import RenderItemOrder from '../components/RenderItemOrder';
 import RenderStaff from '../components/RenderStaff';
 import { LogBox } from 'react-native';
 import styles from '../components/styles';
-
-function WaiterDetailOrder(props) {
+import { useIsFocused } from '@react-navigation/native'
+function ChefCompleteFood(props) {
 
   const { navigation, route } = props;
   const [user, setUser] = useState('')
@@ -24,6 +17,7 @@ function WaiterDetailOrder(props) {
   const [loading, setLoading] = useState(true)
   const [socket, setSocket] = useState(null)
   const [refreshing, setRefreshing] = React.useState(false);
+  const isFocused = useIsFocused()
 
   LogBox.ignoreLogs([
     'Non-serializable values were found in the navigation state',
@@ -33,6 +27,7 @@ function WaiterDetailOrder(props) {
     setName(route.params.name);
     setSocket(route.params.socket);
   }, [])
+
   const getOrder = () => {
     axios({
       method: 'get',
@@ -49,10 +44,13 @@ function WaiterDetailOrder(props) {
         console.log(error)
       })
   }
-  useEffect(async () => {
-    await getOrder()
+  useEffect(() => {
+    getOrder()
   }, [])
 
+  useEffect(() => {
+    getOrder()
+  }, [isFocused])
   const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
   }
@@ -62,6 +60,7 @@ function WaiterDetailOrder(props) {
     setRefreshing(true);
     wait(1200).then(() => setRefreshing(false));
   };
+
   if (loading) {
     return (
       <View style={styles.container}>
@@ -129,53 +128,13 @@ function WaiterDetailOrder(props) {
           <View style={styles.footerPage}>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('WaiterEditOrder', { nameTable: route.params.nameTable, slug: route.params.slug, user: user, name: name, socket: socket })
+                navigation.navigate('ChefNotification', { nameTable: route.params.nameTable, slug: route.params.slug, user: user, name: name, socket: socket })
               }}
             >
-              <Text style={[styles.textBold, styles.btnFooter]}>Cập nhật</Text>
+              <Text style={[styles.textBold, styles.btnFooter]}>Thông báo</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                Alert.alert(
-                  "Cảnh báo",
-                  "Bạn có chắc muốn hủy hóa đơn này?",
-                  [
-                    {
-                      text: "Bỏ qua",
-                    },
-                    {
-                      text: "Xác nhận", onPress: () => {
-                        axios({
-                          method: 'get',
-                          url: '/chef/deleteOrder',
-                          params: {
-                            table: route.params.slug,
-                            user: user
-                          }
-                        })
-                          .then(response => {
-                            if (response.data === "ok") {
-                              socket.emit("sendNotificationWaiterUpdate", {
-                                senderName: name,
-                                table: route.params.nameTable,
-                                act: 2
-                              })
-                              navigation.navigate('HomeWaiter')
-                            }
-                            else alert("Không thể xóa hóa đơn")
-                          })
-                          .catch(error => {
-                            console.log(error)
-                          })
-
-                      }
-                    }
-                  ]
-                );
-
-              }}
-            >
-              <Text style={[styles.textBold, styles.btnFooter]}>Hủy</Text>
+            <TouchableOpacity>
+              <Text style={[styles.textBold, styles.btnFooter]}>Hoàn Thành</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -187,4 +146,4 @@ function WaiterDetailOrder(props) {
 
 
 
-export default WaiterDetailOrder;
+export default ChefCompleteFood;

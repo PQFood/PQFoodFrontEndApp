@@ -1,23 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, TextInput, Alert, FlatList } from 'react-native';
-
-import { FontAwesome5 } from '@expo/vector-icons';
-import { Dimensions } from 'react-native';
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
-import Constants from 'expo-constants';
-
+import { StyleSheet, Text, View, TouchableOpacity, Alert, FlatList, RefreshControl } from 'react-native';
 import axios from 'axios';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useIsFocused } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ToastProvider } from 'react-native-toast-notifications'
 import { useToast } from "react-native-toast-notifications";
 import URL from '../components/UrlSocketIO';
-
-
 import { io } from "socket.io-client";
 
 function HomeWaiter(props) {
@@ -28,7 +15,22 @@ function HomeWaiter(props) {
   const [user, setUser] = useState('')
   const [name, setName] = useState('')
   const [socket, setSocket] = useState(null)
+  const [refreshing, setRefreshing] = React.useState(false);
+  const [dinnerTable, setDinnerTable] = useState(null)
+  const isFocused = useIsFocused()
 
+  const getdinnerTable = () => {
+    axios({
+      method: 'get',
+      url: '/waiter/homeWaiter',
+    })
+      .then(response => {
+        setDinnerTable(response.data)
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }
   const getData = async () => {
     try {
       const value1 = await AsyncStorage.getItem('user')
@@ -54,8 +56,8 @@ function HomeWaiter(props) {
   useEffect(() => {
     socket?.on("getNotificationUpdate", data => {
       getdinnerTable()
-      toast.show(data, {
-        type: "success",
+      toast.show(data.message, {
+        type: data.type,
         placement: "top",
         duration: 30000,
         offset: 30,
@@ -63,40 +65,57 @@ function HomeWaiter(props) {
       });
     })
   }, [socket])
+  useEffect(() => {
+    socket?.on("getNotificationWaiterUpdate", data => {
+      getdinnerTable()
+      toast.show(data.message, {
+        type: data.type,
+        placement: "top",
+        duration: 60000,
+        offset: 30,
+        animationType: "slide-in",
+      });
+    })
+  }, [socket])
 
+  useEffect(() => {
+    socket?.on("getNotificationChefNote", data => {
+      getdinnerTable()
+      toast.show(data, {
+        type: "normal",
+        placement: "top",
+        duration: 60000,
+        offset: 30,
+        animationType: "slide-in",
+      });
+    })
+  }, [socket])
+
+  useEffect(() => {
+    getdinnerTable()
+    // const intervalId = setInterval(() => {
+    //   getdinnerTable()
+    // }, 60000)
+
+    // return () => clearInterval(intervalId);
+
+  }, [isFocused])
+
+  const wait = (timeout) => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+  }
+
+  const onRefresh = () => {
+    getdinnerTable();
+    setRefreshing(true);
+    wait(1200).then(() => setRefreshing(false));
+  };
 
   const Item = ({ item, onPress, backgroundColor, textColor }) => (
     <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
       <Text style={[styles.title, textColor]}>{item.nameTable}</Text>
     </TouchableOpacity>
   );
-
-  const [dinnerTable, setDinnerTable] = useState(null)
-  const isFocused = useIsFocused()
-  const getdinnerTable = () => {
-    axios({
-      method: 'get',
-      url: '/waiter/homeWaiter',
-    })
-      .then(response => {
-        setDinnerTable(response.data)
-      })
-      .catch(error => {
-        console.log(error)
-      })
-  }
-
-  useEffect(() => {
-    getdinnerTable()
-    const intervalId = setInterval(() => {
-      getdinnerTable()
-    }, 60000)
-
-    return () => clearInterval(intervalId);
-
-  }, [isFocused])
-
-
   const renderItem = ({ item }) => {
     var backgroundColor = ""
     if (item.color === "Orange") {
@@ -117,7 +136,7 @@ function HomeWaiter(props) {
         item={item}
         onPress={() => {
           if (item.color === "Orange") {
-            navigation.navigate('WaiterDetailOrder', { nameTable: item.nameTable, slug: item.slug, user: user, name: name })
+            navigation.navigate('WaiterDetailOrder', { nameTable: item.nameTable, slug: item.slug, user: user, name: name, socket: socket })
           }
           else if (item.color === "Green") {
             navigation.navigate('WaiterPayOrder', { nameTable: item.nameTable, slug: item.slug, user: user, name: name, socket: socket })
@@ -138,6 +157,13 @@ function HomeWaiter(props) {
   return (
     <View style={styles.container}>
       <FlatList
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={["#ffcc66", "green", "blue"]}
+          />
+        }
         data={dinnerTable}
         numColumns={2}
         renderItem={renderItem}

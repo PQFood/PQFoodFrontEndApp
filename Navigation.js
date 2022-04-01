@@ -28,6 +28,8 @@ import WaiterCompleteFood from './screens/WaiterCompleteFood'
 import WaiterEditOrder from './screens/WaiterEditOrder'
 import ChefPayOrder from './screens/ChefPayOrder'
 import ChefDetailOrder from './screens/ChefDetailOrder';
+import ChefCompleteFood from './screens/ChefCompleteFood';
+import ChefNotification from './screens/ChefNotification';
 
 function Navigation(props) {
 
@@ -63,10 +65,12 @@ function Navigation(props) {
                 <Stack.Screen name="WaiterDetailOrder" component={WaiterDetailOrder} options={{ title: "Chi Tiết Hóa Đơn", headerStyle: { backgroundColor: '#ffcc66' }, headerTitleAlign: "center" }} />
                 <Stack.Screen name="WaiterPayOrder" component={WaiterPayOrder} options={{ title: "Thanh Toán Hóa Đơn", headerStyle: { backgroundColor: '#99ff66' }, headerTitleAlign: "center" }} />
                 <Stack.Screen name="WaiterAddOrder" component={WaiterAddOrder} options={{ title: "Thêm Hóa Đơn", headerTitleAlign: "center" }} />
-                <Stack.Screen name="WaiterCompleteFood" component={WaiterCompleteFood} options={{ title: "Hoàn thành món", headerTitleAlign: "center" }} />
-                <Stack.Screen name="WaiterEditOrder" component={WaiterEditOrder} options={{ title: "Cập nhật phiếu gọi món", headerTitleAlign: "center" }} />
+                <Stack.Screen name="WaiterCompleteFood" component={WaiterCompleteFood} options={{ title: "Hoàn Thành Món", headerTitleAlign: "center", headerStyle: { backgroundColor: '#0099ff' }, }} />
+                <Stack.Screen name="WaiterEditOrder" component={WaiterEditOrder} options={{ title: "Cập nhật Hóa Đơn", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
                 <Stack.Screen name="ChefPayOrder" component={ChefPayOrder} options={{ title: "Chờ thanh Toán", headerTitleAlign: "center" }} />
                 <Stack.Screen name="ChefDetailOrder" component={ChefDetailOrder} options={{ title: "Chi Tiết Hóa Đơn",headerStyle: { backgroundColor: '#ffcc66' }, headerTitleAlign: "center" }} />
+                <Stack.Screen name="ChefCompleteFood" component={ChefCompleteFood} options={{ title: "Hoàn Thành Món", headerTitleAlign: "center", headerStyle: { backgroundColor: '#0099ff' }, }} />
+                <Stack.Screen name="ChefNotification" component={ChefNotification} options={{ title: "Thông báo", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
 
             </Stack.Navigator>
         </NavigationContainer>
