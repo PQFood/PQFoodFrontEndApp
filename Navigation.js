@@ -39,7 +39,7 @@ function Navigation(props) {
     const HomeWaiterDrawer = () => {
         return (
             <WaiterDrawer.Navigator initialRouteName="Home">
-                <WaiterDrawer.Screen name="Home" component={HomeWaiter} options={{ title: "Home", headerStyle: { backgroundColor: '#ffcc66',}, headerTitleAlign: "center",  }}/>
+                <WaiterDrawer.Screen name="Home" component={HomeWaiter} options={{ title: "Trang chủ phục vụ", headerStyle: { backgroundColor: '#ffcc66',}, headerTitleAlign: "center",  }}/>
                 <WaiterDrawer.Screen name="Test" component={Test} />
             </WaiterDrawer.Navigator>
         );
@@ -48,7 +48,7 @@ function Navigation(props) {
     const HomeChefDrawer = () => {
         return (
             <WaiterDrawer.Navigator initialRouteName="Home">
-                <WaiterDrawer.Screen name="Home" component={HomeChef} options={{ title: "Home", headerStyle: { backgroundColor: '#ffcc66',}, headerTitleAlign: "center",  }}/>
+                <WaiterDrawer.Screen name="Home" component={HomeChef} options={{ title: "Trang chủ dầu bếp", headerStyle: { backgroundColor: '#ffcc66',}, headerTitleAlign: "center",  }}/>
                 <WaiterDrawer.Screen name="Test" component={Test} />
             </WaiterDrawer.Navigator>
         );
@@ -67,7 +67,7 @@ function Navigation(props) {
                 <Stack.Screen name="WaiterAddOrder" component={WaiterAddOrder} options={{ title: "Thêm Hóa Đơn", headerTitleAlign: "center" }} />
                 <Stack.Screen name="WaiterCompleteFood" component={WaiterCompleteFood} options={{ title: "Hoàn Thành Món", headerTitleAlign: "center", headerStyle: { backgroundColor: '#0099ff' }, }} />
                 <Stack.Screen name="WaiterEditOrder" component={WaiterEditOrder} options={{ title: "Cập nhật Hóa Đơn", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
-                <Stack.Screen name="ChefPayOrder" component={ChefPayOrder} options={{ title: "Chờ thanh Toán", headerTitleAlign: "center" }} />
+                <Stack.Screen name="ChefPayOrder" component={ChefPayOrder} options={{ title: "Chờ thanh Toán", headerTitleAlign: "center", headerStyle: { backgroundColor: '#99ff66' } }} />
                 <Stack.Screen name="ChefDetailOrder" component={ChefDetailOrder} options={{ title: "Chi Tiết Hóa Đơn",headerStyle: { backgroundColor: '#ffcc66' }, headerTitleAlign: "center" }} />
                 <Stack.Screen name="ChefCompleteFood" component={ChefCompleteFood} options={{ title: "Hoàn Thành Món", headerTitleAlign: "center", headerStyle: { backgroundColor: '#0099ff' }, }} />
                 <Stack.Screen name="ChefNotification" component={ChefNotification} options={{ title: "Thông báo", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />

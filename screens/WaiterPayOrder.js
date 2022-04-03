@@ -1,55 +1,141 @@
 import React, { useState, useEffect } from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, TextInput, Alert, RefreshControl } from 'react-native';
-
-import { FontAwesome5 } from '@expo/vector-icons';
-import { Dimensions } from 'react-native';
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
-import Constants from 'expo-constants';
+import {Text, View, TouchableOpacity, TextInput, FlatList } from 'react-native';
 
 import axios from 'axios';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import URL from '../components/UrlSocketIO';
-import { io } from "socket.io-client";
+import CurrencyFormat from 'react-currency-format';
+import RenderItemOrder from '../components/RenderItemOrder';
+import RenderStaff from '../components/RenderStaff';
 import { LogBox } from 'react-native';
 import styles from '../components/styles';
 
-
 function WaiterPayOrder(props) {
-  // console.log(URL)
+
   const { navigation, route } = props;
   const [user, setUser] = useState('')
+  const [name, setName] = useState('')
+  const [order, SetOrder] = useState(null)
+  const [loading, setLoading] = useState(true)
   const [socket, setSocket] = useState(null)
   LogBox.ignoreLogs([
     'Non-serializable values were found in the navigation state',
   ]);
+
   useEffect(() => {
-    setUser(route.params.user)
+    setUser(route.params.user);
+    setName(route.params.name);
     setSocket(route.params.socket);
   }, [])
-  // console.log(route.params.socket)
-  return (
-    <View style={{
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center'
-    }}>
-      <TouchableOpacity
-        onPress={
-          ()=>{
-            socket.emit("sendNotificationAddOrder",{
-              senderName: user,
-            })
-          }
-        }
-      >
-        <Text>pay {route.params.user}</Text>
-      </TouchableOpacity>
-    </View>
-  );
+  const getOrder = () => {
+    axios({
+      method: 'get',
+      url: '/waiter/getOrder',
+      params: {
+        table: route.params.slug
+      }
+    })
+      .then(response => {
+        SetOrder(response.data)
+        setLoading(false)
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }
+  useEffect(() => {
+    getOrder()
+  }, [])
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <Text style={{
+          fontSize: 20,
+          fontWeight: "bold",
+          color: "#ff6600"
+        }}>Đang tải...</Text>
+      </View>
+    )
+  }
+  else {
+    return (
+      <>
+        <View style={styles.container}>
+          <Text style={styles.title}>{route.params.nameTable}</Text>
+
+          <FlatList
+            ListFooterComponent={
+              <>
+                <FlatList
+                  data={order.staff}
+                  ListHeaderComponent={<Text style={styles.ul}>Nhân viên xử lý</Text>}
+                  renderItem={RenderStaff}
+                  keyExtractor={(item) => item.id}
+                  ListFooterComponent={
+                    <TextInput
+                      style={styles.noteStyle}
+                      multiline
+                      numberOfLines={4}
+                      value={order.note}
+                      editable={false}
+                      selectTextOnFocus={false}
+                    />
+                  }
+                />
+              </>
+            }
+            ListHeaderComponent={
+              <Text style={styles.ul}>Món gọi</Text>
+            }
+            data={order.order}
+            renderItem={RenderItemOrder}
+            keyExtractor={(item) => item.slug}
+          />
+        </View>
+        <View style={styles.footer}>
+          <View style={styles.footer2}>
+            <Text style={styles.textBold}>Tổng Tiền: </Text>
+            <CurrencyFormat
+              value={order.total}
+              displayType={'text'}
+              thousandSeparator={true}
+              suffix={' đ'}
+              renderText={value => <Text style={styles.textBold}>{value}</Text>}
+            />
+          </View>
+          <View>
+            <TouchableOpacity style={{ backgroundColor: "#ffcc66", alignItems: "center", height: 40 }}
+              onPress={() => {
+                axios({
+                  method: 'get',
+                  url: '/waiter/completePayOrder',
+                  params: {
+                    table: route.params.slug,
+                    user: user
+                  }
+                })
+                  .then(response => {
+                    if (response.data === "ok") {
+                      socket.emit("sendNotificationWaiterCompletePayOrder", {
+                        senderName: name,
+                        table: route.params.nameTable,
+                      })
+                      navigation.navigate('HomeWaiter')
+                    }
+                    else alert("Không thể hoàn thành hóa đơn")
+                  })
+                  .catch(error => {
+                    console.log(error)
+                  })
+              }}
+            >
+              <Text style={[styles.textBold, { lineHeight: 40 }]}>Xác nhận thanh toán</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </>
+
+    );
+  }
 }
 
 export default WaiterPayOrder;

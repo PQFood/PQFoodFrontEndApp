@@ -76,6 +76,7 @@ function Login(props) {
                                         text: 'Ok',
                                     }]
                                 )
+                                
                             }
                             else {
                                 if (response.data.position === "Chủ quán") {

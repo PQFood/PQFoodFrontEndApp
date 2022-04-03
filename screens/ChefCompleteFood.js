@@ -133,7 +133,32 @@ function ChefCompleteFood(props) {
             >
               <Text style={[styles.textBold, styles.btnFooter]}>Thông báo</Text>
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity
+            onPress={()=>{
+              axios({
+                method: 'get',
+                url: '/chef/completeOrder',
+                params: {
+                  table: route.params.slug,
+                  user: user
+                }
+              })
+                .then(response => {
+                  if (response.data === "ok") {
+                    socket.emit("sendNotificationChefCompleteOrder", {
+                      senderName: name,
+                      table: route.params.nameTable,
+                      act: 2
+                    })
+                    navigation.navigate('HomeChef')
+                  }
+                  else alert("Không thể hoàn thành hóa đơn")
+                })
+                .catch(error => {
+                  console.log(error)
+                })
+            }}
+            >
               <Text style={[styles.textBold, styles.btnFooter]}>Hoàn Thành</Text>
             </TouchableOpacity>
           </View>

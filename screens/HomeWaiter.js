@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Alert, FlatList, RefreshControl } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Alert, FlatList, RefreshControl, BackHandler } from 'react-native';
 import axios from 'axios';
 import { useIsFocused } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -10,7 +10,6 @@ import { io } from "socket.io-client";
 function HomeWaiter(props) {
 
   const toast = useToast();
-
   const { navigation, route } = props;
   const [user, setUser] = useState('')
   const [name, setName] = useState('')
@@ -18,7 +17,6 @@ function HomeWaiter(props) {
   const [refreshing, setRefreshing] = React.useState(false);
   const [dinnerTable, setDinnerTable] = useState(null)
   const isFocused = useIsFocused()
-
   const getdinnerTable = () => {
     axios({
       method: 'get',
@@ -44,6 +42,16 @@ function HomeWaiter(props) {
   useEffect(() => {
     getData()
   }, [])
+
+  useEffect(() => {
+    getdinnerTable()
+    // const intervalId = setInterval(() => {
+    //   getdinnerTable()
+    // }, 60000)
+
+    // return () => clearInterval(intervalId);
+
+  }, [isFocused])
 
   useEffect(() => {
     setSocket(io(URL));
@@ -92,14 +100,67 @@ function HomeWaiter(props) {
   }, [socket])
 
   useEffect(() => {
-    getdinnerTable()
-    // const intervalId = setInterval(() => {
-    //   getdinnerTable()
-    // }, 60000)
+    socket?.on("getNotificationChefCompleteOrder", data => {
+      getdinnerTable()
+      toast.show(data, {
+        type: "success",
+        placement: "top",
+        duration: 60000,
+        offset: 30,
+        animationType: "slide-in",
+      });
+    })
+  }, [socket])
 
-    // return () => clearInterval(intervalId);
+  useEffect(() => {
+    socket?.on("getNotificationWaiterCompleteOrder", data => {
+      getdinnerTable()
+    })
+  }, [socket])
 
-  }, [isFocused])
+  useEffect(() => {
+    socket?.on("getNotificationWaiterCompletePayOrder", data => {
+      getdinnerTable()
+    })
+  }, [socket])
+
+  useEffect(() => {
+    socket?.on("getNotificationBookShip", data => {
+      getdinnerTable()
+      toast.show(data, {
+        type: "success",
+        placement: "top",
+        duration: 60000,
+        offset: 30,
+        animationType: "slide-in",
+      });
+    })
+  }, [socket])
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => {
+        Alert.alert("Thông báo", "Bạn có chắc muốn thoát ứng dụng?", [
+          {
+            text: "Hủy",
+            onPress: () => null,
+            style: "cancel"
+          },
+          {
+            text: "Xác nhận", onPress: () => {
+              socket?.emit('forceDisconnect');
+              navigation.navigate("Login")
+            }
+          }
+        ]);
+        return true;
+      }
+    );
+
+    return () => backHandler.remove();
+  }, [socket]);
+
 
   const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
@@ -142,7 +203,7 @@ function HomeWaiter(props) {
             navigation.navigate('WaiterPayOrder', { nameTable: item.nameTable, slug: item.slug, user: user, name: name, socket: socket })
           }
           else if (item.color === "Blue") {
-            navigation.navigate('WaiterCompleteFood', { nameTable: item.nameTable, slug: item.slug, name: name, user: user })
+            navigation.navigate('WaiterCompleteFood', { nameTable: item.nameTable, slug: item.slug, name: name, user: user, socket: socket })
           }
           else {
             navigation.navigate('WaiterAddOrder', { nameTable: item.nameTable, slug: item.slug, name: name, user: user, socket: socket })

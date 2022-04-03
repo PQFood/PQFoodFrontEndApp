@@ -1,38 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, ScrollView, FlatList, SafeAreaView } from 'react-native';
-
-import { FontAwesome5 } from '@expo/vector-icons';
-import { Dimensions } from 'react-native';
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
-import Constants from 'expo-constants';
-
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, FlatList } from 'react-native';
 import axios from 'axios';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import CurrencyFormat from 'react-currency-format';
 import RenderItemOrder from '../components/RenderItemOrder';
 import RenderStaff from '../components/RenderStaff';
+import { LogBox } from 'react-native';
 import styles from '../components/styles';
 
 function WaiterCompleteFood(props) {
 
   const { navigation, route } = props;
   const [user, setUser] = useState('')
+  const [name, setName] = useState('')
   const [order, SetOrder] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [socket, setSocket] = useState(null)
+  LogBox.ignoreLogs([
+    'Non-serializable values were found in the navigation state',
+  ]);
 
-  const getUser = async () => {
-    try {
-      const value = await AsyncStorage.getItem('user')
-      await setUser(value)
-    } catch (e) {
-      console.log(e)
-    }
-  }
-  if (user === '') getUser()
+  useEffect(() => {
+    setUser(route.params.user);
+    setName(route.params.name);
+    setSocket(route.params.socket);
+  }, [])
   const getOrder = () => {
     axios({
       method: 'get',
@@ -110,37 +102,33 @@ function WaiterCompleteFood(props) {
               renderText={value => <Text style={styles.textBold}>{value}</Text>}
             />
           </View>
-          <View style={styles.footerPage}>
-            <TouchableOpacity
-            // onPress={() => {
-            //     axios({
-            //       method: 'post',
-            //       url: '/waiter/addOrder',
-            //       data: {
-            //         food: foodState,
-            //         drink: drinkState,
-            //         total: total,
-            //         nameTable: route.params.nameTable,
-            //         slugTable: route.params.slug,
-            //         note: note,
-            //         staff: user
-
-            //       }
-            //     })
-            //       .then(response => {
-            //         if (response.data === "ok") navigation.navigate('HomeWaiter')
-            //         else alert("Đặt đơn không thành công")
-            //       })
-            //       .catch(error => {
-            //         console.log(error)
-            //       })
-            //   }
-            // }
+          <View>
+            <TouchableOpacity style={{ backgroundColor: "#ffcc66", alignItems: "center", height: 40 }}
+              onPress={() => {
+                axios({
+                  method: 'get',
+                  url: '/waiter/completeOrder',
+                  params: {
+                    table: route.params.slug,
+                    user: user
+                  }
+                })
+                  .then(response => {
+                    if (response.data === "ok") {
+                      socket.emit("sendNotificationWaiterCompleteOrder", {
+                        senderName: name,
+                        table: route.params.nameTable,
+                      })
+                      navigation.navigate('HomeWaiter')
+                    }
+                    else alert("Không thể hoàn thành hóa đơn")
+                  })
+                  .catch(error => {
+                    console.log(error)
+                  })
+              }}
             >
-              <Text style={[styles.textBold, styles.btnFooter]}>Cập nhật</Text>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Text style={[styles.textBold, styles.btnFooter]}>Hoàn Thành</Text>
+              <Text style={[styles.textBold, { lineHeight: 40 }]}>Hoàn Thành</Text>
             </TouchableOpacity>
           </View>
         </View>

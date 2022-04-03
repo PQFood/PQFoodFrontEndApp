@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, RefreshControl } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, RefreshControl, BackHandler, Alert } from 'react-native';
 import { useToast } from "react-native-toast-notifications";
 import axios from 'axios';
 import { useIsFocused } from '@react-navigation/native'
@@ -36,7 +36,7 @@ function HomeChef(props) {
     getdinnerTable()
     // const intervalId = setInterval(() => {
     //   getdinnerTable()
-    // }, 60000)
+    // }, 60000*3)
     // return () => clearInterval(intervalId);
   }, [isFocused])
 
@@ -90,6 +90,50 @@ function HomeChef(props) {
       });
     })
   }, [socket])
+
+  useEffect(() => {
+    socket?.on("getNotificationChefCompleteOrder", data => {
+      getdinnerTable()
+    })
+  }, [socket])
+
+  useEffect(() => {
+    socket?.on("getNotificationWaiterCompleteOrder", data => {
+      getdinnerTable()
+    })
+  }, [socket])
+  
+  useEffect(() => {
+    socket?.on("getNotificationWaiterCompletePayOrder", data => {
+      getdinnerTable()
+    })
+  }, [socket])
+
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => {
+        Alert.alert("Thông báo", "Bạn có chắc muốn thoát ứng dụng?", [
+          {
+            text: "Hủy",
+            onPress: () => null,
+            style: "cancel"
+          },
+          {
+            text: "Xác nhận", onPress: () => {
+              socket?.emit('forceDisconnect');
+              navigation.navigate("Login")
+            }
+          }
+        ]);
+        return true;
+      }
+    );
+
+    return () => backHandler.remove();
+  }, [socket]);
+
   const Item = ({ item, onPress, backgroundColor, textColor }) => (
     <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
       <Text style={[styles.title, textColor]}>{item.nameTable}</Text>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, Alert, FlatList, RefreshControl } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, Alert, FlatList, RefreshControl, BackHandler } from 'react-native';
 
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Dimensions } from 'react-native';
@@ -14,7 +14,6 @@ import RenderItemOrder from '../components/RenderItemOrder';
 import RenderStaff from '../components/RenderStaff';
 import { LogBox } from 'react-native';
 import styles from '../components/styles';
-
 function WaiterDetailOrder(props) {
 
   const { navigation, route } = props;
@@ -24,7 +23,6 @@ function WaiterDetailOrder(props) {
   const [loading, setLoading] = useState(true)
   const [socket, setSocket] = useState(null)
   const [refreshing, setRefreshing] = React.useState(false);
-
   LogBox.ignoreLogs([
     'Non-serializable values were found in the navigation state',
   ]);
@@ -49,8 +47,8 @@ function WaiterDetailOrder(props) {
         console.log(error)
       })
   }
-  useEffect(async () => {
-    await getOrder()
+  useEffect(() => {
+    getOrder()
   }, [])
 
   const wait = (timeout) => {
