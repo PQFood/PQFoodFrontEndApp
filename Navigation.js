@@ -1,19 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { StatusBar } from 'expo-status-bar';
+import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, TextInput, Alert, RefreshControl } from 'react-native';
 
-import { FontAwesome5 } from '@expo/vector-icons';
-import { Dimensions } from 'react-native';
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
-import Constants from 'expo-constants';
 
-import axios from 'axios';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import 'react-native-gesture-handler'
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { Formik } from 'formik';
 
 import Login from './screens/Login'
 import HomeShipper from './screens/HomeShipper'
@@ -31,12 +23,14 @@ import ChefDetailOrder from './screens/ChefDetailOrder';
 import ChefCompleteFood from './screens/ChefCompleteFood';
 import ChefNotification from './screens/ChefNotification';
 
+import DrawerWaiter from './screens/DrawerWaiter';
+
 function Navigation(props) {
 
     const Stack = createNativeStackNavigator();
     const WaiterDrawer = createDrawerNavigator();
 
-    const HomeWaiterDrawer = () => {
+    const HomeWaiterDrawer = (props) => {
         return (
             <WaiterDrawer.Navigator initialRouteName="Home">
                 <WaiterDrawer.Screen name="Home" component={HomeWaiter} options={{ title: "Trang chủ phục vụ", headerStyle: { backgroundColor: '#ffcc66',}, headerTitleAlign: "center",  }}/>
@@ -60,17 +54,18 @@ function Navigation(props) {
                 <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
                 <Stack.Screen name="HomeAdmin" component={HomeAdmin} options={{ headerShown: false }} />
                 <Stack.Screen name="HomeShipper" component={HomeShipper} options={{ headerShown: false }} />
-                <Stack.Screen name="HomeWaiter" component={HomeWaiterDrawer} options={{ headerShown: false }} />
+                <Stack.Screen name="HomeWaiter" component={HomeWaiterDrawer} options={{ headerShown: false }}  />
                 <Stack.Screen name="HomeChef" component={HomeChefDrawer} options={{ headerShown: false }} />
                 <Stack.Screen name="WaiterDetailOrder" component={WaiterDetailOrder} options={{ title: "Chi Tiết Hóa Đơn", headerStyle: { backgroundColor: '#ffcc66' }, headerTitleAlign: "center" }} />
                 <Stack.Screen name="WaiterPayOrder" component={WaiterPayOrder} options={{ title: "Thanh Toán Hóa Đơn", headerStyle: { backgroundColor: '#99ff66' }, headerTitleAlign: "center" }} />
-                <Stack.Screen name="WaiterAddOrder" component={WaiterAddOrder} options={{ title: "Thêm Hóa Đơn", headerTitleAlign: "center" }} />
+                <Stack.Screen name="WaiterAddOrder" component={WaiterAddOrder} options={({route})=>({title: route.params.nameTable, headerTitleAlign: "center"})} />
                 <Stack.Screen name="WaiterCompleteFood" component={WaiterCompleteFood} options={{ title: "Hoàn Thành Món", headerTitleAlign: "center", headerStyle: { backgroundColor: '#0099ff' }, }} />
                 <Stack.Screen name="WaiterEditOrder" component={WaiterEditOrder} options={{ title: "Cập nhật Hóa Đơn", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
                 <Stack.Screen name="ChefPayOrder" component={ChefPayOrder} options={{ title: "Chờ thanh Toán", headerTitleAlign: "center", headerStyle: { backgroundColor: '#99ff66' } }} />
                 <Stack.Screen name="ChefDetailOrder" component={ChefDetailOrder} options={{ title: "Chi Tiết Hóa Đơn",headerStyle: { backgroundColor: '#ffcc66' }, headerTitleAlign: "center" }} />
                 <Stack.Screen name="ChefCompleteFood" component={ChefCompleteFood} options={{ title: "Hoàn Thành Món", headerTitleAlign: "center", headerStyle: { backgroundColor: '#0099ff' }, }} />
                 <Stack.Screen name="ChefNotification" component={ChefNotification} options={{ title: "Thông báo", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
+                <Stack.Screen name="TestStack" component={Test} options={{ title: "Test nè", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
 
             </Stack.Navigator>
         </NavigationContainer>

@@ -16,7 +16,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 function Test(props) {
+
+  const { navigation, route } = props;
+
   const [user, setUser] = useState('')
+  useEffect(()=>{
+    console.log(route)
+  },[])
   const getData = async () => {
     try {
       const value = await AsyncStorage.getItem('user')

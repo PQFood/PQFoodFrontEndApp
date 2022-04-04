@@ -230,14 +230,14 @@ function HomeWaiter(props) {
         renderItem={renderItem}
         keyExtractor={(item) => item.slug}
       />
-      {/* <TouchableOpacity
+      <TouchableOpacity
         onPress={()=>{
-          socket.disconnect()
+          navigation.navigate('Test')
         }
         }
         >
           <Text>nhap vao</Text>
-        </TouchableOpacity> */}
+        </TouchableOpacity>
 
     </View>
   );
