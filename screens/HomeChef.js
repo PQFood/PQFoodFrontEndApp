@@ -36,7 +36,7 @@ function HomeChef(props) {
     getdinnerTable()
     // const intervalId = setInterval(() => {
     //   getdinnerTable()
-    // }, 60000*3)
+    // }, 60000)
     // return () => clearInterval(intervalId);
   }, [isFocused])
 
@@ -58,8 +58,9 @@ function HomeChef(props) {
     setSocket(io(URL));
   }, [])
   useEffect(() => {
-    socket?.emit("newUser", { position: 2 })
-  }, [socket])
+    if (user !== "")
+      socket?.emit("newUser", { userName: user, position: 2 })
+  }, [socket, user])
 
   useEffect(() => {
     socket?.on("getNotificationAddOrder", data => {
@@ -102,37 +103,12 @@ function HomeChef(props) {
       getdinnerTable()
     })
   }, [socket])
-  
+
   useEffect(() => {
     socket?.on("getNotificationWaiterCompletePayOrder", data => {
       getdinnerTable()
     })
   }, [socket])
-
-
-  useEffect(() => {
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      () => {
-        Alert.alert("Thông báo", "Bạn có chắc muốn thoát ứng dụng?", [
-          {
-            text: "Hủy",
-            onPress: () => null,
-            style: "cancel"
-          },
-          {
-            text: "Xác nhận", onPress: () => {
-              socket?.emit('forceDisconnect');
-              navigation.navigate("Login")
-            }
-          }
-        ]);
-        return true;
-      }
-    );
-
-    return () => backHandler.remove();
-  }, [socket]);
 
   const Item = ({ item, onPress, backgroundColor, textColor }) => (
     <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>

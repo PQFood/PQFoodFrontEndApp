@@ -90,7 +90,23 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 10,
         paddingHorizontal: 20
-      }
+    },
+    flexBetweenRow: {
+        flex: 1,
+        justifyContent: "space-between",
+        flexDirection: "row"
+    },
+    bookTableConfirm: {
+        backgroundColor: "#99d6ff",
+        marginVertical: 5,
+        borderRadius: 10,
+        paddingHorizontal: 10,
+        paddingVertical: 6
+    },
+    textConfirmBookTable: {
+        fontSize: 16,
+        marginVertical: 4
+    },
 });
 
 export default styles

@@ -58,8 +58,9 @@ function HomeWaiter(props) {
   }, [])
 
   useEffect(() => {
-    socket?.emit("newUser", { position: 1 })
-  }, [socket])
+    if(user!== "")
+      socket?.emit("newUser", { userName: user, position: 1 })
+  }, [socket,user])
 
   useEffect(() => {
     socket?.on("getNotificationUpdate", data => {
@@ -137,31 +138,6 @@ function HomeWaiter(props) {
     })
   }, [socket])
 
-  useEffect(() => {
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      () => {
-        Alert.alert("Thông báo", "Bạn có chắc muốn thoát ứng dụng?", [
-          {
-            text: "Hủy",
-            onPress: () => null,
-            style: "cancel"
-          },
-          {
-            text: "Xác nhận", onPress: () => {
-              socket?.emit('forceDisconnect');
-              navigation.navigate("Login")
-            }
-          }
-        ]);
-        return true;
-      }
-    );
-
-    return () => backHandler.remove();
-  }, [socket]);
-
-
   const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
   }
@@ -230,14 +206,14 @@ function HomeWaiter(props) {
         renderItem={renderItem}
         keyExtractor={(item) => item.slug}
       />
-      <TouchableOpacity
+      {/* <TouchableOpacity
         onPress={()=>{
           navigation.navigate('Test')
         }
         }
         >
           <Text>nhap vao</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
     </View>
   );

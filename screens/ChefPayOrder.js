@@ -16,6 +16,7 @@ import CurrencyFormat from 'react-currency-format';
 import RenderItemOrder from '../components/RenderItemOrder';
 import RenderStaff from '../components/RenderStaff';
 import styles from '../components/styles';
+import LoadingComponent from '../components/Loading';
 
 function ChefPayOrder(props) {
 
@@ -54,13 +55,7 @@ function ChefPayOrder(props) {
   // console.log(order.staff)
   if (loading) {
     return (
-      <View style={styles.container}>
-        <Text style={{
-          fontSize: 20,
-          fontWeight: "bold",
-          color: "#ff6600"
-        }}>Đang tải...</Text>
-      </View>
+      <LoadingComponent />
     )
   }
   else {

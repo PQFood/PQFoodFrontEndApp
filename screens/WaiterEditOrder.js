@@ -11,6 +11,7 @@ import CurrencyFormat from 'react-currency-format';
 import { LogBox } from 'react-native';
 import showToast from '../components/ShowToast';
 import styles from '../components/styles';
+import LoadingComponent from '../components/Loading';
 
 function WaiterAddOrder(props) {
 
@@ -332,14 +333,7 @@ function WaiterAddOrder(props) {
 
   if (loading) {
     return (
-      <View style={styles.container}>
-        <Text style={{
-          fontSize: 20,
-          fontWeight: "bold",
-          color: "#ff6600"
-        }}>Đang tải...</Text>
-      </View>
-
+      <LoadingComponent />
     )
   }
   else {

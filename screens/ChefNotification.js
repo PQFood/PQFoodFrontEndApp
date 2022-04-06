@@ -7,6 +7,7 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 import { LogBox } from 'react-native';
 import styles from '../components/styles';
+import LoadingComponent from '../components/Loading';
 
 function ChefNotification(props) {
 
@@ -47,13 +48,7 @@ function ChefNotification(props) {
   }, [])
   if (loading) {
     return (
-      <View style={styles.container}>
-        <Text style={{
-          fontSize: 20,
-          fontWeight: "bold",
-          color: "#ff6600"
-        }}>Đang tải...</Text>
-      </View>
+      <LoadingComponent />
     )
   }
   else {

@@ -22,19 +22,22 @@ import ChefPayOrder from './screens/ChefPayOrder'
 import ChefDetailOrder from './screens/ChefDetailOrder';
 import ChefCompleteFood from './screens/ChefCompleteFood';
 import ChefNotification from './screens/ChefNotification';
-
-import DrawerWaiter from './screens/DrawerWaiter';
+import LogOut from './screens/LogOut';
+import WaiterConfirmBookTable from './screens/WaiterConfirmBookTable';
 
 function Navigation(props) {
 
     const Stack = createNativeStackNavigator();
     const WaiterDrawer = createDrawerNavigator();
 
-    const HomeWaiterDrawer = (props) => {
+    const HomeWaiterDrawer = () => {
         return (
             <WaiterDrawer.Navigator initialRouteName="Home">
                 <WaiterDrawer.Screen name="Home" component={HomeWaiter} options={{ title: "Trang chủ phục vụ", headerStyle: { backgroundColor: '#ffcc66',}, headerTitleAlign: "center",  }}/>
                 <WaiterDrawer.Screen name="Test" component={Test} />
+                <WaiterDrawer.Screen name="LogOut" component={LogOut} options={{ headerShown: false }}/>
+                <WaiterDrawer.Screen name="WaiterConfirmBookTable" component={WaiterConfirmBookTable} options={{ title: "Xác nhận đặt bàn", headerStyle: { backgroundColor: '#ffcc66',}, headerTitleAlign: "center",  }}/>
+
             </WaiterDrawer.Navigator>
         );
     }
@@ -44,6 +47,7 @@ function Navigation(props) {
             <WaiterDrawer.Navigator initialRouteName="Home">
                 <WaiterDrawer.Screen name="Home" component={HomeChef} options={{ title: "Trang chủ dầu bếp", headerStyle: { backgroundColor: '#ffcc66',}, headerTitleAlign: "center",  }}/>
                 <WaiterDrawer.Screen name="Test" component={Test} />
+                <WaiterDrawer.Screen name="LogOut" component={LogOut} options={{ headerShown: false }}/>
             </WaiterDrawer.Navigator>
         );
     }

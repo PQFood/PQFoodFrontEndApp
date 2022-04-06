@@ -7,6 +7,7 @@ import RenderItemOrder from '../components/RenderItemOrder';
 import RenderStaff from '../components/RenderStaff';
 import { LogBox } from 'react-native';
 import styles from '../components/styles';
+import LoadingComponent from '../components/Loading';
 
 function WaiterPayOrder(props) {
 
@@ -47,13 +48,7 @@ function WaiterPayOrder(props) {
 
   if (loading) {
     return (
-      <View style={styles.container}>
-        <Text style={{
-          fontSize: 20,
-          fontWeight: "bold",
-          color: "#ff6600"
-        }}>Đang tải...</Text>
-      </View>
+      <LoadingComponent />
     )
   }
   else {

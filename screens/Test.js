@@ -21,7 +21,7 @@ function Test(props) {
 
   const [user, setUser] = useState('')
   useEffect(()=>{
-    console.log(route)
+    // console.log(props)
   },[])
   const getData = async () => {
     try {
