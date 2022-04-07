@@ -16,7 +16,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Entypo } from '@expo/vector-icons';
 import { useIsFocused } from '@react-navigation/native'
 
-function Login(props) {
+function WaiterChangePassword(props) {
 
 
     const { navigation } = props;
@@ -245,4 +245,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Login;
+export default WaiterChangePassword;

@@ -9,7 +9,7 @@ import RenderBookTable from '../components/RenderBookTable';
 import showToast from '../components/ShowToast';
 import { useIsFocused } from '@react-navigation/native'
 
-function WaiterConfirmBookTable(props) {
+function WaiterHistoryOrder(props) {
 
   const { navigation, route } = props;
   const [user, setUser] = useState('')
@@ -146,4 +146,4 @@ function WaiterConfirmBookTable(props) {
   }
 }
 
-export default WaiterConfirmBookTable;
+export default WaiterHistoryOrder;

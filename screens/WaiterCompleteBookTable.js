@@ -9,7 +9,7 @@ import RenderBookTable from '../components/RenderBookTable';
 import showToast from '../components/ShowToast';
 import { useIsFocused } from '@react-navigation/native'
 
-function WaiterConfirmBookTable(props) {
+function WaiterCompleteBookTable(props) {
 
   const { navigation, route } = props;
   const [user, setUser] = useState('')
@@ -33,7 +33,7 @@ function WaiterConfirmBookTable(props) {
       method: 'get',
       url: '/waiter/getBookTable',
       params: {
-        state: "Đang xử lý"
+        state: "Xác nhận"
       }
     })
       .then(response => {
@@ -52,7 +52,6 @@ function WaiterConfirmBookTable(props) {
 
   useEffect(() => {
     getBookTableConfirm()
-
   }, [isFocused])
 
   const wait = (timeout) => {
@@ -71,18 +70,18 @@ function WaiterConfirmBookTable(props) {
         confirmBook={() => {
           axios({
             method: 'post',
-            url: '/waiter/confirmBookTable',
+            url: '/waiter/completeBookTable',
             data: {
               id: item._id
             }
           })
             .then(response => {
               if (response.data === "ok") {
-                showToast("Xác nhận thành công")
+                showToast("Hoàn thành")
                 getBookTableConfirm();
               }
               else {
-                alert("Xác nhận thất bại")
+                alert("Lỗi không thể hoàn thành")
               }
             })
             .catch(error => {
@@ -111,7 +110,7 @@ function WaiterConfirmBookTable(props) {
             })
         }}
         item={item}
-        nameBtn="Xác nhận"
+        nameBtn="Hoàn thành"
       />
     )
   }
@@ -146,4 +145,4 @@ function WaiterConfirmBookTable(props) {
   }
 }
 
-export default WaiterConfirmBookTable;
+export default WaiterCompleteBookTable;

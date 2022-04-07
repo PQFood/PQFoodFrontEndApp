@@ -5,11 +5,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from '../components/styles';
 import LoadingComponent from '../components/Loading';
 import axios from 'axios';
-import RenderBookTable from '../components/RenderBookTable';
+import RenderHistoryBookTable from '../components/RenderHistoryBookTable';
 import showToast from '../components/ShowToast';
 import { useIsFocused } from '@react-navigation/native'
 
-function WaiterConfirmBookTable(props) {
+function WaiterHistoryBookTable(props) {
 
   const { navigation, route } = props;
   const [user, setUser] = useState('')
@@ -33,7 +33,7 @@ function WaiterConfirmBookTable(props) {
       method: 'get',
       url: '/waiter/getBookTable',
       params: {
-        state: "Đang xử lý"
+        state: "all"
       }
     })
       .then(response => {
@@ -52,7 +52,6 @@ function WaiterConfirmBookTable(props) {
 
   useEffect(() => {
     getBookTableConfirm()
-
   }, [isFocused])
 
   const wait = (timeout) => {
@@ -68,50 +67,8 @@ function WaiterConfirmBookTable(props) {
   const RenderItem = ({ item }) => {
     return (
       <RenderBookTable
-        confirmBook={() => {
-          axios({
-            method: 'post',
-            url: '/waiter/confirmBookTable',
-            data: {
-              id: item._id
-            }
-          })
-            .then(response => {
-              if (response.data === "ok") {
-                showToast("Xác nhận thành công")
-                getBookTableConfirm();
-              }
-              else {
-                alert("Xác nhận thất bại")
-              }
-            })
-            .catch(error => {
-              console.log(error)
-            })
-        }}
-        cancelBook={() => {
-          axios({
-            method: 'post',
-            url: '/waiter/cancelBookTable',
-            data: {
-              id: item._id
-            }
-          })
-            .then(response => {
-              if (response.data === "ok") {
-                showToast("Hủy thành công")
-                getBookTableConfirm();
-              }
-              else {
-                alert("Hủy thất bại")
-              }
-            })
-            .catch(error => {
-              console.log(error)
-            })
-        }}
         item={item}
-        nameBtn="Xác nhận"
+        nameBtn="Hoàn thành"
       />
     )
   }
@@ -135,7 +92,7 @@ function WaiterConfirmBookTable(props) {
               />
             }
             data={bookTable}
-            renderItem={RenderItem}
+            renderItem={RenderHistoryBookTable}
             keyExtractor={(item) => item._id}
             style={{ marginTop: 10 }}
           />
@@ -146,4 +103,4 @@ function WaiterConfirmBookTable(props) {
   }
 }
 
-export default WaiterConfirmBookTable;
+export default WaiterHistoryBookTable;

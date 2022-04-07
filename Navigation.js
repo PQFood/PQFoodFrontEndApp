@@ -1,6 +1,9 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, TextInput, Alert, RefreshControl } from 'react-native';
-
+import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -24,6 +27,10 @@ import ChefCompleteFood from './screens/ChefCompleteFood';
 import ChefNotification from './screens/ChefNotification';
 import LogOut from './screens/LogOut';
 import WaiterConfirmBookTable from './screens/WaiterConfirmBookTable';
+import WaiterCompleteBookTable from './screens/WaiterCompleteBookTable';
+import WaiterHistoryBookTable from './screens/WaiterHistoryBookTable';
+import WaiterHistoryOrder from './screens/WaiterHistoryOrder';
+import WaiterChangePassword from './screens/WaiterChangePassword';
 
 function Navigation(props) {
 
@@ -33,10 +40,16 @@ function Navigation(props) {
     const HomeWaiterDrawer = () => {
         return (
             <WaiterDrawer.Navigator initialRouteName="Home">
-                <WaiterDrawer.Screen name="Home" component={HomeWaiter} options={{ title: "Trang chủ phục vụ", headerStyle: { backgroundColor: '#ffcc66',}, headerTitleAlign: "center",  }}/>
-                <WaiterDrawer.Screen name="Test" component={Test} />
-                <WaiterDrawer.Screen name="LogOut" component={LogOut} options={{ headerShown: false }}/>
-                <WaiterDrawer.Screen name="WaiterConfirmBookTable" component={WaiterConfirmBookTable} options={{ title: "Xác nhận đặt bàn", headerStyle: { backgroundColor: '#ffcc66',}, headerTitleAlign: "center",  }}/>
+                <WaiterDrawer.Screen name="Home" component={HomeWaiter} options={{ drawerIcon: ({focused, size, color})=>(<FontAwesome5 name="home" size={24} color="black" />),title: "Trang chủ phục vụ", headerStyle: { backgroundColor: '#ffcc66',}, headerTitleAlign: "center", }}/>
+                <WaiterDrawer.Screen name="Test" component={Test}/>
+                <WaiterDrawer.Screen name="WaiterConfirmBookTable" component={WaiterConfirmBookTable} options={{ title: "Xác nhận đặt bàn", headerStyle: { backgroundColor: '#ffcc66',}, headerTitleAlign: "center",drawerIcon: (focused, size, color)=>(<FontAwesome name="calendar-check-o" size={24} color="black" />)  }}/>
+                <WaiterDrawer.Screen name="WaiterCompleteBookTable" component={WaiterCompleteBookTable} options={{ title: "Xem lịch đặt bàn", headerStyle: { backgroundColor: '#ffcc66',}, headerTitleAlign: "center", drawerIcon: (focused, size, color)=>(<FontAwesome name="calendar" size={24} color="black" />) }}/>
+                <WaiterDrawer.Screen name="WaiterHistoryBookTable" component={WaiterHistoryBookTable} options={{ title: "Lịch sử đặt bàn", headerStyle: { backgroundColor: '#ffcc66',}, headerTitleAlign: "center", drawerIcon: (focused, size, color)=>(<FontAwesome5 name="calendar-alt" size={24} color="black" />) }}/>
+                <WaiterDrawer.Screen name="WaiterHistoryOrder" component={WaiterHistoryOrder} options={{ title: "Lịch sử hóa đơn", headerStyle: { backgroundColor: '#ffcc66',}, headerTitleAlign: "center", drawerIcon: (focused, size, color)=>(<FontAwesome5 name="history" size={24} color="black" />) }}/>
+                <WaiterDrawer.Screen name="WaiterChangePassword" component={WaiterChangePassword} options={{ title: "Đổi mật khẩu", headerStyle: { backgroundColor: '#ffcc66',}, headerTitleAlign: "center", drawerIcon: (focused, size, color)=>(<MaterialCommunityIcons name="key-change" size={24} color="black" />) }}/>
+
+
+                <WaiterDrawer.Screen name="LogOut" component={LogOut} options={{ headerShown: false, drawerIcon: ({focused, size, color})=>(<Entypo name="log-out" size={24} color="black" />) }}/>
 
             </WaiterDrawer.Navigator>
         );
@@ -45,9 +58,9 @@ function Navigation(props) {
     const HomeChefDrawer = () => {
         return (
             <WaiterDrawer.Navigator initialRouteName="Home">
-                <WaiterDrawer.Screen name="Home" component={HomeChef} options={{ title: "Trang chủ dầu bếp", headerStyle: { backgroundColor: '#ffcc66',}, headerTitleAlign: "center",  }}/>
+                <WaiterDrawer.Screen name="Home" component={HomeChef} options={{ title: "Trang chủ dầu bếp", headerStyle: { backgroundColor: '#ffcc66',}, headerTitleAlign: "center",drawerIcon: ({focused, size, color})=>(<FontAwesome5 name="home" size={24} color="black" />)  }}/>
                 <WaiterDrawer.Screen name="Test" component={Test} />
-                <WaiterDrawer.Screen name="LogOut" component={LogOut} options={{ headerShown: false }}/>
+                <WaiterDrawer.Screen name="LogOut" component={LogOut} options={{ headerShown: false, drawerIcon: ({focused, size, color})=>(<Entypo name="log-out" size={24} color="black" />) }}/>
             </WaiterDrawer.Navigator>
         );
     }
