@@ -8,7 +8,9 @@ import axios from 'axios';
 import RenderHistoryBookTable from '../components/RenderHistoryBookTable';
 import showToast from '../components/ShowToast';
 import { useIsFocused } from '@react-navigation/native'
-
+import { Dimensions } from 'react-native';
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 function WaiterHistoryBookTable(props) {
 
   const { navigation, route } = props;

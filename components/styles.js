@@ -107,6 +107,13 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginVertical: 4
     },
+    orderHistory: { 
+        width: windowWidth * 0.45, 
+        marginHorizontal: 6,
+        borderRadius: 10,
+        paddingHorizontal: 8,
+        paddingVertical: 6
+    },
 });
 
 export default styles

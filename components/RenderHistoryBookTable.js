@@ -5,7 +5,7 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 import styles from './styles';
 
-const RenderHistoryBookTable = ({ item, nameBtn, cancelBook, confirmBook }) => {
+const RenderHistoryBookTable = ({ item }) => {
   return (
     <View style={[styles.bookTableConfirm, { width: windowWidth * 0.9 }]}>
       <View style={styles.flexBetweenRow}>

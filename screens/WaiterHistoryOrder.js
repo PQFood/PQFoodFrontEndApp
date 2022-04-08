@@ -8,36 +8,28 @@ import axios from 'axios';
 import RenderBookTable from '../components/RenderBookTable';
 import showToast from '../components/ShowToast';
 import { useIsFocused } from '@react-navigation/native'
+import RenderHistoryOrder from '../components/RenderHistoryOrder';
+
 
 function WaiterHistoryOrder(props) {
 
   const { navigation, route } = props;
-  const [user, setUser] = useState('')
-  const [name, setName] = useState('')
-  const [bookTable, setBookTable] = useState(null)
+  const [quantity, setQuantity] = useState(1)
+  const [orderHistory, setOrderHistory] = useState(null)
   const [loading, setLoading] = useState(false)
   const [refreshing, setRefreshing] = React.useState(false);
   const isFocused = useIsFocused()
-  const getData = async () => {
-    try {
-      const value1 = await AsyncStorage.getItem('user')
-      const value2 = await AsyncStorage.getItem('name')
-      await setUser(value1)
-      await setName(value2)
-    } catch (e) {
-      console.log(e)
-    }
-  }
-  const getBookTableConfirm = () => {
+
+  const getHistoryOrder = (quantity) => {
     axios({
       method: 'get',
-      url: '/waiter/getBookTable',
+      url: '/waiter/getHistoryOrder',
       params: {
-        state: "Đang xử lý"
+        quantity: quantity
       }
     })
       .then(response => {
-        setBookTable(response.data)
+        setOrderHistory(response.data.order)
         setLoading(false)
       })
       .catch(error => {
@@ -46,13 +38,11 @@ function WaiterHistoryOrder(props) {
   }
 
   useEffect(() => {
-    getData()
-    getBookTableConfirm()
+    getHistoryOrder(quantity)
   }, [])
 
   useEffect(() => {
-    getBookTableConfirm()
-
+    getHistoryOrder(quantity)
   }, [isFocused])
 
   const wait = (timeout) => {
@@ -60,59 +50,23 @@ function WaiterHistoryOrder(props) {
   }
 
   const onRefresh = () => {
-    getBookTableConfirm();
+    getHistoryOrder(quantity);
     setRefreshing(true);
     wait(1200).then(() => setRefreshing(false));
   };
 
   const RenderItem = ({ item }) => {
     return (
-      <RenderBookTable
-        confirmBook={() => {
-          axios({
-            method: 'post',
-            url: '/waiter/confirmBookTable',
-            data: {
-              id: item._id
-            }
-          })
-            .then(response => {
-              if (response.data === "ok") {
-                showToast("Xác nhận thành công")
-                getBookTableConfirm();
-              }
-              else {
-                alert("Xác nhận thất bại")
-              }
-            })
-            .catch(error => {
-              console.log(error)
-            })
+      <TouchableOpacity
+        onPress={()=>{
+          alert("abs")
         }}
-        cancelBook={() => {
-          axios({
-            method: 'post',
-            url: '/waiter/cancelBookTable',
-            data: {
-              id: item._id
-            }
-          })
-            .then(response => {
-              if (response.data === "ok") {
-                showToast("Hủy thành công")
-                getBookTableConfirm();
-              }
-              else {
-                alert("Hủy thất bại")
-              }
-            })
-            .catch(error => {
-              console.log(error)
-            })
-        }}
-        item={item}
-        nameBtn="Xác nhận"
-      />
+      >
+        <RenderHistoryOrder
+          item={item}
+        />
+      </TouchableOpacity>
+
     )
   }
 
@@ -134,7 +88,8 @@ function WaiterHistoryOrder(props) {
                 colors={["#ffcc66", "green", "blue"]}
               />
             }
-            data={bookTable}
+            data={orderHistory}
+            numColumns={2}
             renderItem={RenderItem}
             keyExtractor={(item) => item._id}
             style={{ marginTop: 10 }}
