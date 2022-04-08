@@ -6,44 +6,44 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { Dimensions } from 'react-native';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-import Constants from 'expo-constants';
 
 import axios from 'axios';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import CurrencyFormat from 'react-currency-format';
 import RenderItemOrder from '../components/RenderItemOrder';
 import RenderStaff from '../components/RenderStaff';
 import styles from '../components/styles';
 import LoadingComponent from '../components/Loading';
 
-function ChefPayOrder(props) {
+function DetailOrder(props) {
 
   const { navigation, route } = props;
   const [order, SetOrder] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [staff, setStaff] = useState(null)
 
-  const getOrder = () => {
+  const getOrderHistory = () => {
     axios({
       method: 'get',
-      url: '/waiter/getOrder',
+      url: '/waiter/getDetailOrder',
       params: {
-        table: route.params.slug
+        orderId: route.params.orderId
       }
     })
       .then(response => {
         SetOrder(response.data)
+        setStaff(response.data.staff)
         setLoading(false)
       })
       .catch(error => {
         console.log(error)
       })
   }
+
   useEffect(() => {
-    getOrder()
+    getOrderHistory()
   }, [])
-  // console.log(order.staff)
+
+
   if (loading) {
     return (
       <LoadingComponent />
@@ -59,7 +59,7 @@ function ChefPayOrder(props) {
           ListFooterComponent={
             <>
               <FlatList
-                data={order.staff}
+                data={staff}
                 ListHeaderComponent={<Text style={styles.ul}>Nhân viên xử lý</Text>}
                 renderItem={RenderStaff}
                 keyExtractor={(item) => item.id}
@@ -104,4 +104,4 @@ function ChefPayOrder(props) {
 }
 
 
-export default ChefPayOrder;
+export default DetailOrder;

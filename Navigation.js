@@ -31,6 +31,7 @@ import WaiterCompleteBookTable from './screens/WaiterCompleteBookTable';
 import WaiterHistoryBookTable from './screens/WaiterHistoryBookTable';
 import WaiterHistoryOrder from './screens/WaiterHistoryOrder';
 import WaiterChangePassword from './screens/WaiterChangePassword';
+import DetailOrder from './screens/DetailOrder';
 
 function Navigation(props) {
 
@@ -82,6 +83,10 @@ function Navigation(props) {
                 <Stack.Screen name="ChefDetailOrder" component={ChefDetailOrder} options={{ title: "Chi Tiết Hóa Đơn",headerStyle: { backgroundColor: '#ffcc66' }, headerTitleAlign: "center" }} />
                 <Stack.Screen name="ChefCompleteFood" component={ChefCompleteFood} options={{ title: "Hoàn Thành Món", headerTitleAlign: "center", headerStyle: { backgroundColor: '#0099ff' }, }} />
                 <Stack.Screen name="ChefNotification" component={ChefNotification} options={{ title: "Thông báo", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
+                
+                <Stack.Screen name="DetailOrder" component={DetailOrder} options={{ title: "Chi tiết hóa đơn", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
+
+
                 <Stack.Screen name="TestStack" component={Test} options={{ title: "Test nè", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
 
             </Stack.Navigator>

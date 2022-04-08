@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableOpacity, RefreshControl, FlatList, Button } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from '../components/styles';
 import LoadingComponent from '../components/Loading';
 import axios from 'axios';
-import RenderBookTable from '../components/RenderBookTable';
-import showToast from '../components/ShowToast';
 import { useIsFocused } from '@react-navigation/native'
 import RenderHistoryOrder from '../components/RenderHistoryOrder';
-
+import { Dimensions } from 'react-native';
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 function WaiterHistoryOrder(props) {
 
@@ -43,6 +41,10 @@ function WaiterHistoryOrder(props) {
 
   useEffect(() => {
     getHistoryOrder(quantity)
+  }, [quantity])
+
+  useEffect(() => {
+    getHistoryOrder(quantity)
   }, [isFocused])
 
   const wait = (timeout) => {
@@ -59,8 +61,9 @@ function WaiterHistoryOrder(props) {
     return (
       <TouchableOpacity
         onPress={()=>{
-          alert("abs")
+          navigation.navigate('DetailOrder',{orderId: item.orderId})
         }}
+        style={{marginBottom: 10}}
       >
         <RenderHistoryOrder
           item={item}
@@ -93,6 +96,42 @@ function WaiterHistoryOrder(props) {
             renderItem={RenderItem}
             keyExtractor={(item) => item._id}
             style={{ marginTop: 10 }}
+            ListFooterComponent = {
+              <>
+              {quantity < 5 ? (
+                <TouchableOpacity
+                onPress={()=>{
+                  setQuantity(quantity+1)
+                }}
+                style={{
+                  backgroundColor: "#66ccff",
+                  alignItems: "center",
+                  marginHorizontal: windowWidth*0.3,
+                  paddingVertical: windowHeight*0.01,
+                  borderRadius: 10,
+                }}
+              >
+                <Text style={{fontSize: 16}}>Xem thêm</Text>
+              </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                onPress={()=>{
+                  setQuantity(1)
+                }}
+                style={{
+                  backgroundColor: "#ffcc66",
+                  alignItems: "center",
+                  marginHorizontal: windowWidth*0.3,
+                  paddingVertical: windowHeight*0.01,
+                  borderRadius: 10,
+                }}
+              >
+                <Text style={{fontSize: 16}}>Ẩn bớt</Text>
+              </TouchableOpacity>
+              )}
+              
+              </>
+            }
           />
 
         </View>
