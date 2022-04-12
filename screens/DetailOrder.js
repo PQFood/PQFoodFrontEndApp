@@ -52,52 +52,60 @@ function DetailOrder(props) {
   else {
     return (
       <>
-      <View style={styles.container}>
-        <Text style={styles.title}>{route.params.nameTable}</Text>
+        <View style={styles.container}>
+          <Text style={styles.title}>{route.params.nameTable}</Text>
 
-        <FlatList
-          ListFooterComponent={
-            <>
-              <FlatList
-                data={staff}
-                ListHeaderComponent={<Text style={styles.ul}>Nhân viên xử lý</Text>}
-                renderItem={RenderStaff}
-                keyExtractor={(item) => item.id}
-                ListFooterComponent={
-                  <TextInput
-                    style={styles.noteStyle}
-                    multiline
-                    numberOfLines={4}
-                    value={order.note}
-                    editable={false}
-                    selectTextOnFocus={false}
-                  />
-                }
-              />
-            </>
-          }
-          ListHeaderComponent={
-            <Text style={styles.ul}>Món gọi</Text>
-          }
-          data={order.order}
-          renderItem={RenderItemOrder}
-          keyExtractor={(item) => item.slug}
-        />
-      </View>
-      <View style={styles.footerOneElement}>
-        <View style={styles.footer2}>
-          <Text style={styles.textBold}>Tổng Tiền: </Text>
-          <CurrencyFormat
-            value={order.total}
-            displayType={'text'}
-            thousandSeparator={true}
-            suffix={' đ'}
-            renderText={value => <Text style={styles.textBold}>{value}</Text>}
+          <FlatList
+            ListFooterComponent={
+              <>
+                <FlatList
+                  data={staff}
+                  ListHeaderComponent={<Text style={styles.ul}>Nhân viên xử lý</Text>}
+                  renderItem={RenderStaff}
+                  keyExtractor={(item) => item.id}
+                  ListFooterComponent={
+                    <TextInput
+                      style={styles.noteStyle}
+                      multiline
+                      numberOfLines={4}
+                      value={order.note}
+                      editable={false}
+                      selectTextOnFocus={false}
+                    />
+                  }
+                />
+              </>
+            }
+            ListHeaderComponent={
+              <Text style={styles.ul}>Món gọi</Text>
+            }
+            data={order.order}
+            renderItem={RenderItemOrder}
+            keyExtractor={(item) => item.slug}
           />
         </View>
-        
-      </View>
-    </>
+        <View style={[styles.footer]}>
+          <View style={[styles.footer2]}>
+            <Text style={styles.textBold}>Tổng Tiền: </Text>
+            <CurrencyFormat
+              value={order.total}
+              displayType={'text'}
+              thousandSeparator={true}
+              suffix={' đ'}
+              renderText={value => <Text style={styles.textBold}>{value}</Text>}
+            />
+          </View>
+          <View style={{alignItems: "center", backgroundColor: "#ccffcc"}}>
+            {order.state === "Đã hủy" ? (
+            <Text style={[styles.textBold, { lineHeight: 40, color: "#ff0000" }]}>{order.state}</Text>
+
+            ) : (
+            <Text style={[styles.textBold, { lineHeight: 40, color:"#00cc00" }]}>{order.state}</Text>
+            )}
+          </View>
+
+        </View>
+      </>
 
     );
   }

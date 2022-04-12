@@ -21,140 +21,127 @@ function WaiterChangePassword(props) {
 
     const { navigation } = props;
     const isFocused = useIsFocused()
-    const [pass, SetPass] = useState(true)
-    const [userState, setUserState] = useState({
-        user: "",
-        password: ""
-    })
+    const [pass1, SetPass1] = useState(true)
+    const [pass2, SetPass2] = useState(true)
+    const [pass3, SetPass3] = useState(true)
+
 
     useEffect(() => {
-        SetPass(true)
+        SetPass1(true)
+        SetPass2(true)
+        SetPass3(true)
     }, [isFocused])
-    const LoginSchema = Yup.object().shape({
-        user: Yup.string()
-            .required('Vui lòng nhập vào tên đăng nhập!'),
-        password: Yup.string()
-            .required('Vui lòng nhập vào mật khẩu!'),
-    });
 
-    const storeData = async (value) => {
-        try {
-            await AsyncStorage.setItem('user', value)
-        } catch (e) {
-            console.log(e)
-        }
-    }
-    const storeName = async (value) => {
-        try {
-            await AsyncStorage.setItem('name', value)
-        } catch (e) {
-            console.log(e)
-        }
-    }
+    const ChangePasswordSchema = Yup.object().shape({
+        passOld: Yup.string()
+            .required('Vui lòng nhập vào mật khẩu cũ!'),
+        passNew: Yup.string()
+            .required('Vui lòng nhập vào mật khẩu mới!')
+            .min(6, 'Mật khẩu quá ngắn!')
+            .max(14, 'Mật khẩu quá dài!')
+    });
 
     return (
         <>
-
             <Formik
                 enableReinitialize={true}
-                initialValues={userState}
-                validationSchema={LoginSchema}
-                onSubmit={(values,{resetForm}) => {
-                    axios({
-                        method: 'post',
-                        url: '/login',
-                        data: {
-                            user: values.user,
-                            password: values.password
-                        }
-                    })
-                        .then(response => {
-                            if (response.data === "Thất bại") {
-                                Alert.alert(
-                                    'Thông báo',
-                                    'Đăng nhập thất bại! Vui lòng đăng nhập lại!',
-                                    [{
-                                        text: 'Ok',
-                                    }]
-                                )
-                                
-                            }
-                            else {
-                                if (response.data.position === "Chủ quán") {
-                                    storeData(response.data.userName)
-                                    navigation.navigate('HomeAdmin', { data: response.data })
-                                }
-                                else if (response.data.position === "Phục vụ") {
-                                    storeData(response.data.userName)
-                                    storeName(response.data.name)
-                                    navigation.navigate('HomeWaiter', { data: response.data })
-                                }
-                                else if (response.data.position === "Shipper") {
-                                    storeData(response.data.userName)
-                                    storeName(response.data.name)
-                                    navigation.navigate('HomeShipper', { data: response.data })
-                                }
-                                else {
-                                    storeData(response.data.userName)
-                                    storeName(response.data.name)
-                                    navigation.navigate('HomeChef', { data: response.data })
-                                }
-                            }
-                        })
-                        .catch(error => {
-                            console.log(error)
-                        })
-                        resetForm({values: {
-                            user: values.user,
-                            password: ""
-                        }})
+                initialValues={{ passOld: '', passNew: '', passReNew: '' }}
+                validationSchema={ChangePasswordSchema}
+                onSubmit={(values, { resetForm }) => {
+                    console.log(values)
+                    alert("án")
                 }}
+            //     axios({
+            //         method: 'post',
+            //         url: '/login',
+            //         data: {
+            //             user: values.user,
+            //             password: values.password
+            //         }
+            //     })
+            //         .then(response => {
+            //            
+            //         })
+            //         .catch(error => {
+            //             console.log(error)
+            //         })
+            //         resetForm({values: {
+            //             user: values.user,
+            //             password: ""
+            //         }})
+            // }}
             >
                 {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
                     <SafeAreaView style={styles.container}>
                         <StatusBar style="light" />
-                        <View style={styles.content}>
-                            <Text style={styles.inHi}>Đăng nhập</Text>
-
-                        </View>
-
                         <View style={styles.form}>
 
+
                             <View style={{ position: "relative" }}>
-                                <FontAwesome5 name="user-alt" size={24} color="black" style={styles.iconUser} />
                                 <TextInput
                                     style={styles.inputText}
-                                    placeholder="Tên đăng nhập"
-                                    autoFocus={true}
-                                    onChangeText={handleChange('user')}
-                                    onBlur={handleBlur('user')}
-                                    value={values.user}
+                                    placeholder="Mật khẩu cũ"
+                                    secureTextEntry={pass1}
+                                    onChangeText={handleChange('passOld')}
+                                    onBlur={handleBlur('passOld')}
+                                    value={values.passOld}
                                 />
-                                {errors.user && touched.user ? (
-                                    <Text style={{ color: 'red', textAlign: "center" }}>{errors.user}</Text>
+                                {errors.passOld && touched.passOld ? (
+                                    <Text style={{ color: 'red', textAlign: "center" }}>{errors.passOld}</Text>
                                 ) : null}
+                                <TouchableOpacity
+                                    style={styles.iconShowHidden}
+                                    onPress={() => {
+                                        SetPass1(!pass1)
+                                    }}
+                                >
+                                    {pass1 ? (<Entypo name="eye" size={28} color="black" />) : (<Entypo name="eye-with-line" size={28} color="black" />)}
+
+                                </TouchableOpacity>
+
                             </View>
                             <View style={{ position: "relative" }}>
                                 <TextInput
                                     style={styles.inputText}
-                                    placeholder="Mật khẩu"
-                                    // keyboardType="numeric"
-                                    secureTextEntry={pass}
-                                    onChangeText={handleChange('password')}
-                                    onBlur={handleBlur('password')}
-                                    value={values.password}
+                                    placeholder="Mật khẩu mới"
+                                    secureTextEntry={pass2}
+                                    onChangeText={handleChange('passNew')}
+                                    onBlur={handleBlur('passNew')}
+                                    value={values.passNew}
                                 />
-                                {errors.password && touched.password ? (
-                                    <Text style={{ color: 'red', textAlign: "center" }}>{errors.password}</Text>
+                                {errors.passNew && touched.passNew ? (
+                                    <Text style={{ color: 'red', textAlign: "center" }}>{errors.passNew}</Text>
                                 ) : null}
-                                <FontAwesome5 name="lock" size={24} color="black" style={styles.iconLock} />
                                 <TouchableOpacity
                                     style={styles.iconShowHidden}
                                     onPress={() => {
-                                        SetPass(!pass)
+                                        SetPass2(!pass2)
                                     }}
                                 >
-                                    {pass ? (<Entypo name="eye" size={28} color="black" />) : (<Entypo name="eye-with-line" size={28} color="black" />)}
+                                    {pass2 ? (<Entypo name="eye" size={28} color="black" />) : (<Entypo name="eye-with-line" size={28} color="black" />)}
+
+                                </TouchableOpacity>
+
+                            </View>
+                            <View style={{ position: "relative" }}>
+                                <TextInput
+                                    style={styles.inputText}
+                                    placeholder="Nhập lại mật khẩu mới"
+                                    secureTextEntry={pass3}
+                                    onChangeText={handleChange('passReNew')}
+                                    onBlur={handleBlur('passReNew')}
+                                    value={values.passReNew}
+                                />
+                                {errors.passReNew && touched.passReNew ? (
+                                    <Text style={{ color: 'red', textAlign: "center" }}>{errors.passReNew}</Text>
+                                ) : null}
+                                <TouchableOpacity
+                                    style={styles.iconShowHidden}
+                                    onPress={() => {
+                                        SetPass3(!pass3)
+                                    }}
+                                >
+                                    {pass3 ? (<Entypo name="eye" size={28} color="black" />) : (<Entypo name="eye-with-line" size={28} color="black" />)}
 
                                 </TouchableOpacity>
 
@@ -163,7 +150,7 @@ function WaiterChangePassword(props) {
                                 style={styles.buttonLogin}
                                 onPress={handleSubmit}
                             >
-                                <Text style={{ ...TEXT }}>Đăng nhập</Text>
+                                <Text style={{ ...TEXT }}>Xác nhận</Text>
                             </TouchableOpacity>
                         </View>
                     </SafeAreaView>
@@ -185,7 +172,7 @@ const TEXT = {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#ff9933",
+        backgroundColor: "#e6ffff",
         justifyContent: "center"
     },
     content: {
@@ -228,19 +215,19 @@ const styles = StyleSheet.create({
     iconLock: {
         position: "absolute",
         top: 20,
-        left: windowWidth*0.18,
+        left: windowWidth * 0.18,
         zIndex: 100,
     },
     iconUser: {
         position: "absolute",
         top: 20,
-        left: windowWidth*0.18,
+        left: windowWidth * 0.18,
         zIndex: 100,
     },
     iconShowHidden: {
         position: "absolute",
         top: 20,
-        left: windowWidth*0.74,
+        left: windowWidth * 0.74,
         zIndex: 100,
     }
 })

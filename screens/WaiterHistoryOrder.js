@@ -8,6 +8,7 @@ import RenderHistoryOrder from '../components/RenderHistoryOrder';
 import { Dimensions } from 'react-native';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
+import { AntDesign } from '@expo/vector-icons';
 
 function WaiterHistoryOrder(props) {
 
@@ -15,6 +16,7 @@ function WaiterHistoryOrder(props) {
   const [quantity, setQuantity] = useState(1)
   const [orderHistory, setOrderHistory] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [full, setFull] = useState(false)
   const [refreshing, setRefreshing] = React.useState(false);
   const isFocused = useIsFocused()
 
@@ -28,6 +30,7 @@ function WaiterHistoryOrder(props) {
     })
       .then(response => {
         setOrderHistory(response.data.order)
+        setFull(response.data.full)
         setLoading(false)
       })
       .catch(error => {
@@ -98,7 +101,7 @@ function WaiterHistoryOrder(props) {
             style={{ marginTop: 10 }}
             ListFooterComponent = {
               <>
-              {quantity < 5 ? (
+              {(quantity < 5 && !full) ? (
                 <TouchableOpacity
                 onPress={()=>{
                   setQuantity(quantity+1)
@@ -111,7 +114,7 @@ function WaiterHistoryOrder(props) {
                   borderRadius: 10,
                 }}
               >
-                <Text style={{fontSize: 16}}>Xem thêm</Text>
+                <Text style={{fontSize: 16}}><AntDesign name="downcircle" size={16} color="black" />   Xem thêm</Text>
               </TouchableOpacity>
               ) : (
                 <TouchableOpacity
@@ -126,7 +129,7 @@ function WaiterHistoryOrder(props) {
                   borderRadius: 10,
                 }}
               >
-                <Text style={{fontSize: 16}}>Ẩn bớt</Text>
+                <Text style={{fontSize: 16}}><AntDesign name="upcircle" size={16} color="black" />  Ẩn bớt</Text>
               </TouchableOpacity>
               )}
               
