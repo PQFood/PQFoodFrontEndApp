@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
         marginVertical: 4
     },
     orderHistory: { 
-        width: windowWidth * 0.45, 
+        width: windowWidth * 0.9, 
         marginHorizontal: 6,
         borderRadius: 10,
         paddingHorizontal: 8,

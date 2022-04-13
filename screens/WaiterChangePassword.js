@@ -7,14 +7,15 @@ import { Dimensions } from 'react-native';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 import Constants from 'expo-constants';
-
 import axios from 'axios';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Entypo } from '@expo/vector-icons';
 import { useIsFocused } from '@react-navigation/native'
+import showToast from '../components/ShowToast';
+import { useToast } from "react-native-toast-notifications";
+
 
 function WaiterChangePassword(props) {
 
@@ -24,8 +25,19 @@ function WaiterChangePassword(props) {
     const [pass1, SetPass1] = useState(true)
     const [pass2, SetPass2] = useState(true)
     const [pass3, SetPass3] = useState(true)
-
-
+    const [user, setUser] = useState('')
+    const toast = useToast();
+    const getUser = async () => {
+        try {
+            const value = await AsyncStorage.getItem('user')
+            await setUser(value)
+        } catch (e) {
+            console.log(e)
+        }
+    }
+    useEffect(() => {
+        getUser()
+    }, [])
     useEffect(() => {
         SetPass1(true)
         SetPass2(true)
@@ -34,11 +46,17 @@ function WaiterChangePassword(props) {
 
     const ChangePasswordSchema = Yup.object().shape({
         passOld: Yup.string()
-            .required('Vui lòng nhập vào mật khẩu cũ!'),
+            .required('Vui lòng nhập vào mật khẩu cũ!')
+            .matches(/^(?=.*[A-Za-z])(?=.*[0-9])[A-Za-z0-9]{6,15}$/, "Mật khẩu từ 6 - 15 kí tự bao gồm chữ và số!"),
         passNew: Yup.string()
             .required('Vui lòng nhập vào mật khẩu mới!')
             .min(6, 'Mật khẩu quá ngắn!')
             .max(14, 'Mật khẩu quá dài!')
+            .matches(/^(?=.*[A-Za-z])(?=.*[0-9])[A-Za-z0-9]{6,15}$/, "Mật khẩu từ 6 - 15 kí tự bao gồm chữ và số!"),
+        passReNew: Yup.string()
+            .required('Vui lòng nhập lại mật khẩu mới!')
+            .oneOf([Yup.ref('passNew')], 'Mật khẩu nhập lại không đúng!')
+            .matches(/^(?=.*[A-Za-z])(?=.*[0-9])[A-Za-z0-9]{6,15}$/, "Mật khẩu từ 6 - 15 kí tự bao gồm chữ và số!"),
     });
 
     return (
@@ -48,28 +66,51 @@ function WaiterChangePassword(props) {
                 initialValues={{ passOld: '', passNew: '', passReNew: '' }}
                 validationSchema={ChangePasswordSchema}
                 onSubmit={(values, { resetForm }) => {
-                    console.log(values)
-                    alert("án")
+                    axios({
+                        method: 'post',
+                        url: '/waiter/changePassword',
+                        data: {
+                            user: user,
+                            passOld: values.passOld,
+                            passNew: values.passNew
+                        }
+                    })
+                        .then(response => {
+                            if (response.data === "incorrect") {
+                                toast.show("Mật khẩu cũ không đúng", {
+                                    type: "danger",
+                                    placement: "top",
+                                    duration: 3000,
+                                    offset: 30,
+                                    animationType: "slide-in",
+                                });
+                            }
+                            else if (response.data === "ok") {
+                                toast.show("Đổi mật khẩu thành công", {
+                                    type: "success",
+                                    placement: "top",
+                                    duration: 3000,
+                                    offset: 30,
+                                    animationType: "slide-in",
+                                });
+                                resetForm({
+                                    values: { passOld: '', passNew: '', passReNew: '' }
+                                })
+                                navigation.navigate('Home')
+                            }
+                            else {
+                                resetForm({
+                                    values: { passOld: '', passNew: '', passReNew: '' }
+                                })
+                                alert("Lỗi! Không thể đổi mật khẩu!")
+                            }
+                        })
+                        .catch(error => {
+                            console.log(error)
+                        })
+
                 }}
-            //     axios({
-            //         method: 'post',
-            //         url: '/login',
-            //         data: {
-            //             user: values.user,
-            //             password: values.password
-            //         }
-            //     })
-            //         .then(response => {
-            //            
-            //         })
-            //         .catch(error => {
-            //             console.log(error)
-            //         })
-            //         resetForm({values: {
-            //             user: values.user,
-            //             password: ""
-            //         }})
-            // }}
+
             >
                 {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
                     <SafeAreaView style={styles.container}>
@@ -172,7 +213,7 @@ const TEXT = {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#e6ffff",
+        backgroundColor: "#00ffff",
         justifyContent: "center"
     },
     content: {

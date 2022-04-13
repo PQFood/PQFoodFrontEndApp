@@ -61,12 +61,23 @@ function WaiterHistoryOrder(props) {
   };
 
   const RenderItem = ({ item }) => {
+    let colorItem = ""
+    if(item.state === "Đã hủy") colorItem = "#ff3300"
+    else colorItem = "#66ff66"
+
     return (
       <TouchableOpacity
         onPress={()=>{
           navigation.navigate('DetailOrder',{orderId: item.orderId})
         }}
-        style={{marginBottom: 10}}
+        style={{marginBottom: 10, 
+          width: windowWidth*0.9,
+          backgroundColor: colorItem,
+          marginHorizontal: 10,
+          borderRadius: 10,
+          paddingHorizontal: 10,
+          paddingVertical: 8
+        }}
       >
         <RenderHistoryOrder
           item={item}
@@ -95,7 +106,6 @@ function WaiterHistoryOrder(props) {
               />
             }
             data={orderHistory}
-            numColumns={2}
             renderItem={RenderItem}
             keyExtractor={(item) => item._id}
             style={{ marginTop: 10 }}

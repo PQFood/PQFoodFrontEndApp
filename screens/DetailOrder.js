@@ -53,8 +53,6 @@ function DetailOrder(props) {
     return (
       <>
         <View style={styles.container}>
-          <Text style={styles.title}>{route.params.nameTable}</Text>
-
           <FlatList
             ListFooterComponent={
               <>
