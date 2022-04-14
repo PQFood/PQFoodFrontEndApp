@@ -27,7 +27,8 @@ function ChefChangeQuantityWarehouse(props) {
 
     const ChangeQuantity = Yup.object().shape({
         quantity: Yup
-            .number("Vui lòng Nhập vào số!")
+            .number()
+            .typeError("Vui lòng nhập vào số!")
             .required('Vui lòng nhập vào số lượng!')
             .min(0, "Nhở hơn")
     });
@@ -77,7 +78,19 @@ function ChefChangeQuantityWarehouse(props) {
                             }
                         })
                             .then(response => {
-                                alert(response.data)
+                                if(response.data === "ok"){
+                                    toast.show("Cập nhật số lượng thành công", {
+                                        type: "success",
+                                        placement: "top",
+                                        duration: 3000,
+                                        offset: 30,
+                                        animationType: "slide-in",
+                                    });
+                                    navigation.navigate('ChefWarehouse')
+                                }
+                                else{
+                                    alert("Lỗi! Không thể cập nhật số lượng!")
+                                }
                             })
                             .catch(error => {
                                 console.log(error)
