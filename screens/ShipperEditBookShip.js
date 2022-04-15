@@ -13,7 +13,7 @@ import showToast from '../components/ShowToast';
 import styles from '../components/styles';
 import LoadingComponent from '../components/Loading';
 
-function WaiterAddOrder(props) {
+function ShipperEditBookShip(props) {
 
   const { navigation, route } = props;
   const [food, setFood] = useState(null)
@@ -25,6 +25,10 @@ function WaiterAddOrder(props) {
   const [foodState, setFoodState] = useState(null)
   const [drinkState, setDrinkState] = useState(null)
   const [note, setNote] = useState('')
+  const [nameCustomer, setNameCustomer] = useState('')
+  const [phoneNumber, setPhoneNumber] = useState('')
+  const [address, setAddress] = useState('')
+
   const [user, setUser] = useState('')
   const [name, setName] = useState('')
   const [socket, setSocket] = useState(null)
@@ -39,9 +43,9 @@ function WaiterAddOrder(props) {
   const getmenu = () => {
     axios({
       method: 'get',
-      url: '/waiter/getOrderEdit',
+      url: '/shipper/getBookShipEdit',
       params: {
-        table: route.params.slug
+        orderId: route.params.orderId
       }
     })
       .then(response => {
@@ -50,6 +54,9 @@ function WaiterAddOrder(props) {
         setFoodState(response.data.foodState)
         setDrinkState(response.data.drinkState)
         setNote(response.data.note)
+        setNameCustomer(response.data.name)
+        setAddress(response.data.address)
+        setPhoneNumber(response.data.phoneNumber)
         setTotal(response.data.total)
         setLoading(false)
       })
@@ -114,7 +121,7 @@ function WaiterAddOrder(props) {
       })
       setFoodCheck(!foodCheck)
     }
-    else{
+    else {
       showToast("Không thể giảm tiếp!")
     }
   }
@@ -158,7 +165,7 @@ function WaiterAddOrder(props) {
       })
       setFoodCheck(!drinkCheck)
     }
-    else{
+    else {
       showToast("Không thể giảm tiếp!")
     }
   }
@@ -277,7 +284,6 @@ function WaiterAddOrder(props) {
             <View>
               <Switch
                 trackColor={{ false: "#767577", true: "#81b0ff" }}
-                // thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
                 ios_backgroundColor="#3e3e3e"
                 value={drinkState[index].value}
                 onValueChange={(value) => { toggleSwitchDrink(item, value, index) }}
@@ -351,16 +357,35 @@ function WaiterAddOrder(props) {
                   ListHeaderComponent={<Text style={styles.ul}>Danh Sách Thức Uống</Text>}
                   renderItem={renderItemDrink}
                   keyExtractor={(item) => item.slug}
-                  ListFooterComponent={
-                    <TextInput
-                      style={styles.noteStyle}
-                      multiline
-                      numberOfLines={4}
-                      onChangeText={(text) => setNote(text)}
-                      value={note}
-                      placeholder="Ghi chú"
-                    />
-                  }
+
+                />
+                <TextInput
+                  style={styles.noteStyle}
+                  multiline
+                  numberOfLines={4}
+                  onChangeText={(text) => setNote(text)}
+                  value={note}
+                  placeholder="Ghi chú"
+                />
+                <TextInput
+                  style={styles.noteStyle}
+                  onChangeText={(text) => setNameCustomer(text)}
+                  value={nameCustomer}
+                  placeholder="Họ và tên"
+                />
+                <TextInput
+                  style={styles.noteStyle}
+                  onChangeText={(text) => setPhoneNumber(text)}
+                  value={phoneNumber}
+                  placeholder="Số điện thoại"
+                />
+                <TextInput
+                  style={styles.noteStyle}
+                  multiline
+                  numberOfLines={4}
+                  onChangeText={(text) => setAddress(text)}
+                  value={address}
+                  placeholder="Địa chỉ"
                 />
               </>
             }
@@ -389,25 +414,26 @@ function WaiterAddOrder(props) {
                 if (total > 0) {
                   axios({
                     method: 'post',
-                    url: '/waiter/editOrder',
+                    url: '/shipper/editBookShip',
                     data: {
                       food: foodState,
                       drink: drinkState,
                       total: total,
-                      nameTable: route.params.nameTable,
-                      slugTable: route.params.slug,
+                      orderId: route.params.orderId,
                       note: note,
-                      staff: user
+                      staff: user,
+                      name: nameCustomer,
+                      phoneNumber: phoneNumber,
+                      address: address,
                     }
                   })
                     .then(response => {
                       if (response.data === "ok") {
-                        socket.emit("sendNotificationWaiterUpdate", {
+                        socket.emit("sendNotificationShipperUpdateBookTable", {
                           senderName: name,
-                          table: route.params.nameTable,
-                          act: 1
+                          orderId: route.params.orderId,
                         })
-                        navigation.navigate('HomeWaiter')
+                        navigation.goBack()
                       }
                       else alert("Cập nhật thất bại!")
                     })
@@ -420,7 +446,7 @@ function WaiterAddOrder(props) {
                 }
 
               }}
-
+              disabled={nameCustomer === '' || phoneNumber === '' || address === '' ? true : false}
             >
               <Text style={[styles.textBold, { lineHeight: 40 }]}>Cập nhật</Text>
             </TouchableOpacity>
@@ -432,4 +458,4 @@ function WaiterAddOrder(props) {
 }
 
 
-export default WaiterAddOrder;
+export default ShipperEditBookShip;

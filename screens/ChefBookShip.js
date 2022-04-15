@@ -14,7 +14,7 @@ const windowHeight = Dimensions.get('window').height;
 import styles from '../components/stylesShipper';
 import CurrencyFormat from 'react-currency-format';
 
-function HomeShipper(props) {
+function ChefBookShip(props) {
 
   const { navigation, route } = props;
   const [user, setUser] = useState('')
@@ -63,30 +63,29 @@ function HomeShipper(props) {
   }, [])
   useEffect(() => {
     if (user !== "")
-      socket?.emit("newUser", { userName: user, position: 3 })
+      socket?.emit("newUser", { userName: user, position: 4 })
   }, [socket, user])
 
   useEffect(() => {
-    socket?.on("getNotificationShipperConfirmBookShip", data => {
-      getOrderShip()
-    })
-    socket?.on("getNotificationShipperUpdateBookTable", data => {
-      getOrderShip()
-    })
     socket?.on("getNotificationShipperCancelBookShip", data => {
-      getOrderShip()
+      getdinnerTable()
+    })
+
+    socket?.on("getNotificationShipperConfirmBookShip", data => {
+      getdinnerTable()
       toast.show(data, {
-        type: "danger",
+        type: "success",
         placement: "top",
         duration: 60000,
         offset: 30,
         animationType: "slide-in",
       });
     })
-    socket?.on("getNotificationBookShip", data => {
-      getOrderShip()
+
+    socket?.on("getNotificationShipperUpdateBookTable", data => {
+      getdinnerTable()
       toast.show(data, {
-        type: "success",
+        type: "normal",
         placement: "top",
         duration: 60000,
         offset: 30,
@@ -196,4 +195,4 @@ function HomeShipper(props) {
   }
 }
 
-export default HomeShipper;
+export default ChefBookShip;

@@ -35,7 +35,9 @@ import DetailOrder from './screens/DetailOrder';
 import ChefWarehouse from './screens/ChefWarehouse';
 import ChefChangeQuantityWarehouse from './screens/ChefChangeQuantityWarehouse';
 import ShipperConfirm from './screens/ShipperConfirm';
-
+import ShipperDetailBookShip from './screens/ShipperDetailBookShip';
+import ShipperEditBookShip from './screens/ShipperEditBookShip';
+import ChefBookShip from './screens/ChefBookShip';
 
 
 function Navigation(props) {
@@ -65,6 +67,7 @@ function Navigation(props) {
                 <WaiterDrawer.Screen name="WaiterHistoryOrder" component={WaiterHistoryOrder} options={{ title: "Lịch sử hóa đơn", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: (focused, size, color) => (<FontAwesome5 name="history" size={24} color="black" />) }} />
                 <WaiterDrawer.Screen name="WaiterChangePassword" component={WaiterChangePassword} options={{ title: "Đổi mật khẩu", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: (focused, size, color) => (<MaterialCommunityIcons name="key-change" size={24} color="black" />) }} />
                 <WaiterDrawer.Screen name="ChefWarehouse" component={ChefWarehouse} options={{ title: "Quản lý kho", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: (focused, size, color) => (<FontAwesome5 name="warehouse" size={20} color="black" />) }} />
+                <WaiterDrawer.Screen name="ChefBookShip" component={ChefBookShip} options={{ title: "Quản lý đơn ship", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: (focused, size, color) => (<FontAwesome5 name="shipping-fast" size={20} color="black" />) }} />
 
 
                 <WaiterDrawer.Screen name="LogOut" component={LogOut} options={{ headerShown: false, drawerIcon: ({ focused, size, color }) => (<Entypo name="log-out" size={28} color="black" />) }} />
@@ -108,7 +111,9 @@ function Navigation(props) {
                 })} />
                 <Stack.Screen name="ChefChangeQuantityWarehouse" component={ChefChangeQuantityWarehouse} options={{ title: "Cập nhật số lượng", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
 
-                <Stack.Screen name="ShipperConfirm" component={ShipperConfirm} options={{ title: "Xác nhận đơn", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
+                <Stack.Screen name="ShipperConfirm" component={ShipperConfirm} options={{ title: "Xác nhận đơn", headerTitleAlign: "center" }} />
+                <Stack.Screen name="ShipperDetailBookShip" component={ShipperDetailBookShip} options={{ title: "Chi tiết đơn hàng", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
+                <Stack.Screen name="ShipperEditBookShip" component={ShipperEditBookShip} options={{ title: "Cập nhật đơn hàng", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
 
 
 

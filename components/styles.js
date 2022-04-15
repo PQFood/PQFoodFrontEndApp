@@ -85,11 +85,19 @@ const styles = StyleSheet.create({
         width: windowWidth * 0.495,
         textAlign: "center",
     },
+    btnFooter3Item: {
+        lineHeight: windowHeight * 0.05,
+        backgroundColor: "#ffcc66",
+        width: windowWidth * 0.33,
+        textAlign: "center",
+    },
     noteStyle: {
         backgroundColor: "#ffffff",
         borderWidth: 1,
         borderRadius: 10,
-        paddingHorizontal: 20
+        paddingHorizontal: 20,
+        marginVertical: 5,
+        paddingVertical: 4
     },
     flexBetweenRow: {
         flex: 1,
@@ -107,8 +115,8 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginVertical: 4
     },
-    orderHistory: { 
-        width: windowWidth * 0.9, 
+    orderHistory: {
+        width: windowWidth * 0.9,
         marginHorizontal: 6,
         borderRadius: 10,
         paddingHorizontal: 8,
@@ -118,6 +126,13 @@ const styles = StyleSheet.create({
         color: "black",
         marginVertical: 2,
         fontSize: 15
+    },
+    infoCustomer: {
+        backgroundColor: "#ffffff", 
+        width: windowWidth * 0.9,
+        marginVertical: 8,
+        padding: 10,
+        borderRadius: 10
     }
 });
 

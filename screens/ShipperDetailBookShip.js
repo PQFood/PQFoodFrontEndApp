@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, Alert } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, Alert, TextInput } from 'react-native';
 import axios from 'axios';
 import CurrencyFormat from 'react-currency-format';
 import RenderItemOrder from '../components/RenderItemOrder';
@@ -11,7 +11,7 @@ import LoadingComponent from '../components/Loading';
 import { useIsFocused } from '@react-navigation/native'
 
 
-function ShipperConfirm(props) {
+function ShipperDetailBookShip(props) {
 
   const { navigation, route } = props;
   const [user, setUser] = useState('')
@@ -64,24 +64,8 @@ function ShipperConfirm(props) {
           <FlatList
             ListFooterComponent={
               <>
-                {/* <FlatList
-                  data={bookShip.staff}
-                  ListHeaderComponent={<Text style={styles.ul}>Nhân viên xử lý</Text>}
-                  renderItem={RenderStaff}
-                  keyExtractor={(item) => item.id}
-                  ListFooterComponent={
-                    <TextInput
-                      style={styles.noteStyle}
-                      multiline
-                      numberOfLines={4}
-                      value={bookShip.note}
-                      editable={false}
-                      selectTextOnFocus={false}
-                    />
-                  } */}
-                {/* /> */}
                 <Text style={styles.ul}>Thông tin khách hàng</Text>
-                <View>
+                <View style={styles.infoCustomer}>
                   <View style={[styles.flexBetweenRow]}>
                     <Text style={[styles.textInfoCustomer]}>{bookShip.name}</Text>
                     <Text style={[styles.textInfoCustomer]}>{bookShip.phoneNumber}</Text>
@@ -91,6 +75,13 @@ function ShipperConfirm(props) {
                     <Text style={[styles.textInfoCustomer]}>Ghi chú: {bookShip.note}</Text>
                   </View>
                 </View>
+                <FlatList
+                  data={bookShip.staff}
+                  ListHeaderComponent={<Text style={styles.ul}>Nhân viên xử lý</Text>}
+                  renderItem={RenderStaff}
+                  keyExtractor={(item) => item.id}
+                />
+
 
               </>
             }
@@ -115,37 +106,11 @@ function ShipperConfirm(props) {
           </View>
           <View style={styles.footerPage}>
             <TouchableOpacity
-              onPress={()=>{
-                navigation.navigate("ShipperEditBookShip",{orderId: bookShip.orderId, user: user, name: name, socket: socket})
-              }}
-            >
-              <Text style={[styles.textBold, styles.btnFooter3Item]}>Cập nhật</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
               onPress={() => {
-                axios({
-                  method: 'get',
-                  url: '/shipper/confirmBookShip',
-                  params: {
-                    orderId: route.params.orderId,
-                    user: user
-                  }
-                })
-                  .then(response => {
-                    if (response.data === "ok") {
-                      socket.emit("sendNotificationShipperConfirmBookShip", {
-                        senderName: name,
-                      })
-                      navigation.navigate('HomeShipper')
-                    }
-                    else alert("Không thể xác nhận hóa đơn")
-                  })
-                  .catch(error => {
-                    console.log(error)
-                  })
+                navigation.navigate("ShipperEditBookShip", { orderId: bookShip.orderId, user: user, name: name, socket: socket })
               }}
             >
-              <Text style={[styles.textBold, styles.btnFooter3Item]}>Xác nhận</Text>
+              <Text style={[styles.textBold, styles.btnFooter]}>Cập nhật</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
@@ -187,7 +152,7 @@ function ShipperConfirm(props) {
 
               }}
             >
-              <Text style={[styles.textBold, styles.btnFooter3Item]}>Hủy</Text>
+              <Text style={[styles.textBold, styles.btnFooter]}>Hủy</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -197,4 +162,4 @@ function ShipperConfirm(props) {
   }
 }
 
-export default ShipperConfirm;
+export default ShipperDetailBookShip;

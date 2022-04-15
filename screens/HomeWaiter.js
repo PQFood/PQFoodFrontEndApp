@@ -45,12 +45,6 @@ function HomeWaiter(props) {
 
   useEffect(() => {
     getdinnerTable()
-    // const intervalId = setInterval(() => {
-    //   getdinnerTable()
-    // }, 60000)
-
-    // return () => clearInterval(intervalId);
-
   }, [isFocused])
 
   useEffect(() => {
@@ -62,7 +56,15 @@ function HomeWaiter(props) {
       socket?.emit("newUser", { userName: user, position: 1 })
   }, [socket,user])
 
+  socket?.on("getNotificationWaiterCompletePayOrder", data => {
+    getdinnerTable()
+  })
+
   useEffect(() => {
+    socket?.on("getNotificationWaiterCompleteOrder", data => {
+      getdinnerTable()
+    })
+
     socket?.on("getNotificationUpdate", data => {
       getdinnerTable()
       toast.show(data.message, {
@@ -73,8 +75,7 @@ function HomeWaiter(props) {
         animationType: "slide-in",
       });
     })
-  }, [socket])
-  useEffect(() => {
+
     socket?.on("getNotificationWaiterUpdate", data => {
       getdinnerTable()
       toast.show(data.message, {
@@ -85,9 +86,7 @@ function HomeWaiter(props) {
         animationType: "slide-in",
       });
     })
-  }, [socket])
 
-  useEffect(() => {
     socket?.on("getNotificationChefNote", data => {
       getdinnerTable()
       toast.show(data, {
@@ -98,9 +97,7 @@ function HomeWaiter(props) {
         animationType: "slide-in",
       });
     })
-  }, [socket])
 
-  useEffect(() => {
     socket?.on("getNotificationChefCompleteOrder", data => {
       getdinnerTable()
       toast.show(data, {
@@ -111,22 +108,7 @@ function HomeWaiter(props) {
         animationType: "slide-in",
       });
     })
-  }, [socket])
-
-  useEffect(() => {
-    socket?.on("getNotificationWaiterCompleteOrder", data => {
-      getdinnerTable()
-    })
-  }, [socket])
-
-  useEffect(() => {
-    socket?.on("getNotificationWaiterCompletePayOrder", data => {
-      getdinnerTable()
-    })
-  }, [socket])
-
-  useEffect(() => {
-    socket?.on("getNotificationBookShip", data => {
+    socket?.on("getNotificationBookTable", data => {
       getdinnerTable()
       toast.show(data, {
         type: "success",

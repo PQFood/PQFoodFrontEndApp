@@ -63,6 +63,22 @@ function HomeChef(props) {
   }, [socket, user])
 
   useEffect(() => {
+    socket?.on("getNotificationUpdate", data => {
+      getdinnerTable()
+    })
+    socket?.on("getNotificationChefCompleteOrder", data => {
+      getdinnerTable()
+    })
+    socket?.on("getNotificationWaiterCompleteOrder", data => {
+      getdinnerTable()
+    })
+    socket?.on("getNotificationWaiterCompletePayOrder", data => {
+      getdinnerTable()
+    })
+    socket?.on("getNotificationShipperCancelBookShip", data => {
+      getdinnerTable()
+    })
+
     socket?.on("getNotificationAddOrder", data => {
       getdinnerTable()
       toast.show(data, {
@@ -73,44 +89,6 @@ function HomeChef(props) {
         animationType: "slide-in",
       });
     })
-  }, [socket])
-  useEffect(() => {
-    socket?.on("getNotificationUpdate", data => {
-      getdinnerTable()
-    })
-  }, [socket])
-  useEffect(() => {
-    socket?.on("getNotificationWaiterUpdate", data => {
-      getdinnerTable()
-      toast.show(data.message, {
-        type: data.type,
-        placement: "top",
-        duration: 60000,
-        offset: 30,
-        animationType: "slide-in",
-      });
-    })
-  }, [socket])
-
-  useEffect(() => {
-    socket?.on("getNotificationChefCompleteOrder", data => {
-      getdinnerTable()
-    })
-  }, [socket])
-
-  useEffect(() => {
-    socket?.on("getNotificationWaiterCompleteOrder", data => {
-      getdinnerTable()
-    })
-  }, [socket])
-
-  useEffect(() => {
-    socket?.on("getNotificationWaiterCompletePayOrder", data => {
-      getdinnerTable()
-    })
-  }, [socket])
-
-  useEffect(() => {
     socket?.on("getNotificationShipperConfirmBookShip", data => {
       getdinnerTable()
       toast.show(data, {
@@ -121,7 +99,28 @@ function HomeChef(props) {
         animationType: "slide-in",
       });
     })
+    socket?.on("getNotificationWaiterUpdate", data => {
+      getdinnerTable()
+      toast.show(data.message, {
+        type: data.type,
+        placement: "top",
+        duration: 60000,
+        offset: 30,
+        animationType: "slide-in",
+      });
+    })
+    socket?.on("getNotificationShipperUpdateBookTable", data => {
+      getdinnerTable()
+      toast.show(data, {
+        type: "normal",
+        placement: "top",
+        duration: 60000,
+        offset: 30,
+        animationType: "slide-in",
+      });
+    })
   }, [socket])
+
 
   const Item = ({ item, onPress, backgroundColor, textColor }) => (
     <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
