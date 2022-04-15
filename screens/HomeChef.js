@@ -110,6 +110,19 @@ function HomeChef(props) {
     })
   }, [socket])
 
+  useEffect(() => {
+    socket?.on("getNotificationShipperConfirmBookShip", data => {
+      getdinnerTable()
+      toast.show(data, {
+        type: "success",
+        placement: "top",
+        duration: 60000,
+        offset: 30,
+        animationType: "slide-in",
+      });
+    })
+  }, [socket])
+
   const Item = ({ item, onPress, backgroundColor, textColor }) => (
     <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
       <Text style={[styles.title, textColor]}>{item.nameTable}</Text>

@@ -114,6 +114,11 @@ const styles = StyleSheet.create({
         paddingHorizontal: 8,
         paddingVertical: 6
     },
+    textInfoCustomer: {
+        color: "black",
+        marginVertical: 2,
+        fontSize: 15
+    }
 });
 
 export default styles

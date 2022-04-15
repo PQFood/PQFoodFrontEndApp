@@ -34,6 +34,8 @@ import WaiterChangePassword from './screens/WaiterChangePassword';
 import DetailOrder from './screens/DetailOrder';
 import ChefWarehouse from './screens/ChefWarehouse';
 import ChefChangeQuantityWarehouse from './screens/ChefChangeQuantityWarehouse';
+import ShipperConfirm from './screens/ShipperConfirm';
+
 
 
 function Navigation(props) {
@@ -92,7 +94,7 @@ function Navigation(props) {
                 <Stack.Screen name="HomeChef" component={HomeChefDrawer} options={{ headerShown: false }} />
                 <Stack.Screen name="WaiterDetailOrder" component={WaiterDetailOrder} options={{ title: "Chi Tiết Hóa Đơn", headerStyle: { backgroundColor: '#ffcc66' }, headerTitleAlign: "center" }} />
                 <Stack.Screen name="WaiterPayOrder" component={WaiterPayOrder} options={{ title: "Thanh Toán Hóa Đơn", headerStyle: { backgroundColor: '#99ff66' }, headerTitleAlign: "center" }} />
-                <Stack.Screen name="WaiterAddOrder" component={WaiterAddOrder} options={({ route }) => ({ title: route.params.nameTable, headerTitleAlign: "center" })} />
+                <Stack.Screen name="WaiterAddOrder" component={WaiterAddOrder} options={{ title: "Lập hóa đơn", headerTitleAlign: "center" }} />
                 <Stack.Screen name="WaiterCompleteFood" component={WaiterCompleteFood} options={{ title: "Hoàn Thành Món", headerTitleAlign: "center", headerStyle: { backgroundColor: '#0099ff' }, }} />
                 <Stack.Screen name="WaiterEditOrder" component={WaiterEditOrder} options={{ title: "Cập nhật Hóa Đơn", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
                 <Stack.Screen name="ChefPayOrder" component={ChefPayOrder} options={{ title: "Chờ thanh Toán", headerTitleAlign: "center", headerStyle: { backgroundColor: '#99ff66' } }} />
@@ -105,6 +107,10 @@ function Navigation(props) {
                     headerStyle: { backgroundColor: '#ffcc66' }
                 })} />
                 <Stack.Screen name="ChefChangeQuantityWarehouse" component={ChefChangeQuantityWarehouse} options={{ title: "Cập nhật số lượng", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
+
+                <Stack.Screen name="ShipperConfirm" component={ShipperConfirm} options={{ title: "Xác nhận đơn", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
+
+
 
                 <Stack.Screen name="TestStack" component={Test} options={{ title: "Test nè", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
 

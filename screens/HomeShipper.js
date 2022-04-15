@@ -66,6 +66,12 @@ function HomeChef(props) {
       socket?.emit("newUser", { userName: user, position: 3 })
   }, [socket, user])
 
+  useEffect(() => {
+    socket?.on("getNotificationShipperConfirmBookShip", data => {
+      getOrderShip()
+    })
+  }, [socket])
+
   // useEffect(() => {
   //   socket?.on("getNotificationAddOrder", data => {
   //     getOrderShip()
@@ -83,18 +89,21 @@ function HomeChef(props) {
   const Item = ({ item, onPress, backgroundColor }) => (
     <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
       <View style={styles.flexBetweenRow}>
-        <Text style={[styles.textBold,styles.textSize]}>{item.orderId}</Text>
+        <Text style={[styles.textBold, styles.textSize]}>{item.orderId}</Text>
         <CurrencyFormat
-              value={item.total}
-              displayType={'text'}
-              thousandSeparator={true}
-              suffix={' đ'}
-              renderText={value => <Text style={[styles.textBold,styles.textSize]}>{value}</Text>}
-            />
+          value={item.total}
+          displayType={'text'}
+          thousandSeparator={true}
+          suffix={' đ'}
+          renderText={value => <Text style={[styles.textBold, styles.textSize]}>{value}</Text>}
+        />
       </View>
       <View style={styles.flexBetweenRow}>
         <Text style={styles.textSize}>{item.name}</Text>
         <Text style={styles.textSize}>{item.phoneNumber}</Text>
+      </View>
+      <View>
+        <Text style={styles.textSize}>Địa chỉ: {item.address}</Text>
       </View>
 
     </TouchableOpacity>
@@ -131,17 +140,17 @@ function HomeChef(props) {
       <Item
         item={item}
         onPress={() => {
-          if (item.color === "Orange") {
-            navigation.navigate('ChefDetailOrder', { nameTable: item.nameTable, slug: item.slug, user: user, name: name, socket: socket })
+          if (item.color === "orange") {
+            navigation.navigate('ChefDetailOrder', { orderId: item.orderId, user: user, name: name, socket: socket })
           }
-          else if (item.color === "Green") {
-            navigation.navigate('ChefPayOrder', { nameTable: item.nameTable, slug: item.slug })
+          else if (item.color === "green") {
+            navigation.navigate('ChefPayOrder', { orderId: item.orderId, slug: item.slug })
           }
-          else if (item.color === "Blue") {
-            navigation.navigate('ChefCompleteFood', { nameTable: item.nameTable, slug: item.slug, user: user, name: name, socket: socket })
+          else if (item.color === "blue") {
+            navigation.navigate('ChefCompleteFood', { orderId: item.orderId, user: user, name: name, socket: socket })
           }
           else {
-            showToast("Bàn trống")
+            navigation.navigate('ShipperConfirm', { orderId: item.orderId, user: user, name: name, socket: socket })
           }
         }}
         backgroundColor={{ backgroundColor }}
