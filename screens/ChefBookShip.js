@@ -25,11 +25,12 @@ function ChefBookShip(props) {
   const isFocused = useIsFocused()
   const [refreshing, setRefreshing] = React.useState(false);
   const [loading, setLoading] = useState(true)
+  const [socketId, setSocketId] = useState(null)
 
   const getOrderShip = () => {
     axios({
       method: 'get',
-      url: '/shipper/homeShipper',
+      url: '/chef/chefBookShip',
     })
       .then(response => {
         setBookShip(response.data)
@@ -44,6 +45,13 @@ function ChefBookShip(props) {
     getOrderShip()
   }, [isFocused])
 
+  const storeSocketId = async (value) => {
+    try {
+      await AsyncStorage.setItem('socketId', value)
+    } catch (e) {
+      console.log(e)
+    }
+  }
 
   const getData = async () => {
     try {
@@ -61,18 +69,60 @@ function ChefBookShip(props) {
   useEffect(() => {
     setSocket(io(URL));
   }, [])
-  useEffect(() => {
-    if (user !== "")
-      socket?.emit("newUser", { userName: user, position: 4 })
-  }, [socket, user])
+
+  useEffect(async () => {
+    try {
+      let socketIdStore = await AsyncStorage.getItem('socketId')
+      socket?.on('connect', () => {
+        setSocketId(socket.id)
+      });
+      if (socketIdStore !== socketId) {
+        if (user !== "")
+          socket?.emit("newUser", { userName: user, position: 4 })
+        socket?.on('connect', () => {
+          storeSocketId(socket.id)
+        });
+      }
+
+    } catch (e) {
+      console.log(e)
+    }
+
+  }, [socket, isFocused, user])
 
   useEffect(() => {
+    socket?.on("getNotificationChefConfirmBookShip", data => {
+      getOrderShip()
+    })
+    socket?.on("getNotificationChefCompleteBookShip", data => {
+      getOrderShip()
+    })
+
+
+    socket?.on("getNotificationShipperReceiveBookShip", data => {
+      getOrderShip()
+      toast.show(data, {
+        type: "success",
+        placement: "top",
+        duration: 60000,
+        offset: 30,
+        animationType: "slide-in",
+      });
+    })
+
     socket?.on("getNotificationShipperCancelBookShip", data => {
-      getdinnerTable()
+      getOrderShip()
+      toast.show(data, {
+        type: "danger",
+        placement: "top",
+        duration: 60000,
+        offset: 30,
+        animationType: "slide-in",
+      });
     })
 
     socket?.on("getNotificationShipperConfirmBookShip", data => {
-      getdinnerTable()
+      getOrderShip()
       toast.show(data, {
         type: "success",
         placement: "top",
@@ -83,7 +133,7 @@ function ChefBookShip(props) {
     })
 
     socket?.on("getNotificationShipperUpdateBookTable", data => {
-      getdinnerTable()
+      getOrderShip()
       toast.show(data, {
         type: "normal",
         placement: "top",
@@ -150,16 +200,16 @@ function ChefBookShip(props) {
         item={item}
         onPress={() => {
           if (item.color === "orange") {
-            navigation.navigate('ShipperDetailBookShip', { orderId: item.orderId, user: user, name: name, socket: socket })
+            navigation.navigate('ChefConfirmBookShip', { orderId: item.orderId, user: user, name: name, socket: socket })
           }
           else if (item.color === "green") {
-            navigation.navigate('ChefPayOrder', { orderId: item.orderId, slug: item.slug })
+            navigation.navigate('ChefCompleteBookShip', { orderId: item.orderId })
           }
           else if (item.color === "blue") {
-            navigation.navigate('ChefCompleteFood', { orderId: item.orderId, user: user, name: name, socket: socket })
+            navigation.navigate('ChefProcessBookShip', { orderId: item.orderId, user: user, name: name, socket: socket })
           }
           else {
-            navigation.navigate('ShipperConfirm', { orderId: item.orderId, user: user, name: name, socket: socket })
+            showToast("Chờ xác nhận")
           }
         }}
         backgroundColor={{ backgroundColor }}

@@ -10,7 +10,7 @@ import { Dimensions } from 'react-native';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 import { MaterialIcons } from '@expo/vector-icons';
-axios.defaults.baseURL = 'http://192.168.1.5:8002';
+axios.defaults.baseURL = 'http://192.168.1.15:8002';
 import { ToastProvider } from 'react-native-toast-notifications'
 import Constants from 'expo-constants';
 

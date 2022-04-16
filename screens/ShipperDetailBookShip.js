@@ -9,6 +9,7 @@ import { LogBox } from 'react-native';
 import styles from '../components/styles';
 import LoadingComponent from '../components/Loading';
 import { useIsFocused } from '@react-navigation/native'
+import RenderInfoCustomer from '../components/RenderInfoCustomer';
 
 
 function ShipperDetailBookShip(props) {
@@ -64,25 +65,13 @@ function ShipperDetailBookShip(props) {
           <FlatList
             ListFooterComponent={
               <>
-                <Text style={styles.ul}>Thông tin khách hàng</Text>
-                <View style={styles.infoCustomer}>
-                  <View style={[styles.flexBetweenRow]}>
-                    <Text style={[styles.textInfoCustomer]}>{bookShip.name}</Text>
-                    <Text style={[styles.textInfoCustomer]}>{bookShip.phoneNumber}</Text>
-                  </View>
-                  <View style={[styles.flexBetweenRow]}>
-                    <Text style={[styles.textInfoCustomer]}>Địa chỉ: {bookShip.address}</Text>
-                    <Text style={[styles.textInfoCustomer]}>Ghi chú: {bookShip.note}</Text>
-                  </View>
-                </View>
+                <RenderInfoCustomer bookShip={bookShip}/>
                 <FlatList
                   data={bookShip.staff}
                   ListHeaderComponent={<Text style={styles.ul}>Nhân viên xử lý</Text>}
                   renderItem={RenderStaff}
                   keyExtractor={(item) => item.id}
                 />
-
-
               </>
             }
             ListHeaderComponent={

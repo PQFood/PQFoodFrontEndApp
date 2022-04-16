@@ -73,6 +73,29 @@ function HomeShipper(props) {
     socket?.on("getNotificationShipperUpdateBookTable", data => {
       getOrderShip()
     })
+    socket?.on("getNotificationShipperReceiveBookShip", data => {
+      getOrderShip()
+    })
+    socket?.on("getNotificationChefCompleteBookShip", data => {
+      getOrderShip()
+      toast.show(data, {
+        type: "success",
+        placement: "top",
+        duration: 60000,
+        offset: 30,
+        animationType: "slide-in",
+      });
+    })
+    socket?.on("getNotificationChefConfirmBookShip", data => {
+      getOrderShip()
+      toast.show(data, {
+        type: "success",
+        placement: "top",
+        duration: 60000,
+        offset: 30,
+        animationType: "slide-in",
+      });
+    })
     socket?.on("getNotificationShipperCancelBookShip", data => {
       getOrderShip()
       toast.show(data, {
@@ -154,10 +177,10 @@ function HomeShipper(props) {
             navigation.navigate('ShipperDetailBookShip', { orderId: item.orderId, user: user, name: name, socket: socket })
           }
           else if (item.color === "green") {
-            navigation.navigate('ChefPayOrder', { orderId: item.orderId, slug: item.slug })
+            navigation.navigate('ShipperCompleteBookShip', { orderId: item.orderId, user: user, name: name, socket: socket })
           }
           else if (item.color === "blue") {
-            navigation.navigate('ChefCompleteFood', { orderId: item.orderId, user: user, name: name, socket: socket })
+            navigation.navigate('ShipperReceiveBookShip', { orderId: item.orderId, user: user, name: name, socket: socket })
           }
           else {
             navigation.navigate('ShipperConfirm', { orderId: item.orderId, user: user, name: name, socket: socket })

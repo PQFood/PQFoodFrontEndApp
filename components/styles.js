@@ -133,6 +133,12 @@ const styles = StyleSheet.create({
         marginVertical: 8,
         padding: 10,
         borderRadius: 10
+    },
+    btnFooterOneElement: {
+        lineHeight: windowHeight * 0.05,
+        backgroundColor: "#ffcc66",
+        width: windowWidth,
+        textAlign: "center",
     }
 });
 

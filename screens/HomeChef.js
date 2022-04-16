@@ -17,7 +17,9 @@ function HomeChef(props) {
   const toast = useToast();
   const [dinnerTable, setDinnerTable] = useState(null)
   const isFocused = useIsFocused()
-  const [refreshing, setRefreshing] = React.useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [socketShip, setSocketShip] = useState(null)
+  const [socketId, setSocketId] = useState(null)
 
   const getdinnerTable = () => {
     axios({
@@ -34,10 +36,6 @@ function HomeChef(props) {
 
   useEffect(() => {
     getdinnerTable()
-    // const intervalId = setInterval(() => {
-    //   getdinnerTable()
-    // }, 60000)
-    // return () => clearInterval(intervalId);
   }, [isFocused])
 
 
@@ -54,6 +52,16 @@ function HomeChef(props) {
   useEffect(() => {
     getData()
   }, [])
+
+  const storeSocketId = async (value) => {
+    try {
+      await AsyncStorage.setItem('socketId', value)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  //2
   useEffect(() => {
     setSocket(io(URL));
   }, [])
@@ -61,7 +69,31 @@ function HomeChef(props) {
     if (user !== "")
       socket?.emit("newUser", { userName: user, position: 2 })
   }, [socket, user])
+  //4
+  useEffect(() => {
+    setSocketShip(io(URL));
+  }, [])
 
+  useEffect(async () => {
+    try {
+      let socketIdStore = await AsyncStorage.getItem('socketId')
+      socketShip?.on('connect', () => {
+        setSocketId(socketShip.id)
+      });
+      if (socketIdStore !== socketId) {
+        if (user !== "")
+          socketShip?.emit("newUser", { userName: user, position: 4 })
+        socketShip?.on('connect', () => {
+          storeSocketId(socketShip.id)
+        });
+      }
+
+    } catch (e) {
+      console.log(e)
+    }
+
+  }, [socket, isFocused, user])
+  //positon 2
   useEffect(() => {
     socket?.on("getNotificationUpdate", data => {
       getdinnerTable()
@@ -121,6 +153,48 @@ function HomeChef(props) {
     })
   }, [socket])
 
+  //position 4
+  useEffect(() => {
+
+    socketShip?.on("getNotificationShipperReceiveBookShip", data => {
+      toast.show(data, {
+        type: "success",
+        placement: "top",
+        duration: 60000,
+        offset: 30,
+        animationType: "slide-in",
+      });
+    })
+
+    socketShip?.on("getNotificationShipperConfirmBookShip", data => {
+      toast.show(data, {
+        type: "success",
+        placement: "top",
+        duration: 60000,
+        offset: 30,
+        animationType: "slide-in",
+      });
+    })
+
+    socketShip?.on("getNotificationShipperUpdateBookTable", data => {
+      toast.show(data, {
+        type: "normal",
+        placement: "top",
+        duration: 60000,
+        offset: 30,
+        animationType: "slide-in",
+      });
+    })
+    socketShip?.on("getNotificationShipperCancelBookShip", data => {
+      toast.show(data, {
+        type: "danger",
+        placement: "top",
+        duration: 60000,
+        offset: 30,
+        animationType: "slide-in",
+      });
+    })
+  }, [socketShip])
 
   const Item = ({ item, onPress, backgroundColor, textColor }) => (
     <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>

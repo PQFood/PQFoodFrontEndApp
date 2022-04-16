@@ -12,7 +12,7 @@ import { useIsFocused } from '@react-navigation/native'
 import RenderInfoCustomer from '../components/RenderInfoCustomer';
 
 
-function ShipperConfirm(props) {
+function ChefConfirmBookShip(props) {
 
   const { navigation, route } = props;
   const [user, setUser] = useState('')
@@ -64,7 +64,15 @@ function ShipperConfirm(props) {
 
           <FlatList
             ListFooterComponent={
-              <RenderInfoCustomer bookShip={bookShip}/>
+              <>
+                <RenderInfoCustomer bookShip={bookShip}/>
+                <FlatList
+                  data={bookShip.staff}
+                  ListHeaderComponent={<Text style={styles.ul}>Nhân viên xử lý</Text>}
+                  renderItem={RenderStaff}
+                  keyExtractor={(item) => item.id}
+                />
+              </>
             }
             ListHeaderComponent={
               <Text style={styles.ul}>Món gọi</Text>
@@ -86,18 +94,12 @@ function ShipperConfirm(props) {
             />
           </View>
           <View style={styles.footerPage}>
-            <TouchableOpacity
-              onPress={()=>{
-                navigation.navigate("ShipperEditBookShip",{orderId: bookShip.orderId, user: user, name: name, socket: socket})
-              }}
-            >
-              <Text style={[styles.textBold, styles.btnFooter3Item]}>Cập nhật</Text>
-            </TouchableOpacity>
+            
             <TouchableOpacity
               onPress={() => {
                 axios({
                   method: 'get',
-                  url: '/shipper/confirmBookShip',
+                  url: '/chef/confirmBookShip',
                   params: {
                     orderId: route.params.orderId,
                     user: user
@@ -105,10 +107,11 @@ function ShipperConfirm(props) {
                 })
                   .then(response => {
                     if (response.data === "ok") {
-                      socket.emit("sendNotificationShipperConfirmBookShip", {
+                      socket.emit("sendNotificationChefConfirmBookShip", {
                         senderName: name,
+                        orderId: route.params.orderId,
                       })
-                      navigation.navigate('HomeShipper')
+                      navigation.goBack()
                     }
                     else alert("Không thể xác nhận hóa đơn")
                   })
@@ -117,7 +120,7 @@ function ShipperConfirm(props) {
                   })
               }}
             >
-              <Text style={[styles.textBold, styles.btnFooter3Item]}>Xác nhận</Text>
+              <Text style={[styles.textBold, styles.btnFooter]}>Xác nhận</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
@@ -144,7 +147,7 @@ function ShipperConfirm(props) {
                                 senderName: name,
                                 orderId: route.params.orderId,
                               })
-                              navigation.navigate('HomeShipper')
+                              navigation.goBack()
                             }
                             else alert("Không thể xóa hóa đơn")
                           })
@@ -159,7 +162,7 @@ function ShipperConfirm(props) {
 
               }}
             >
-              <Text style={[styles.textBold, styles.btnFooter3Item]}>Hủy</Text>
+              <Text style={[styles.textBold, styles.btnFooter]}>Hủy</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -169,4 +172,4 @@ function ShipperConfirm(props) {
   }
 }
 
-export default ShipperConfirm;
+export default ChefConfirmBookShip;

@@ -38,7 +38,11 @@ import ShipperConfirm from './screens/ShipperConfirm';
 import ShipperDetailBookShip from './screens/ShipperDetailBookShip';
 import ShipperEditBookShip from './screens/ShipperEditBookShip';
 import ChefBookShip from './screens/ChefBookShip';
-
+import ChefConfirmBookShip from './screens/ChefConfirmBookShip';
+import ChefProcessBookShip from './screens/ChefProcessBookShip';
+import ChefCompleteBookShip from './screens/ChefCompleteBookShip';
+import ShipperReceiveBookShip from './screens/ShipperReceiveBookShip';
+import ShipperCompleteBookShip from './screens/ShipperCompleteBookShip';
 
 function Navigation(props) {
 
@@ -104,6 +108,10 @@ function Navigation(props) {
                 <Stack.Screen name="ChefDetailOrder" component={ChefDetailOrder} options={{ title: "Chi Tiết Hóa Đơn", headerStyle: { backgroundColor: '#ffcc66' }, headerTitleAlign: "center" }} />
                 <Stack.Screen name="ChefCompleteFood" component={ChefCompleteFood} options={{ title: "Hoàn Thành Món", headerTitleAlign: "center", headerStyle: { backgroundColor: '#0099ff' }, }} />
                 <Stack.Screen name="ChefNotification" component={ChefNotification} options={{ title: "Thông báo", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
+                <Stack.Screen name="ChefConfirmBookShip" component={ChefConfirmBookShip} options={{ title: "Xác nhận đơn", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
+                <Stack.Screen name="ChefProcessBookShip" component={ChefProcessBookShip} options={{ title: "Hoàn thành món", headerTitleAlign: "center", headerStyle: { backgroundColor: '#0099ff' }, }} />
+                <Stack.Screen name="ChefCompleteBookShip" component={ChefCompleteBookShip} options={{ title: "Chờ giao", headerTitleAlign: "center", headerStyle: { backgroundColor: '#99ff66' }, }} />
+                
                 <Stack.Screen name="DetailOrder" component={DetailOrder} options={({ route }) => ({
                     title: "Hóa đơn - " + route.params.orderId,
                     headerTitleAlign: "center",
@@ -114,6 +122,8 @@ function Navigation(props) {
                 <Stack.Screen name="ShipperConfirm" component={ShipperConfirm} options={{ title: "Xác nhận đơn", headerTitleAlign: "center" }} />
                 <Stack.Screen name="ShipperDetailBookShip" component={ShipperDetailBookShip} options={{ title: "Chi tiết đơn hàng", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
                 <Stack.Screen name="ShipperEditBookShip" component={ShipperEditBookShip} options={{ title: "Cập nhật đơn hàng", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
+                <Stack.Screen name="ShipperReceiveBookShip" component={ShipperReceiveBookShip} options={{ title: "Nhận món", headerTitleAlign: "center", headerStyle: { backgroundColor: '#0099ff' }, }} />
+                <Stack.Screen name="ShipperCompleteBookShip" component={ShipperCompleteBookShip} options={{ title: "Hoàn thành đơn", headerTitleAlign: "center", headerStyle: { backgroundColor: '#99ff66' }, }} />
 
 
 
