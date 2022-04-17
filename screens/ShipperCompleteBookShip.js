@@ -99,7 +99,7 @@ function ShipperCompleteBookShip(props) {
               onPress={() => {
                 axios({
                   method: 'get',
-                  url: '/chef/confirmBookShip',
+                  url: '/shipper/completeBookShip',
                   params: {
                     orderId: route.params.orderId,
                     user: user
@@ -107,7 +107,7 @@ function ShipperCompleteBookShip(props) {
                 })
                   .then(response => {
                     if (response.data === "ok") {
-                      socket.emit("sendNotificationChefConfirmBookShip", {
+                      socket.emit("sendNotificationShipperCompleteBookShip", {
                         senderName: name,
                         orderId: route.params.orderId,
                       })

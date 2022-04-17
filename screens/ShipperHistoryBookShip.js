@@ -1,35 +1,39 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, RefreshControl, FlatList, Button } from 'react-native';
-import styles from '../components/styles';
-import LoadingComponent from '../components/Loading';
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, RefreshControl, BackHandler, Alert } from 'react-native';
+import { useToast } from "react-native-toast-notifications";
 import axios from 'axios';
 import { useIsFocused } from '@react-navigation/native'
-import RenderHistoryOrder from '../components/RenderHistoryOrder';
+import LoadingComponent from '../components/Loading';
 import { Dimensions } from 'react-native';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
+import styles from '../components/stylesShipper';
+import CurrencyFormat from 'react-currency-format';
 import { AntDesign } from '@expo/vector-icons';
+import RenderBookShipElement from '../components/RenderBookShipElement';
 
-function WaiterHistoryOrder(props) {
+function ShipperHistoryBookShip(props) {
 
   const { navigation, route } = props;
-  const [quantity, setQuantity] = useState(1)
-  const [orderHistory, setOrderHistory] = useState(null)
-  const [loading, setLoading] = useState(false)
-  const [full, setFull] = useState(false)
-  const [refreshing, setRefreshing] = React.useState(false);
-  const isFocused = useIsFocused()
 
-  const getHistoryOrder = (quantity) => {
+  const toast = useToast();
+  const [bookShip, setBookShip] = useState(null)
+  const isFocused = useIsFocused()
+  const [refreshing, setRefreshing] = React.useState(false);
+  const [loading, setLoading] = useState(true)
+  const [quantity, setQuantity] = useState(1)
+  const [full, setFull] = useState(false)
+
+  const getOrderShip = () => {
     axios({
       method: 'get',
-      url: '/waiter/getHistoryOrder',
+      url: '/shipper/getBookShipHistory',
       params: {
         quantity: quantity
       }
     })
       .then(response => {
-        setOrderHistory(response.data.order)
+        setBookShip(response.data.order)
         setFull(response.data.full)
         setLoading(false)
       })
@@ -37,48 +41,41 @@ function WaiterHistoryOrder(props) {
         console.log(error)
       })
   }
-  
+
   useEffect(() => {
-    getHistoryOrder(quantity)
-  }, [isFocused, quantity])
+    getOrderShip()
+  }, [isFocused,quantity])
+
 
   const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
   }
 
   const onRefresh = () => {
-    getHistoryOrder(quantity);
+    getOrderShip();
     setRefreshing(true);
     wait(1200).then(() => setRefreshing(false));
   };
 
-  const RenderItem = ({ item }) => {
-    let colorItem = ""
-    if(item.state === "Đã hủy") colorItem = "#ff3300"
-    else colorItem = "#66ff66"
+  const renderItem = ({ item }) => {
 
+    var backgroundColor = ""
+    if (item.state === "Đã hủy") {
+      backgroundColor = "#ff3300"
+    }
+    else {
+      backgroundColor = "#66ff66"
+    }
     return (
-      <TouchableOpacity
-        onPress={()=>{
-          navigation.navigate('DetailOrder',{orderId: item.orderId})
+      <RenderBookShipElement
+        item={item}
+        onPress={() => {
+          navigation.navigate("ShipperDetailHistotyBookShip",{orderId: item.orderId})
         }}
-        style={{marginBottom: 10, 
-          width: windowWidth*0.9,
-          backgroundColor: colorItem,
-          marginHorizontal: 10,
-          borderRadius: 10,
-          paddingHorizontal: 10,
-          paddingVertical: 8
-        }}
-      >
-        <RenderHistoryOrder
-          item={item}
-        />
-      </TouchableOpacity>
-
-    )
-  }
-
+        backgroundColor={{ backgroundColor }}
+      />
+    );
+  };
 
   if (loading) {
     return (
@@ -86,6 +83,7 @@ function WaiterHistoryOrder(props) {
     )
   }
   else {
+
     return (
       <>
         <View style={styles.container}>
@@ -97,10 +95,9 @@ function WaiterHistoryOrder(props) {
                 colors={["#ffcc66", "green", "blue"]}
               />
             }
-            data={orderHistory}
-            renderItem={RenderItem}
-            keyExtractor={(item) => item._id}
-            style={{ marginTop: 10 }}
+            data={bookShip}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.orderId}
             ListFooterComponent = {
               <>
               {(quantity < 5 && !full) ? (
@@ -138,11 +135,10 @@ function WaiterHistoryOrder(props) {
               </>
             }
           />
-
         </View>
       </>
     );
   }
 }
 
-export default WaiterHistoryOrder;
+export default ShipperHistoryBookShip;

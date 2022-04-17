@@ -13,6 +13,7 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 import styles from '../components/stylesShipper';
 import CurrencyFormat from 'react-currency-format';
+import RenderBookShipElement from '../components/RenderBookShipElement';
 
 function HomeShipper(props) {
 
@@ -76,6 +77,16 @@ function HomeShipper(props) {
     socket?.on("getNotificationShipperReceiveBookShip", data => {
       getOrderShip()
     })
+    socket?.on("getNotificationShipperCompleteBookShip", data => {
+      getOrderShip()
+      toast.show(data, {
+        type: "success",
+        placement: "top",
+        duration: 60000,
+        offset: 30,
+        animationType: "slide-in",
+      });
+    })
     socket?.on("getNotificationChefCompleteBookShip", data => {
       getOrderShip()
       toast.show(data, {
@@ -118,30 +129,6 @@ function HomeShipper(props) {
     })
   }, [socket])
 
-
-  const Item = ({ item, onPress, backgroundColor }) => (
-    <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
-      <View style={styles.flexBetweenRow}>
-        <Text style={[styles.textBold, styles.textSize]}>{item.orderId}</Text>
-        <CurrencyFormat
-          value={item.total}
-          displayType={'text'}
-          thousandSeparator={true}
-          suffix={' đ'}
-          renderText={value => <Text style={[styles.textBold, styles.textSize]}>{value}</Text>}
-        />
-      </View>
-      <View style={styles.flexBetweenRow}>
-        <Text style={styles.textSize}>{item.name}</Text>
-        <Text style={styles.textSize}>{item.phoneNumber}</Text>
-      </View>
-      <View>
-        <Text style={styles.textSize}>Địa chỉ: {item.address}</Text>
-      </View>
-
-    </TouchableOpacity>
-  );
-
   const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
   }
@@ -170,7 +157,7 @@ function HomeShipper(props) {
       backgroundColor = "#ffffff"
     }
     return (
-      <Item
+      <RenderBookShipElement
         item={item}
         onPress={() => {
           if (item.color === "orange") {

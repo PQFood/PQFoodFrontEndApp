@@ -13,6 +13,7 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 import styles from '../components/stylesShipper';
 import CurrencyFormat from 'react-currency-format';
+import RenderBookShipElement from '../components/RenderBookShipElement';
 
 function ChefBookShip(props) {
 
@@ -97,6 +98,9 @@ function ChefBookShip(props) {
     socket?.on("getNotificationChefCompleteBookShip", data => {
       getOrderShip()
     })
+    socket?.on("getNotificationShipperCompleteBookShip", data => {
+      getOrderShip()
+    })
 
 
     socket?.on("getNotificationShipperReceiveBookShip", data => {
@@ -144,30 +148,6 @@ function ChefBookShip(props) {
     })
   }, [socket])
 
-
-  const Item = ({ item, onPress, backgroundColor }) => (
-    <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
-      <View style={styles.flexBetweenRow}>
-        <Text style={[styles.textBold, styles.textSize]}>{item.orderId}</Text>
-        <CurrencyFormat
-          value={item.total}
-          displayType={'text'}
-          thousandSeparator={true}
-          suffix={' đ'}
-          renderText={value => <Text style={[styles.textBold, styles.textSize]}>{value}</Text>}
-        />
-      </View>
-      <View style={styles.flexBetweenRow}>
-        <Text style={styles.textSize}>{item.name}</Text>
-        <Text style={styles.textSize}>{item.phoneNumber}</Text>
-      </View>
-      <View>
-        <Text style={styles.textSize}>Địa chỉ: {item.address}</Text>
-      </View>
-
-    </TouchableOpacity>
-  );
-
   const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
   }
@@ -196,7 +176,7 @@ function ChefBookShip(props) {
       backgroundColor = "#ffffff"
     }
     return (
-      <Item
+      <RenderBookShipElement
         item={item}
         onPress={() => {
           if (item.color === "orange") {
