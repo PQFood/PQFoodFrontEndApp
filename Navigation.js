@@ -49,49 +49,48 @@ import ShipperDetailHistotyBookShip from './screens/ShipperDetailHistotyBookShip
 function Navigation(props) {
 
     const Stack = createNativeStackNavigator();
-    const WaiterDrawer = createDrawerNavigator();
+    const Drawer = createDrawerNavigator();
 
     const HomeWaiterDrawer = () => {
         return (
-            <WaiterDrawer.Navigator initialRouteName="Home">
-                <WaiterDrawer.Screen name="Home" component={HomeWaiter} options={{ drawerIcon: ({ focused, size, color }) => (<FontAwesome5 name="home" size={20} color="black" />), title: "Trang chủ phục vụ", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", }} />
-                <WaiterDrawer.Screen name="WaiterConfirmBookTable" component={WaiterConfirmBookTable} options={{ title: "Xác nhận đặt bàn", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: (focused, size, color) => (<FontAwesome name="calendar-check-o" size={24} color="black" />) }} />
-                <WaiterDrawer.Screen name="WaiterCompleteBookTable" component={WaiterCompleteBookTable} options={{ title: "Xem lịch đặt bàn", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: (focused, size, color) => (<FontAwesome name="calendar" size={24} color="black" />) }} />
-                <WaiterDrawer.Screen name="WaiterHistoryBookTable" component={WaiterHistoryBookTable} options={{ title: "Lịch sử đặt bàn", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: (focused, size, color) => (<FontAwesome5 name="calendar-alt" size={24} color="black" />) }} />
-                <WaiterDrawer.Screen name="WaiterHistoryOrder" component={WaiterHistoryOrder} options={{ title: "Lịch sử hóa đơn", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: (focused, size, color) => (<FontAwesome5 name="history" size={24} color="black" />) }} />
-                <WaiterDrawer.Screen name="WaiterChangePassword" component={WaiterChangePassword} options={{ title: "Đổi mật khẩu", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: (focused, size, color) => (<MaterialCommunityIcons name="key-change" size={24} color="black" />) }} />
-                <WaiterDrawer.Screen name="LogOut" component={LogOut} options={{ headerShown: false, drawerIcon: ({ focused, size, color }) => (<Entypo name="log-out" size={26} color="black" />) }} />
+            <Drawer.Navigator initialRouteName="Home">
+                <Drawer.Screen name="Home" component={HomeWaiter} options={{ drawerIcon: ({ focused, size, color }) => (<FontAwesome5 name="home" size={20} color="black" />), title: "Trang chủ phục vụ", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", }} />
+                <Drawer.Screen name="WaiterConfirmBookTable" component={WaiterConfirmBookTable} options={{ title: "Xác nhận đặt bàn", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: (focused, size, color) => (<FontAwesome name="calendar-check-o" size={24} color="black" />) }} />
+                <Drawer.Screen name="WaiterCompleteBookTable" component={WaiterCompleteBookTable} options={{ title: "Xem lịch đặt bàn", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: (focused, size, color) => (<FontAwesome name="calendar" size={24} color="black" />) }} />
+                <Drawer.Screen name="WaiterHistoryBookTable" component={WaiterHistoryBookTable} options={{ title: "Lịch sử đặt bàn", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: (focused, size, color) => (<FontAwesome5 name="calendar-alt" size={24} color="black" />) }} />
+                <Drawer.Screen name="WaiterHistoryOrder" component={WaiterHistoryOrder} options={{ title: "Lịch sử hóa đơn", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: (focused, size, color) => (<FontAwesome5 name="history" size={24} color="black" />) }} />
+                <Drawer.Screen name="WaiterChangePassword" component={WaiterChangePassword} options={{ title: "Đổi mật khẩu", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: (focused, size, color) => (<MaterialCommunityIcons name="key-change" size={24} color="black" />) }} />
+                <Drawer.Screen name="LogOut" component={LogOut} options={{title: "Đăng xuất", headerShown: false, drawerIcon: ({ focused, size, color }) => (<Entypo name="log-out" size={26} color="black" />) }} />
 
-            </WaiterDrawer.Navigator>
+            </Drawer.Navigator>
         );
     }
 
     const HomeChefDrawer = () => {
         return (
-            <WaiterDrawer.Navigator initialRouteName="Home">
-                <WaiterDrawer.Screen name="Home" component={HomeChef} options={{ title: "Trang chủ dầu bếp", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: ({ focused, size, color }) => (<FontAwesome5 name="home" size={20} color="black" />) }} />
-                <WaiterDrawer.Screen name="WaiterHistoryOrder" component={WaiterHistoryOrder} options={{ title: "Lịch sử hóa đơn", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: (focused, size, color) => (<FontAwesome5 name="history" size={24} color="black" />) }} />
-                <WaiterDrawer.Screen name="WaiterChangePassword" component={WaiterChangePassword} options={{ title: "Đổi mật khẩu", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: (focused, size, color) => (<MaterialCommunityIcons name="key-change" size={24} color="black" />) }} />
-                <WaiterDrawer.Screen name="ChefWarehouse" component={ChefWarehouse} options={{ title: "Quản lý kho", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: (focused, size, color) => (<FontAwesome5 name="warehouse" size={20} color="black" />) }} />
-                <WaiterDrawer.Screen name="ChefBookShip" component={ChefBookShip} options={{ title: "Quản lý đơn ship", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: (focused, size, color) => (<FontAwesome5 name="shipping-fast" size={20} color="black" />) }} />
-                <WaiterDrawer.Screen name="ShipperHistoryBookShip" component={ShipperHistoryBookShip} options={{ title: "Lịch sử đơn ship", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: ({ focused, size, color }) => (<FontAwesome5 name="history" size={24} color="black" />) }} />
+            <Drawer.Navigator initialRouteName="Home">
+                <Drawer.Screen name="Home" component={HomeChef} options={{ title: "Trang chủ dầu bếp", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: ({ focused, size, color }) => (<FontAwesome5 name="home" size={20} color="black" />) }} />
+                <Drawer.Screen name="ChefWarehouse" component={ChefWarehouse} options={{ title: "Quản lý kho", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: (focused, size, color) => (<FontAwesome5 name="warehouse" size={20} color="black" />) }} />
+                <Drawer.Screen name="ChefBookShip" component={ChefBookShip} options={{ title: "Quản lý đơn ship", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: (focused, size, color) => (<FontAwesome5 name="shipping-fast" size={20} color="black" />) }} />
+                <Drawer.Screen name="ShipperHistoryBookShip" component={ShipperHistoryBookShip} options={{ title: "Lịch sử đơn ship", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: ({ focused, size, color }) => (<FontAwesome5 name="history" size={24} color="black" />) }} />
+                <Drawer.Screen name="WaiterHistoryOrder" component={WaiterHistoryOrder} options={{ title: "Lịch sử hóa đơn", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: (focused, size, color) => (<FontAwesome5 name="history" size={24} color="black" />) }} />
 
-
-                <WaiterDrawer.Screen name="LogOut" component={LogOut} options={{ headerShown: false, drawerIcon: ({ focused, size, color }) => (<Entypo name="log-out" size={28} color="black" />) }} />
-            </WaiterDrawer.Navigator>
+                <Drawer.Screen name="WaiterChangePassword" component={WaiterChangePassword} options={{ title: "Đổi mật khẩu", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: (focused, size, color) => (<MaterialCommunityIcons name="key-change" size={24} color="black" />) }} />
+                <Drawer.Screen name="LogOut" component={LogOut} options={{title: "Đăng xuất", headerShown: false, drawerIcon: ({ focused, size, color }) => (<Entypo name="log-out" size={28} color="black" />) }} />
+            </Drawer.Navigator>
         );
     }
 
     const HomeShipperDrawer = () => {
         return (
-            <WaiterDrawer.Navigator initialRouteName="Home">
-                <WaiterDrawer.Screen name="Home" component={HomeShipper} options={{ title: "Trang chủ shipper", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: ({ focused, size, color }) => (<FontAwesome5 name="home" size={20} color="black" />) }} />
-                <WaiterDrawer.Screen name="ShipperHistoryBookShip" component={ShipperHistoryBookShip} options={{ title: "Lịch sử đơn ship", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: ({ focused, size, color }) => (<FontAwesome5 name="history" size={24} color="black" />) }} />
+            <Drawer.Navigator initialRouteName="Home">
+                <Drawer.Screen name="Home" component={HomeShipper} options={{ title: "Trang chủ shipper", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: ({ focused, size, color }) => (<FontAwesome5 name="home" size={20} color="black" />) }} />
+                <Drawer.Screen name="ShipperHistoryBookShip" component={ShipperHistoryBookShip} options={{ title: "Lịch sử đơn ship", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: ({ focused, size, color }) => (<FontAwesome5 name="history" size={24} color="black" />) }} />
 
 
-                <WaiterDrawer.Screen name="WaiterChangePassword" component={WaiterChangePassword} options={{ title: "Đổi mật khẩu", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: (focused, size, color) => (<MaterialCommunityIcons name="key-change" size={24} color="black" />) }} />
-                <WaiterDrawer.Screen name="LogOut" component={LogOut} options={{ headerShown: false, drawerIcon: ({ focused, size, color }) => (<Entypo name="log-out" size={28} color="black" />) }} />
-            </WaiterDrawer.Navigator>
+                <Drawer.Screen name="WaiterChangePassword" component={WaiterChangePassword} options={{ title: "Đổi mật khẩu", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: (focused, size, color) => (<MaterialCommunityIcons name="key-change" size={24} color="black" />) }} />
+                <Drawer.Screen name="LogOut" component={LogOut} options={{title: "Đăng xuất", headerShown: false, drawerIcon: ({ focused, size, color }) => (<Entypo name="log-out" size={28} color="black" />) }} />
+            </Drawer.Navigator>
         );
     }
 
