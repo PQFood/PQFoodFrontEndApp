@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, Alert, FlatList, RefreshControl, BackHandler } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, Alert, FlatList, RefreshControl, Modal, Pressable } from 'react-native';
 
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Dimensions } from 'react-native';
@@ -15,15 +15,19 @@ import RenderStaff from '../components/RenderStaff';
 import { LogBox } from 'react-native';
 import styles from '../components/styles';
 import LoadingComponent from '../components/Loading';
+import ReasonCancelOrder from '../components/ReasonCancelOrder';
+
 function WaiterDetailOrder(props) {
 
   const { navigation, route } = props;
   const [user, setUser] = useState('')
   const [name, setName] = useState('')
+  const [reason, setReason] = useState('')
   const [order, SetOrder] = useState(null)
   const [loading, setLoading] = useState(true)
   const [socket, setSocket] = useState(null)
   const [refreshing, setRefreshing] = React.useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
   LogBox.ignoreLogs([
     'Non-serializable values were found in the navigation state',
   ]);
@@ -129,49 +133,44 @@ function WaiterDetailOrder(props) {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                Alert.alert(
-                  "Cảnh báo",
-                  "Bạn có chắc muốn hủy hóa đơn này?",
-                  [
-                    {
-                      text: "Bỏ qua",
-                    },
-                    {
-                      text: "Xác nhận", onPress: () => {
-                        axios({
-                          method: 'get',
-                          url: '/chef/deleteOrder',
-                          params: {
-                            table: route.params.slug,
-                            user: user
-                          }
-                        })
-                          .then(response => {
-                            if (response.data === "ok") {
-                              socket.emit("sendNotificationWaiterUpdate", {
-                                senderName: name,
-                                table: route.params.nameTable,
-                                act: 2
-                              })
-                              navigation.navigate('HomeWaiter')
-                            }
-                            else alert("Không thể xóa hóa đơn")
-                          })
-                          .catch(error => {
-                            console.log(error)
-                          })
-
-                      }
-                    }
-                  ]
-                );
-
+                setModalVisible(true)
               }}
             >
               <Text style={[styles.textBold, styles.btnFooter]}>Hủy</Text>
             </TouchableOpacity>
           </View>
         </View>
+        <ReasonCancelOrder
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+          setReason={setReason}
+          reason={reason}
+          cancelOrder={() => {
+            axios({
+              method: 'get',
+              url: '/chef/deleteOrder',
+              params: {
+                table: route.params.slug,
+                user: user,
+                reason: reason
+              }
+            })
+              .then(response => {
+                if (response.data === "ok") {
+                  socket.emit("sendNotificationWaiterUpdate", {
+                    senderName: name,
+                    table: route.params.nameTable,
+                    act: 2
+                  })
+                  navigation.navigate('HomeWaiter')
+                }
+                else alert("Không thể xóa hóa đơn")
+              })
+              .catch(error => {
+                console.log(error)
+              })
+          }}
+        />
       </>
 
     );

@@ -10,6 +10,7 @@ import styles from '../components/styles';
 import LoadingComponent from '../components/Loading';
 import { useIsFocused } from '@react-navigation/native'
 import RenderInfoCustomer from '../components/RenderInfoCustomer';
+import ReasonCancelOrder from '../components/ReasonCancelOrder';
 
 
 function ChefConfirmBookShip(props) {
@@ -21,6 +22,8 @@ function ChefConfirmBookShip(props) {
   const [loading, setLoading] = useState(true)
   const [socket, setSocket] = useState(null)
   const isFocused = useIsFocused()
+  const [reason, setReason] = useState('')
+  const [modalVisible, setModalVisible] = useState(false);
 
   LogBox.ignoreLogs([
     'Non-serializable values were found in the navigation state',
@@ -124,48 +127,44 @@ function ChefConfirmBookShip(props) {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                Alert.alert(
-                  "Cảnh báo",
-                  "Bạn có chắc muốn hủy hóa đơn này?",
-                  [
-                    {
-                      text: "Bỏ qua",
-                    },
-                    {
-                      text: "Xác nhận", onPress: () => {
-                        axios({
-                          method: 'get',
-                          url: '/shipper/deleteBookShip',
-                          params: {
-                            orderId: route.params.orderId,
-                            user: user
-                          }
-                        })
-                          .then(response => {
-                            if (response.data === "ok") {
-                              socket.emit("sendNotificationShipperCancelBookShip", {
-                                senderName: name,
-                                orderId: route.params.orderId,
-                              })
-                              navigation.goBack()
-                            }
-                            else alert("Không thể xóa hóa đơn")
-                          })
-                          .catch(error => {
-                            console.log(error)
-                          })
-
-                      }
-                    }
-                  ]
-                );
-
+                setModalVisible(true)
               }}
             >
               <Text style={[styles.textBold, styles.btnFooter]}>Hủy</Text>
             </TouchableOpacity>
           </View>
         </View>
+        
+        <ReasonCancelOrder
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+          setReason={setReason}
+          reason={reason}
+          cancelOrder={() => {
+            axios({
+              method: 'get',
+              url: '/shipper/deleteBookShip',
+              params: {
+                orderId: route.params.orderId,
+                user: user,
+                reason: reason
+              }
+            })
+              .then(response => {
+                if (response.data === "ok") {
+                  socket.emit("sendNotificationShipperCancelBookShip", {
+                    senderName: name,
+                    orderId: route.params.orderId,
+                  })
+                  navigation.goBack()
+                }
+                else alert("Không thể xóa hóa đơn")
+              })
+              .catch(error => {
+                console.log(error)
+              })
+          }}
+        />
       </>
 
     );

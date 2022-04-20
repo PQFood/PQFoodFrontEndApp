@@ -62,6 +62,7 @@ function DetailOrder(props) {
                   renderItem={RenderStaff}
                   keyExtractor={(item) => item.id}
                   ListFooterComponent={
+                    <>
                     <TextInput
                       style={styles.noteStyle}
                       multiline
@@ -70,6 +71,10 @@ function DetailOrder(props) {
                       editable={false}
                       selectTextOnFocus={false}
                     />
+                    {order.state === "Đã hủy" ? (
+                      <Text style={{marginTop: 5, fontSize: 15}}>Lý do hủy: {order.reason}</Text>
+                    ): null}
+                    </>
                   }
                 />
               </>
@@ -96,7 +101,6 @@ function DetailOrder(props) {
           <View style={{alignItems: "center", backgroundColor: "#ccffcc"}}>
             {order.state === "Đã hủy" ? (
             <Text style={[styles.textBold, { lineHeight: 40, color: "#ff0000" }]}>{order.state}</Text>
-
             ) : (
             <Text style={[styles.textBold, { lineHeight: 40, color:"#00cc00" }]}>{order.state}</Text>
             )}

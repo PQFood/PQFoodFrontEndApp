@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, Image, FlatList, TextInput, Switch, SafeAreaView, Button } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image, FlatList, TextInput, Switch, SafeAreaView, Button, Alert } from 'react-native';
 
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Dimensions } from 'react-native';
@@ -417,7 +417,16 @@ function WaiterAddOrder(props) {
                     })
                 }
                 else {
-                  alert('Vui lòng chọn ít nhất một món!')
+                  Alert.alert(
+                    "Thông báo",
+                    "Vui lòng chọn ít nhất một món!",
+                    [
+                        {
+                            text: "OK",
+                            style: "cancel"
+                        },
+                    ]
+                );
                 }
 
               }}

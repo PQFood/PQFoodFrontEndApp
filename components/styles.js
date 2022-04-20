@@ -139,7 +139,59 @@ const styles = StyleSheet.create({
         backgroundColor: "#ffcc66",
         width: windowWidth,
         textAlign: "center",
-    }
+    },
+
+
+
+    modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+      },
+      button: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2
+      },
+      buttonOpen: {
+        backgroundColor: "#F194FF",
+      },
+      buttonClose: {
+        backgroundColor: "#ff6600",
+      },
+      buttonConfirm: {
+        backgroundColor: "#2196F3",
+      },
+      textStyle: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center"
+      },
+      modalText: {
+        marginBottom: 15,
+        textAlign: "center",
+        fontWeight: "bold",
+        color: "red",
+        fontSize: 16
+      },
+      textInputReason: {
+        backgroundColor: "#f2f2f2",
+        borderRadius: 30,
+        height: 50,
+        marginBottom: 15,
+        paddingLeft: 20,
+        width: windowWidth*0.8
+      }
 });
 
 export default styles
