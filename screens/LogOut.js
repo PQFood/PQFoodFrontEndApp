@@ -22,8 +22,7 @@ function LogOut(props) {
 
   const removeData = () => {
     try {
-      AsyncStorage.removeItem('user')
-      AsyncStorage.removeItem('name')
+      AsyncStorage.clear()
       navigation.navigate('Login')
     } catch (e) {
       console.log(e)

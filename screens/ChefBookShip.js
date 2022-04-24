@@ -20,7 +20,9 @@ function ChefBookShip(props) {
   const { navigation, route } = props;
   const [user, setUser] = useState('')
   const [name, setName] = useState('')
+  const [socketBookShip, setSocketBookShip] = useState(null)
   const [socket, setSocket] = useState(null)
+
   const toast = useToast();
   const [bookShip, setBookShip] = useState(null)
   const isFocused = useIsFocused()
@@ -68,42 +70,90 @@ function ChefBookShip(props) {
     getData()
   }, [])
   useEffect(() => {
+    setSocketBookShip(io(URL));
     setSocket(io(URL));
   }, [])
 
   useEffect(async () => {
     try {
       let socketIdStore = await AsyncStorage.getItem('socketId')
-      socket?.on('connect', () => {
-        setSocketId(socket.id)
-      });
-      if (socketIdStore !== socketId) {
-        if (user !== "")
-          socket?.emit("newUser", { userName: user, position: 4 })
-        socket?.on('connect', () => {
-          storeSocketId(socket.id)
-        });
+      if (socketId === null || socketId !== socketIdStore) {
+        if (user !== "") {
+          await socketBookShip?.emit("newUser", { userName: user, position: 4 })
+          await socket?.emit("newUser", { userName: user, position: 2 })
+          await setSocketId("ship")
+          await storeSocketId("ship")
+        }
       }
-
     } catch (e) {
       console.log(e)
     }
 
-  }, [socket, isFocused, user])
+  }, [socketBookShip, isFocused, user])
 
+  //positon 2
   useEffect(() => {
-    socket?.on("getNotificationChefConfirmBookShip", data => {
+    socket?.on("getNotificationAddOrder", data => {
+      toast.show(data, {
+        type: "success",
+        placement: "top",
+        duration: 60000,
+        offset: 30,
+        animationType: "slide-in",
+      });
+    })
+    socket?.on("getNotificationShipperConfirmBookShip", data => {
+      toast.show(data, {
+        type: "success",
+        placement: "top",
+        duration: 60000,
+        offset: 30,
+        animationType: "slide-in",
+      });
+    })
+    socket?.on("getNotificationWaiterUpdate", data => {
+      toast.show(data.message, {
+        type: data.type,
+        placement: "top",
+        duration: 60000,
+        offset: 30,
+        animationType: "slide-in",
+      });
+    })
+    socket?.on("getNotificationWaiterCompleteOrder", data => {
+      toast.show(data, {
+        type: "success",
+        placement: "top",
+        duration: 60000,
+        offset: 30,
+        animationType: "slide-in",
+      });
+    })
+    socket?.on("getNotificationShipperUpdateBookTable", data => {
+      toast.show(data, {
+        type: "normal",
+        placement: "top",
+        duration: 60000,
+        offset: 30,
+        animationType: "slide-in",
+      });
+    })
+  }, [socket])
+
+  //position 4
+  useEffect(() => {
+    socketBookShip?.on("getNotificationChefConfirmBookShip", data => {
       getOrderShip()
     })
-    socket?.on("getNotificationChefCompleteBookShip", data => {
+    socketBookShip?.on("getNotificationChefCompleteBookShip", data => {
       getOrderShip()
     })
-    socket?.on("getNotificationShipperCompleteBookShip", data => {
+    socketBookShip?.on("getNotificationShipperCompleteBookShip", data => {
       getOrderShip()
     })
 
 
-    socket?.on("getNotificationShipperReceiveBookShip", data => {
+    socketBookShip?.on("getNotificationShipperReceiveBookShip", data => {
       getOrderShip()
       toast.show(data, {
         type: "success",
@@ -114,7 +164,7 @@ function ChefBookShip(props) {
       });
     })
 
-    socket?.on("getNotificationShipperCancelBookShip", data => {
+    socketBookShip?.on("getNotificationShipperCancelBookShip", data => {
       getOrderShip()
       toast.show(data, {
         type: "danger",
@@ -125,7 +175,7 @@ function ChefBookShip(props) {
       });
     })
 
-    socket?.on("getNotificationShipperConfirmBookShip", data => {
+    socketBookShip?.on("getNotificationShipperConfirmBookShip", data => {
       getOrderShip()
       toast.show(data, {
         type: "success",
@@ -136,7 +186,7 @@ function ChefBookShip(props) {
       });
     })
 
-    socket?.on("getNotificationShipperUpdateBookTable", data => {
+    socketBookShip?.on("getNotificationShipperUpdateBookTable", data => {
       getOrderShip()
       toast.show(data, {
         type: "normal",
@@ -146,7 +196,7 @@ function ChefBookShip(props) {
         animationType: "slide-in",
       });
     })
-  }, [socket])
+  }, [socketBookShip])
 
   const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));

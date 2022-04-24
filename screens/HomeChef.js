@@ -65,10 +65,6 @@ function HomeChef(props) {
   useEffect(() => {
     setSocket(io(URL));
   }, [])
-  useEffect(() => {
-    if (user !== "")
-      socket?.emit("newUser", { userName: user, position: 2 })
-  }, [socket, user])
   //4
   useEffect(() => {
     setSocketShip(io(URL));
@@ -77,31 +73,25 @@ function HomeChef(props) {
   useEffect(async () => {
     try {
       let socketIdStore = await AsyncStorage.getItem('socketId')
-      socketShip?.on('connect', () => {
-        setSocketId(socketShip.id)
-      });
-      if (socketIdStore !== socketId) {
-        if (user !== "")
-          socketShip?.emit("newUser", { userName: user, position: 4 })
-        socketShip?.on('connect', () => {
-          storeSocketId(socketShip.id)
-        });
+      if (socketId === null || socketId !== socketIdStore) {
+        if (user !== ""){
+          await socketShip?.emit("newUser", { userName: user, position: 4 })
+          await socket?.emit("newUser", { userName: user, position: 2 })
+          await setSocketId("home")
+          await storeSocketId("home")
+        }
       }
-
     } catch (e) {
       console.log(e)
     }
 
-  }, [socket, isFocused, user])
+  }, [socketShip, isFocused, user, socket])
   //positon 2
   useEffect(() => {
     socket?.on("getNotificationUpdate", data => {
       getdinnerTable()
     })
     socket?.on("getNotificationChefCompleteOrder", data => {
-      getdinnerTable()
-    })
-    socket?.on("getNotificationWaiterCompleteOrder", data => {
       getdinnerTable()
     })
     socket?.on("getNotificationWaiterCompletePayOrder", data => {
@@ -112,6 +102,16 @@ function HomeChef(props) {
     })
 
     socket?.on("getNotificationAddOrder", data => {
+      getdinnerTable()
+      toast.show(data, {
+        type: "success",
+        placement: "top",
+        duration: 60000,
+        offset: 30,
+        animationType: "slide-in",
+      });
+    })
+    socket?.on("getNotificationWaiterCompleteOrder", data => {
       getdinnerTable()
       toast.show(data, {
         type: "success",
