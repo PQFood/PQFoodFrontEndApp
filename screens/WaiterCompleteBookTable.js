@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, RefreshControl, FlatList, Button } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, RefreshControl, FlatList, Button, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from '../components/styles';
 import LoadingComponent from '../components/Loading';
@@ -89,25 +89,38 @@ function WaiterCompleteBookTable(props) {
             })
         }}
         cancelBook={() => {
-          axios({
-            method: 'post',
-            url: '/waiter/cancelBookTable',
-            data: {
-              id: item._id
-            }
-          })
-            .then(response => {
-              if (response.data === "ok") {
-                showToast("Hủy thành công")
-                getBookTableConfirm();
+          Alert.alert(
+            "Cảnh báo",
+            "Bạn có chắc muốn hủy lịch đặt bàn này?",
+            [
+              {
+                text: "Bỏ qua",
+              },
+              {
+                text: "Xác nhận", onPress: () => {
+                  axios({
+                    method: 'post',
+                    url: '/waiter/cancelBookTable',
+                    data: {
+                      id: item._id
+                    }
+                  })
+                    .then(response => {
+                      if (response.data === "ok") {
+                        showToast("Hủy thành công")
+                        getBookTableConfirm();
+                      }
+                      else {
+                        alert("Hủy thất bại")
+                      }
+                    })
+                    .catch(error => {
+                      console.log(error)
+                    })
+                }
               }
-              else {
-                alert("Hủy thất bại")
-              }
-            })
-            .catch(error => {
-              console.log(error)
-            })
+            ]
+          );
         }}
         item={item}
         nameBtn="Hoàn thành"

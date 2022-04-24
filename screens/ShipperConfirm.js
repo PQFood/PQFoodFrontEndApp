@@ -62,6 +62,7 @@ function ShipperConfirm(props) {
   else {
     return (
       <>
+      <StatusBar barStyle="dark-content"/>
         <View style={styles.container}>
           <Text style={styles.title}>{route.params.orderId}</Text>
 

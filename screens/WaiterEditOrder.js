@@ -102,7 +102,7 @@ function WaiterAddOrder(props) {
   }
 
   const decreaseFood = (item, index) => {
-    if (foodState[index].quantity > 1) {
+    if (foodState[index].quantity > 1 && foodState[index].value === true) {
       setFoodState(() => {
         var result = foodState
         result[index].value = true
@@ -146,7 +146,7 @@ function WaiterAddOrder(props) {
   }
 
   const decreaseDrink = (item, index) => {
-    if (drinkState[index].quantity > 1) {
+    if (drinkState[index].quantity > 1 && drinkState[index].value === true) {
       setDrinkState(() => {
         var result = drinkState
         result[index].value = true

@@ -213,7 +213,7 @@ const TEXT = {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#00ffff",
+        backgroundColor: "#e6e6ff",
         justifyContent: "center"
     },
     content: {

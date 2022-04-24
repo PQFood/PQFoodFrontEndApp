@@ -104,30 +104,30 @@ function Navigation(props) {
                 <Stack.Screen name="HomeChef" component={HomeChefDrawer} options={{ headerShown: false }} />
                 <Stack.Screen name="WaiterDetailOrder" component={WaiterDetailOrder} options={{ title: "Chi Tiết Hóa Đơn", headerStyle: { backgroundColor: '#ffcc66' }, headerTitleAlign: "center" }} />
                 <Stack.Screen name="WaiterPayOrder" component={WaiterPayOrder} options={{ title: "Thanh Toán Hóa Đơn", headerStyle: { backgroundColor: '#99ff66' }, headerTitleAlign: "center" }} />
-                <Stack.Screen name="WaiterAddOrder" component={WaiterAddOrder} options={{ title: "Lập hóa đơn", headerTitleAlign: "center" }} />
+                <Stack.Screen name="WaiterAddOrder" component={WaiterAddOrder} options={{ title: "Lập Hóa Đơn", headerTitleAlign: "center" }} />
                 <Stack.Screen name="WaiterCompleteFood" component={WaiterCompleteFood} options={{ title: "Hoàn Thành Món", headerTitleAlign: "center", headerStyle: { backgroundColor: '#0099ff' }, }} />
-                <Stack.Screen name="WaiterEditOrder" component={WaiterEditOrder} options={{ title: "Cập nhật Hóa Đơn", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
-                <Stack.Screen name="ChefPayOrder" component={ChefPayOrder} options={{ title: "Chờ thanh Toán", headerTitleAlign: "center", headerStyle: { backgroundColor: '#99ff66' } }} />
+                <Stack.Screen name="WaiterEditOrder" component={WaiterEditOrder} options={{ title: "Cập Nhật Hóa Đơn", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
+                <Stack.Screen name="ChefPayOrder" component={ChefPayOrder} options={{ title: "Chờ Thanh Toán", headerTitleAlign: "center", headerStyle: { backgroundColor: '#99ff66' } }} />
                 <Stack.Screen name="ChefDetailOrder" component={ChefDetailOrder} options={{ title: "Chi Tiết Hóa Đơn", headerStyle: { backgroundColor: '#ffcc66' }, headerTitleAlign: "center" }} />
                 <Stack.Screen name="ChefCompleteFood" component={ChefCompleteFood} options={{ title: "Hoàn Thành Món", headerTitleAlign: "center", headerStyle: { backgroundColor: '#0099ff' }, }} />
-                <Stack.Screen name="ChefNotification" component={ChefNotification} options={{ title: "Thông báo", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
-                <Stack.Screen name="ChefConfirmBookShip" component={ChefConfirmBookShip} options={{ title: "Xác nhận đơn", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
-                <Stack.Screen name="ChefProcessBookShip" component={ChefProcessBookShip} options={{ title: "Hoàn thành món", headerTitleAlign: "center", headerStyle: { backgroundColor: '#0099ff' }, }} />
-                <Stack.Screen name="ChefCompleteBookShip" component={ChefCompleteBookShip} options={{ title: "Chờ giao", headerTitleAlign: "center", headerStyle: { backgroundColor: '#99ff66' }, }} />
+                <Stack.Screen name="ChefNotification" component={ChefNotification} options={{ title: "Thông Báo", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
+                <Stack.Screen name="ChefConfirmBookShip" component={ChefConfirmBookShip} options={{ title: "Xác Nhận Đơn", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
+                <Stack.Screen name="ChefProcessBookShip" component={ChefProcessBookShip} options={{ title: "Hoàn Thành Món", headerTitleAlign: "center", headerStyle: { backgroundColor: '#0099ff' }, }} />
+                <Stack.Screen name="ChefCompleteBookShip" component={ChefCompleteBookShip} options={{ title: "Chờ Giao", headerTitleAlign: "center", headerStyle: { backgroundColor: '#99ff66' }, }} />
                 
                 <Stack.Screen name="DetailOrder" component={DetailOrder} options={({ route }) => ({
-                    title: "Hóa đơn - " + route.params.orderId,
+                    title: "Hóa Đơn - " + route.params.orderId,
                     headerTitleAlign: "center",
                     headerStyle: { backgroundColor: '#ffcc66' }
                 })} />
                 <Stack.Screen name="ChefChangeQuantityWarehouse" component={ChefChangeQuantityWarehouse} options={{ title: "Cập nhật số lượng", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
 
-                <Stack.Screen name="ShipperConfirm" component={ShipperConfirm} options={{ title: "Xác nhận đơn", headerTitleAlign: "center" }} />
-                <Stack.Screen name="ShipperDetailBookShip" component={ShipperDetailBookShip} options={{ title: "Chi tiết đơn hàng", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
-                <Stack.Screen name="ShipperEditBookShip" component={ShipperEditBookShip} options={{ title: "Cập nhật đơn hàng", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
-                <Stack.Screen name="ShipperReceiveBookShip" component={ShipperReceiveBookShip} options={{ title: "Nhận món", headerTitleAlign: "center", headerStyle: { backgroundColor: '#0099ff' }, }} />
-                <Stack.Screen name="ShipperCompleteBookShip" component={ShipperCompleteBookShip} options={{ title: "Hoàn thành đơn", headerTitleAlign: "center", headerStyle: { backgroundColor: '#99ff66' }, }} />
-                <Stack.Screen name="ShipperDetailHistotyBookShip" component={ShipperDetailHistotyBookShip} options={{ title: "Chi tiết hóa đơn", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
+                <Stack.Screen name="ShipperConfirm" component={ShipperConfirm} options={{ title: "Xác Nhận Đơn", headerTitleAlign: "center" }} />
+                <Stack.Screen name="ShipperDetailBookShip" component={ShipperDetailBookShip} options={{ title: "Chi Tiết Đơn Hàng", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
+                <Stack.Screen name="ShipperEditBookShip" component={ShipperEditBookShip} options={{ title: "Cập Nhật Đơn Hàng", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
+                <Stack.Screen name="ShipperReceiveBookShip" component={ShipperReceiveBookShip} options={{ title: "Nhận Món", headerTitleAlign: "center", headerStyle: { backgroundColor: '#0099ff' }, }} />
+                <Stack.Screen name="ShipperCompleteBookShip" component={ShipperCompleteBookShip} options={{ title: "Hoàn Thành Đơn", headerTitleAlign: "center", headerStyle: { backgroundColor: '#99ff66' }, }} />
+                <Stack.Screen name="ShipperDetailHistotyBookShip" component={ShipperDetailHistotyBookShip} options={{ title: "Chi Tiết Hóa Đơn", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
 
 
 
