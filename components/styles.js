@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
         fontSize: 15
     },
     infoCustomer: {
-        backgroundColor: "#ffffff", 
+        backgroundColor: "#ffffff",
         width: windowWidth * 0.9,
         marginVertical: 8,
         padding: 10,
@@ -151,47 +151,74 @@ const styles = StyleSheet.create({
         alignItems: "center",
         shadowColor: "#000",
         shadowOffset: {
-          width: 0,
-          height: 2
+            width: 0,
+            height: 2
         },
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5
-      },
-      button: {
+    },
+    button: {
         borderRadius: 20,
         padding: 10,
         elevation: 2
-      },
-      buttonOpen: {
+    },
+    buttonOpen: {
         backgroundColor: "#F194FF",
-      },
-      buttonClose: {
+    },
+    buttonClose: {
         backgroundColor: "#ff6600",
-      },
-      buttonConfirm: {
+    },
+    buttonConfirm: {
         backgroundColor: "#2196F3",
-      },
-      textStyle: {
+    },
+    textStyle: {
         color: "white",
         fontWeight: "bold",
         textAlign: "center"
-      },
-      modalText: {
+    },
+    modalText: {
         marginBottom: 15,
         textAlign: "center",
         fontWeight: "bold",
         color: "red",
         fontSize: 16
-      },
-      textInputReason: {
+    },
+    textInputReason: {
         backgroundColor: "#f2f2f2",
         borderRadius: 30,
         height: 50,
         marginBottom: 15,
         paddingLeft: 20,
-        width: windowWidth*0.8
-      }
+        width: windowWidth * 0.8
+    },
+    adminOrder: {
+        width: windowWidth * 0.9,
+        backgroundColor: "#e6fff2",
+        marginVertical: 6,
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+        borderRadius: 10
+    },
+    btnDetail: {
+        backgroundColor: "#ffff33",
+        paddingHorizontal: 10,
+        paddingVertical: 10,
+        borderRadius: 10
+    },
+    btnCancel: {
+        backgroundColor: "#ff6600",
+        paddingHorizontal: 10,
+        paddingVertical: 10,
+        borderRadius: 10
+    },
+    btnConfirm: {
+        backgroundColor: "#ffcc00",
+        paddingHorizontal: 10,
+        paddingVertical: 10,
+        borderRadius: 10
+    },
+
 });
 
 export default styles

@@ -12,7 +12,7 @@ import axios from 'axios';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import LoadingComponent from '../components/Loading';
 
 
 function HomeAdmin(props) {
@@ -23,7 +23,7 @@ function HomeAdmin(props) {
       const value = await AsyncStorage.getItem('user')
       await setUser(value)
     } catch(e) {
-      // error reading value
+      console.log(e)
     }
   }
   getData()
@@ -34,7 +34,7 @@ function HomeAdmin(props) {
       justifyContent: 'center',
       alignItems: 'center'
     }}>
-      <Text>Hello {user}, {route.params.data.userName}!</Text>
+      <Text>Hello {user}!</Text>
     </View>
   );
 }

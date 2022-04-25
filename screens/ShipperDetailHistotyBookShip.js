@@ -61,9 +61,7 @@ function ShipperDetailHistotyBookShip(props) {
                 />
                 {bookShip.state === "Đã hủy" ? (
                   <Text style={{marginTop: 5, fontSize: 15}}>Lý do hủy: {bookShip.reason}</Text>
-                ) : (
-                  <Text style={[styles.textBold, { lineHeight: 40, color: "#00cc00" }]}>{bookShip.state}</Text>
-                )}
+                ) : null}
               </>
             }
             ListHeaderComponent={

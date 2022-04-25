@@ -188,14 +188,6 @@ function HomeWaiter(props) {
         renderItem={renderItem}
         keyExtractor={(item) => item.slug}
       />
-      {/* <TouchableOpacity
-        onPress={()=>{
-          navigation.navigate('Test')
-        }
-        }
-        >
-          <Text>nhap vao</Text>
-        </TouchableOpacity> */}
 
     </View>
   );
