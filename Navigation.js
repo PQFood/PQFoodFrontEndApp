@@ -48,6 +48,11 @@ import ShipperHistoryBookShip from './screens/ShipperHistoryBookShip';
 import ShipperDetailHistotyBookShip from './screens/ShipperDetailHistotyBookShip';
 import AdminConfirmOrder from './screens/AdminConfirmOrder';
 import AdminConfirmShip from './screens/AdminConfirmShip';
+import AdminCurrentOrder from './screens/AdminCurrentOrder';
+import AdminCurrentShip from './screens/AdminCurrentShip';
+import AdminDetailOrder from './screens/AdminDetailOrder';
+import AdminDetailHistotyBookShip from './screens/AdminDetailHistotyBookShip';
+
 
 
 
@@ -124,7 +129,7 @@ function Navigation(props) {
         )
     }
 
-    const HistoryOrderDrawer = () => {
+    const HistoryOrderTab = () => {
         return (
             <Tab.Navigator
                 screenOptions={({ route }) => ({
@@ -141,24 +146,41 @@ function Navigation(props) {
         )
     }
 
+    const OrderCurrentTab = () => {
+        return (
+            <Tab.Navigator
+                screenOptions={({ route }) => ({
+                    tabBarIcon: ({ focused, color, size }) => {
+                        return <FontAwesome5 name="money-bill" size={size} color={color} />
+                    },
+                    tabBarActiveTintColor: 'tomato',
+                    tabBarInactiveTintColor: 'gray',
+                })}
+            >
+                <Tab.Screen name="AdminCurrentOrder" component={AdminCurrentOrder} options={{ title: "Đơn offline", headerShown: false, tabBarLabelStyle: { fontSize: 14, marginBottom: 2 } }} />
+                <Tab.Screen name="AdminCurrentShip" component={AdminCurrentShip} options={{ title: "Đơn online", headerShown: false, tabBarLabelStyle: { fontSize: 14, marginBottom: 2 } }} />
+            </Tab.Navigator>
+        )
+    }
+
     //home admin
     const HomeAdminDrawer = () => {
         return (
             <Drawer.Navigator initialRouteName="Home">
                 <Drawer.Screen name="HomeDrawer" component={HomeAdminTab} options={{ title: "Trang chủ quán", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: ({ focused, size, color }) => (<FontAwesome5 name="home" size={20} color="black" />) }} />
                 
-                
-                <Drawer.Screen name="HistoryOrderDrawer" component={HistoryOrderDrawer} options={{ title: "Lịch sử hóa đơn", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: ({ focused, size, color }) => (<FontAwesome5 name="history" size={20} color="black" />) }} />
+                <Drawer.Screen name="OrderCurrentTab" component={OrderCurrentTab} options={{ title: "Hóa đơn hiện tại", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: ({ focused, size, color }) => (<FontAwesome5 name="money-bill" size={20} color="black" />) }} />
+                <Drawer.Screen name="HistoryOrderDrawer" component={HistoryOrderTab} options={{ title: "Lịch sử hóa đơn", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: ({ focused, size, color }) => (<FontAwesome5 name="history" size={24} color="black" />) }} />
 
                 <Drawer.Screen name="WaiterChangePassword" component={WaiterChangePassword} options={{ title: "Đổi mật khẩu", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: (focused, size, color) => (<MaterialCommunityIcons name="key-change" size={24} color="black" />) }} />
-                <Drawer.Screen name="LogOut" component={LogOut} options={{ title: "Đăng xuất", headerShown: false, drawerIcon: ({ focused, size, color }) => (<Entypo name="log-out" size={28} color="black" />) }} />
+                <Drawer.Screen name="LogOut" component={LogOut} options={{ title: "Đăng xuất", headerShown: false, drawerIcon: ({ focused, size, color }) => (<Entypo name="log-out" size={24} color="black" />) }} />
             </Drawer.Navigator>
         );
     }
 
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName='HomeAdmin'>
+            <Stack.Navigator initialRouteName='Login'>
                 <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
                 <Stack.Screen name="HomeAdmin" component={HomeAdminDrawer} options={{ headerShown: false }} />
                 <Stack.Screen name="HomeShipper" component={HomeShipperDrawer} options={{ headerShown: false }} />
@@ -190,6 +212,8 @@ function Navigation(props) {
                 <Stack.Screen name="ShipperReceiveBookShip" component={ShipperReceiveBookShip} options={{ title: "Nhận Món", headerTitleAlign: "center", headerStyle: { backgroundColor: '#0099ff' }, }} />
                 <Stack.Screen name="ShipperCompleteBookShip" component={ShipperCompleteBookShip} options={{ title: "Hoàn Thành Đơn", headerTitleAlign: "center", headerStyle: { backgroundColor: '#99ff66' }, }} />
                 <Stack.Screen name="ShipperDetailHistotyBookShip" component={ShipperDetailHistotyBookShip} options={{ title: "Chi Tiết Hóa Đơn", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
+                <Stack.Screen name="AdminDetailOrder" component={AdminDetailOrder} options={{ title: "Chi Tiết Hóa Đơn", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
+                <Stack.Screen name="AdminDetailHistotyBookShip" component={AdminDetailHistotyBookShip} options={{ title: "Chi Tiết Hóa Đơn", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
 
 
 

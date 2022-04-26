@@ -68,6 +68,7 @@ function AdminConfirmOrder(props) {
               return (
                 <RenderConfirmOrderAdmin
                   item={item}
+                  confirm = {true}
                   btnCancel={() => {
                     Alert.alert(
                       "Cảnh báo",

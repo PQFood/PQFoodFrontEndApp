@@ -12,8 +12,10 @@ const windowHeight = Dimensions.get('window').height;
 import styles from '../components/stylesShipper';
 import AdminUseGetOrder from '../hooks/AdminUseGetOrder';
 import RenderConfirmShipAdmin from '../components/RenderConfirmShipAdmin';
+import URL from '../components/UrlSocketIO';
+import { io } from "socket.io-client";
 
-function AdminConfirmShip(props) {
+function AdminCurrentShip(props) {
 
   const { navigation, route } = props;
   const [user, setUser] = useState('')
@@ -23,12 +25,16 @@ function AdminConfirmShip(props) {
   const [refreshing, setRefreshing] = React.useState(false);
   const [loading, setLoading] = useState(true)
   const [order, setOrder] = useState(null)
-
+  const [socket, setSocket] = useState(null)
 
   useEffect(() => {
-    AdminUseGetOrder({ setLoading, setOrder, link: "adminGetShip" })
+    setSocket(io(URL));
+  }, [])
+
+  useEffect(() => {
+    AdminUseGetOrder({ setLoading, setOrder, link: "adminGetShipCurrent" })
     const intervalId = setInterval(() => {
-      AdminUseGetOrder({ setLoading, setOrder, link: "adminGetShip" })
+      AdminUseGetOrder({ setLoading, setOrder, link: "adminGetShipCurrent" })
     }, 60000)
     return () => clearInterval(intervalId);
 
@@ -39,7 +45,7 @@ function AdminConfirmShip(props) {
   }
 
   const onRefresh = () => {
-    AdminUseGetOrder({ setLoading, setOrder, link: "adminGetShip" })
+    AdminUseGetOrder({ setLoading, setOrder, link: "adminGetShipCurrent" })
     setRefreshing(true);
     wait(1200).then(() => setRefreshing(false));
   };
@@ -67,7 +73,7 @@ function AdminConfirmShip(props) {
               return (
                 <RenderConfirmShipAdmin
                   item={item}
-                  confirm={true}
+                  confirm={false}
                   btnCancel={() => {
                     Alert.alert(
                       "Cảnh báo",
@@ -80,7 +86,7 @@ function AdminConfirmShip(props) {
                           text: "Xác nhận", onPress: () => {
                             axios({
                               method: 'post',
-                              url: '/admin/adminCancelShip',
+                              url: '/admin/cancelBookShip',
                               data: {
                                 orderId: item.orderId
                               }
@@ -88,7 +94,10 @@ function AdminConfirmShip(props) {
                               .then(response => {
                                 if (response.data === "ok") {
                                   showToast("Hủy thành công")
-                                  AdminUseGetOrder({ setLoading, setOrder, link: "adminGetShip" })
+                                  socket.emit("sendNotificationAdminCancelShip", {
+                                    orderId: item.orderId,
+                                  })
+                                  AdminUseGetOrder({ setLoading, setOrder, link: "adminGetShipCurrent" })
                                 }
                                 else {
                                   alert("Hủy thất bại")
@@ -103,29 +112,8 @@ function AdminConfirmShip(props) {
                       ]
                     );
                   }}
-                  btnConfirm={() => {
-                    axios({
-                      method: 'post',
-                      url: '/admin/adminConfirmShip',
-                      data: {
-                        orderId: item.orderId
-                      }
-                    })
-                      .then(response => {
-                        if (response.data === "ok") {
-                          showToast("Xác nhận thành công")
-                          AdminUseGetOrder({ setLoading, setOrder, link: "adminGetShip" })
-                        }
-                        else {
-                          alert("Xác nhận thất bại")
-                        }
-                      })
-                      .catch(error => {
-                        console.log(error)
-                      })
-                  }}
                   NavigationDetail={() => {
-                    navigation.navigate("ShipperDetailHistotyBookShip", { orderId: item.orderId })
+                    navigation.navigate("AdminDetailHistotyBookShip", { orderId: item.orderId })
                   }}
                 />
               )
@@ -138,4 +126,4 @@ function AdminConfirmShip(props) {
   }
 }
 
-export default AdminConfirmShip;
+export default AdminCurrentShip;

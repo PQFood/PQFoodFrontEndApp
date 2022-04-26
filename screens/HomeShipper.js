@@ -127,6 +127,16 @@ function HomeShipper(props) {
         animationType: "slide-in",
       });
     })
+    socket?.on("getNotificationAdminCancelShip", data => {
+      getOrderShip()
+      toast.show(data, {
+        type: "danger",
+        placement: "top",
+        duration: 60000,
+        offset: 30,
+        animationType: "slide-in",
+      });
+    })
   }, [socket])
 
   const wait = (timeout) => {

@@ -65,6 +65,17 @@ function HomeWaiter(props) {
       getdinnerTable()
     })
 
+    socket?.on("getNotificationAdminCancelOrder", data => {
+      getdinnerTable()
+      toast.show(data, {
+        type: "danger",
+        placement: "top",
+        duration: 30000,
+        offset: 30,
+        animationType: "slide-in",
+      });
+    })
+
     socket?.on("getNotificationUpdate", data => {
       getdinnerTable()
       toast.show(data.message, {

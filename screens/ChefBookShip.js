@@ -93,6 +93,25 @@ function ChefBookShip(props) {
 
   //positon 2
   useEffect(() => {
+
+    socket?.on("getNotificationAdminCancelOrder", data => {
+      toast.show(data, {
+        type: "danger",
+        placement: "top",
+        duration: 60000,
+        offset: 30,
+        animationType: "slide-in",
+      });
+    })
+    socket?.on("getNotificationAdminCancelShip", data => {
+      toast.show(data, {
+        type: "danger",
+        placement: "top",
+        duration: 60000,
+        offset: 30,
+        animationType: "slide-in",
+      });
+    })
     socket?.on("getNotificationAddOrder", data => {
       toast.show(data, {
         type: "success",

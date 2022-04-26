@@ -111,6 +111,26 @@ function HomeChef(props) {
         animationType: "slide-in",
       });
     })
+    socket?.on("getNotificationAdminCancelOrder", data => {
+      getdinnerTable()
+      toast.show(data, {
+        type: "danger",
+        placement: "top",
+        duration: 60000,
+        offset: 30,
+        animationType: "slide-in",
+      });
+    })
+    socket?.on("getNotificationAdminCancelShip", data => {
+      getdinnerTable()
+      toast.show(data, {
+        type: "danger",
+        placement: "top",
+        duration: 60000,
+        offset: 30,
+        animationType: "slide-in",
+      });
+    })
     socket?.on("getNotificationWaiterCompleteOrder", data => {
       getdinnerTable()
       toast.show(data, {

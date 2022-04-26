@@ -8,9 +8,8 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 import moment from 'moment';
 import styles from './styles';
-import Navigation from '../Navigation';
 
-const RenderConfirmShipAdmin = ({ item, btnCancel, btnConfirm,NavigationDetail }) => {
+const RenderConfirmShipAdmin = ({ item, btnCancel, btnConfirm, NavigationDetail, confirm }) => {
     return (
         <>
             <View style={styles.adminOrder}>
@@ -35,19 +34,21 @@ const RenderConfirmShipAdmin = ({ item, btnCancel, btnConfirm,NavigationDetail }
                     >
                         <Text>Chi Tiết</Text>
                     </TouchableOpacity>
-                    <View style={{flexDirection: "row"}}>
+                    <View style={{ flexDirection: "row" }}>
                         <TouchableOpacity
-                            style={[styles.btnCancel,{marginRight: 10}]}
+                            style={[styles.btnCancel, { marginRight: 10 }]}
                             onPress={btnCancel}
                         >
                             <Text>Hủy</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity
-                            style={styles.btnConfirm}
-                            onPress={btnConfirm}
-                        >
-                            <Text>Xác nhận</Text>
-                        </TouchableOpacity>
+                        {confirm ? (
+                            <TouchableOpacity
+                                style={styles.btnConfirm}
+                                onPress={btnConfirm}
+                            >
+                                <Text>Xác nhận</Text>
+                            </TouchableOpacity>
+                        ) : null}
                     </View>
                 </View>
             </View>
