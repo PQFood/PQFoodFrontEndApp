@@ -1,9 +1,11 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, TextInput, Alert, RefreshControl } from 'react-native';
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
+
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -52,11 +54,10 @@ import AdminCurrentOrder from './screens/AdminCurrentOrder';
 import AdminCurrentShip from './screens/AdminCurrentShip';
 import AdminDetailOrder from './screens/AdminDetailOrder';
 import AdminDetailHistotyBookShip from './screens/AdminDetailHistotyBookShip';
+import AdminAddStaff from './screens/AdminAddStaff';
+import AdminListStaff from './screens/AdminListStaff';
 
 
-
-
-import Ionicons from 'react-native-vector-icons/Ionicons';
 function Navigation(props) {
 
     const Stack = createNativeStackNavigator();
@@ -163,13 +164,36 @@ function Navigation(props) {
         )
     }
 
+    const AdminManageStaff = () => {
+        return (
+            <Tab.Navigator
+                screenOptions={({ route }) => ({
+                    tabBarIcon: ({ focused, color, size }) => {
+                        if (route.name === 'AdminListStaff') {
+                            return <Ionicons name="person" size={size + 5} color={color} />
+                        } else if (route.name === 'AdminAddStaff') {
+                            return <AntDesign name="adduser" size={size + 5} color={color} />
+                        }
+                    },
+                    tabBarActiveTintColor: 'tomato',
+                    tabBarInactiveTintColor: 'gray',
+                })}
+            >
+                <Tab.Screen name="AdminListStaff" component={AdminListStaff} options={{ title: "Danh sách", headerShown: false, tabBarLabelStyle: { fontSize: 14, marginBottom: 2 } }} />
+                <Tab.Screen name="AdminAddStaff" component={AdminAddStaff} options={{ title: "Thêm", headerShown: false, tabBarLabelStyle: { fontSize: 14, marginBottom: 2 } }} />
+            </Tab.Navigator>
+        )
+    }
+
     //home admin
     const HomeAdminDrawer = () => {
         return (
             <Drawer.Navigator initialRouteName="Home">
                 <Drawer.Screen name="HomeDrawer" component={HomeAdminTab} options={{ title: "Trang chủ quán", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: ({ focused, size, color }) => (<FontAwesome5 name="home" size={20} color="black" />) }} />
-                
                 <Drawer.Screen name="OrderCurrentTab" component={OrderCurrentTab} options={{ title: "Hóa đơn hiện tại", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: ({ focused, size, color }) => (<FontAwesome5 name="money-bill" size={20} color="black" />) }} />
+                <Drawer.Screen name="AdminManageStaff" component={AdminManageStaff} options={{ title: "Quản lý nhân viên", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: ({ focused, size, color }) => (<Ionicons name="person" size={24} color="black" />) }} />
+
+
                 <Drawer.Screen name="HistoryOrderDrawer" component={HistoryOrderTab} options={{ title: "Lịch sử hóa đơn", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: ({ focused, size, color }) => (<FontAwesome5 name="history" size={24} color="black" />) }} />
 
                 <Drawer.Screen name="WaiterChangePassword" component={WaiterChangePassword} options={{ title: "Đổi mật khẩu", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: (focused, size, color) => (<MaterialCommunityIcons name="key-change" size={24} color="black" />) }} />
@@ -180,7 +204,7 @@ function Navigation(props) {
 
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName='Login'>
+            <Stack.Navigator initialRouteName='HomeAdmin'>
                 <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
                 <Stack.Screen name="HomeAdmin" component={HomeAdminDrawer} options={{ headerShown: false }} />
                 <Stack.Screen name="HomeShipper" component={HomeShipperDrawer} options={{ headerShown: false }} />
