@@ -218,6 +218,25 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         borderRadius: 10
     },
+    inputText: {
+        width: windowWidth*0.85,
+        borderRadius: 30,
+        backgroundColor: "white",
+        height: 50,
+        marginHorizontal: 50,
+        marginVertical: 10,
+        textAlign: "center"
+    },
+    btnConfirmForm: {
+        marginHorizontal: windowWidth*0.12,
+        marginTop: 10,
+        paddingVertical: 15,
+        borderRadius: 30,
+        backgroundColor: "#ff6600",
+        textAlign: "center",
+        fontWeight: "bold",
+        color: "white",
+    }
 
 });
 
