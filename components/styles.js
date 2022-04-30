@@ -236,6 +236,20 @@ const styles = StyleSheet.create({
         textAlign: "center",
         fontWeight: "bold",
         color: "white",
+    },
+    iconShowHidden: {
+        position: "absolute",
+        top: 20,
+        left: windowWidth * 0.8,
+        zIndex: 100,
+    },
+    pickerPositon: {
+        height: 50,
+        flexDirection: "row",
+        justifyContent: "center",
+        marginHorizontal: windowWidth*0.12,
+        backgroundColor: "white",
+        borderRadius: 30,
     }
 
 });

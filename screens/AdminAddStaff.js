@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, TextInput, Alert, ScrollView } from 'react-native';
+import { Picker, Text, View, TouchableOpacity, SafeAreaView, TextInput, Alert, ScrollView } from 'react-native';
 
 import axios from 'axios';
 import { Formik, Field } from 'formik';
@@ -17,7 +17,16 @@ function AdminAddStaff(props) {
 
     const { navigation } = props;
     const isFocused = useIsFocused()
+    const [selectedValue, setSelectedValue] = useState('Phục vụ')
+    const [pass1, setPass1] = useState(true)
+    const [pass2, setPass2] = useState(true)
     const toast = useToast();
+
+    useEffect(() => {
+        setPass1(true)
+        setPass2(true)
+        setSelectedValue('Phục vụ')
+    }, [isFocused])
 
 
     const CheckFormAddStaff = Yup.object().shape({
@@ -29,7 +38,6 @@ function AdminAddStaff(props) {
         rePassword: Yup.string()
             .required('Vui lòng nhập lại mật khẩu mới!')
             .oneOf([Yup.ref('password')], 'Mật khẩu nhập lại không đúng!')
-            .matches(/^(?=.*[A-Za-z])(?=.*[0-9])[A-Za-z0-9]{6,15}$/, "Mật khẩu từ 6 - 15 kí tự bao gồm chữ và số!"),
     });
 
     return (
@@ -40,7 +48,7 @@ function AdminAddStaff(props) {
                     name: '',
                     phoneNumber: '',
                     address: '',
-                    position: '',
+                    position: selectedValue,
                     userName: '',
                     password: '',
                     rePassword: ''
@@ -90,7 +98,18 @@ function AdminAddStaff(props) {
                                 <Text style={{ color: 'red', textAlign: "center" }}>{errors.address}</Text>
                             ) : null}
 
-                           
+                            <View style={styles.pickerPositon}>
+                                <Picker
+                                    selectedValue={selectedValue}
+                                    style={{width: 150,}}
+                                    onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+                                >
+                                    <Picker.Item label="Phục vụ" value="Phục vụ" />
+                                    <Picker.Item label="Đầu bếp" value="Đầu bếp" />
+                                    <Picker.Item label="Shipper" value="Shipper" />
+                                </Picker>
+                            </View>
+
 
                             <TextInput
                                 style={styles.inputText}
@@ -103,27 +122,53 @@ function AdminAddStaff(props) {
                                 <Text style={{ color: 'red', textAlign: "center" }}>{errors.userName}</Text>
                             ) : null}
 
-                            <TextInput
-                                style={styles.inputText}
-                                placeholder="Mật khẩu mới"
-                                onChangeText={handleChange('password')}
-                                onBlur={handleBlur('password')}
-                                value={values.password}
-                            />
-                            {errors.password && touched.password ? (
-                                <Text style={{ color: 'red', textAlign: "center" }}>{errors.password}</Text>
-                            ) : null}
+                            <View style={{ position: "relative" }}>
+                                <TextInput
+                                    style={styles.inputText}
+                                    placeholder="Mật khẩu"
+                                    onChangeText={handleChange('password')}
+                                    onBlur={handleBlur('password')}
+                                    value={values.password}
+                                    secureTextEntry={pass1}
+                                />
+                                {errors.password && touched.password ? (
+                                    <Text style={{ color: 'red', textAlign: "center" }}>{errors.password}</Text>
+                                ) : null}
 
-                            <TextInput
-                                style={styles.inputText}
-                                placeholder="Nhập lại mật khẩu mới"
-                                onChangeText={handleChange('rePassword')}
-                                onBlur={handleBlur('rePassword')}
-                                value={values.rePassword}
-                            />
-                            {errors.rePassword && touched.rePassword ? (
-                                <Text style={{ color: 'red', textAlign: "center" }}>{errors.rePassword}</Text>
-                            ) : null}
+                                <TouchableOpacity
+                                    style={styles.iconShowHidden}
+                                    onPress={() => {
+                                        setPass1(!pass1)
+                                    }}
+                                >
+                                    {pass1 ? (<Entypo name="eye" size={28} color="black" />) : (<Entypo name="eye-with-line" size={28} color="black" />)}
+
+                                </TouchableOpacity>
+                            </View>
+
+                            <View>
+                                <TextInput
+                                    style={styles.inputText}
+                                    placeholder="Nhập lại mật khẩu mới"
+                                    onChangeText={handleChange('rePassword')}
+                                    onBlur={handleBlur('rePassword')}
+                                    value={values.rePassword}
+                                    secureTextEntry={pass2}
+                                />
+                                {errors.rePassword && touched.rePassword ? (
+                                    <Text style={{ color: 'red', textAlign: "center" }}>{errors.rePassword}</Text>
+                                ) : null}
+                                <TouchableOpacity
+                                    style={styles.iconShowHidden}
+                                    onPress={() => {
+                                        setPass2(!pass2)
+                                    }}
+                                >
+                                    {pass2 ? (<Entypo name="eye" size={28} color="black" />) : (<Entypo name="eye-with-line" size={28} color="black" />)}
+
+                                </TouchableOpacity>
+                            </View>
+
 
                             <TouchableOpacity
                                 onPress={handleSubmit}
