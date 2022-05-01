@@ -17,7 +17,6 @@ function AdminAddStaff(props) {
 
     const { navigation } = props;
     const isFocused = useIsFocused()
-    const [selectedValue, setSelectedValue] = useState('Phục vụ')
     const [pass1, setPass1] = useState(true)
     const [pass2, setPass2] = useState(true)
     const toast = useToast();
@@ -25,7 +24,6 @@ function AdminAddStaff(props) {
     useEffect(() => {
         setPass1(true)
         setPass2(true)
-        setSelectedValue('Phục vụ')
     }, [isFocused])
 
 
@@ -61,7 +59,8 @@ function AdminAddStaff(props) {
                             console.log(error)
                         })
                 })
-            }),
+            })
+            .matches(/^[A-Za-z][A-Za-z0-9]{5,15}$/, "Tên đăng nhập từ 6 - 15 kí tự và bắt đầu bằng chữ cái!"),
         password: Yup
             .string()
             .required('Vui lòng nhập vào mật khẩu mới!')
@@ -76,20 +75,21 @@ function AdminAddStaff(props) {
 
     return (
         <ScrollView>
+            <Text style={styles.textHeader}>Thêm nhân viên</Text>
             <Formik
-                enableReinitialize={false}
+                enableReinitialize={true}
                 initialValues={{
                     name: '',
                     phoneNumber: '',
                     address: '',
-                    position: selectedValue,
+                    position: 'Phục vụ',
                     userName: '',
                     password: '',
                     rePassword: ''
                 }}
                 validationSchema={CheckFormAddStaff}
-                validateOnChange={false}
-                onSubmit={(values) => {
+                // validateOnChange={false}
+                onSubmit={(values,{ resetForm }) => {
                     axios({
                         method: 'post',
                         url: '/admin/addStaff',
@@ -105,6 +105,8 @@ function AdminAddStaff(props) {
                         .then(response => {
                             if(response.data === "ok") showToast("Thêm nhân viên thành công")
                             else showToast("Thêm nhân viên thất bại")
+                            resetForm()
+                            navigation.navigate('AdminListStaff')
                         })
                         .catch(error => {
                             console.log(error)
@@ -152,9 +154,9 @@ function AdminAddStaff(props) {
 
                             <View style={styles.pickerPositon}>
                                 <Picker
-                                    selectedValue={selectedValue}
+                                    selectedValue={values.position}
                                     style={{ width: 150, }}
-                                    onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+                                    onValueChange={handleChange('position')}
                                 >
                                     <Picker.Item label="Phục vụ" value="Phục vụ" />
                                     <Picker.Item label="Đầu bếp" value="Đầu bếp" />

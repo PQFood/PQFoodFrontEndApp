@@ -11,9 +11,9 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 import styles from '../components/stylesShipper';
 import AdminUseGetOrder from '../hooks/AdminUseGetOrder';
-import RenderStaffAdmin from '../components/RenderStaffAdmin';
+import RenderDinnerTableAdmin from '../components/RenderDinnerTableAdmin';
 
-function AdminListStaff(props) {
+function AdminListDinnerTable(props) {
 
   const { navigation, route } = props;
   const toast = useToast();
@@ -24,15 +24,17 @@ function AdminListStaff(props) {
   
 
   useEffect(() => {
-    AdminUseGetOrder({ setLoading, setOrder, link: "listStaff" })
+    AdminUseGetOrder({ setLoading, setOrder, link: "getDinnerTable" })
   }, [isFocused])
+
+
 
   const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
   }
 
   const onRefresh = () => {
-    AdminUseGetOrder({ setLoading, setOrder, link: "listStaff" })
+    AdminUseGetOrder({ setLoading, setOrder, link: "getDinnerTable" })
     setRefreshing(true);
     wait(1200).then(() => setRefreshing(false));
   };
@@ -58,7 +60,7 @@ function AdminListStaff(props) {
             data={order}
             renderItem={({ item }) => {
               return (
-                <RenderStaffAdmin
+                <RenderDinnerTableAdmin
                   item={item}
                   NavigationEditStaff = {()=>{
                     navigation.navigate("AdminEditStaff",{userName:item.userName} )
@@ -83,7 +85,7 @@ function AdminListStaff(props) {
                               .then(response => {
                                 if (response.data === "ok") {
                                   showToast("Xóa thành công")
-                                  AdminUseGetOrder({ setLoading, setOrder, link: "listStaff" })
+                                  AdminUseGetOrder({ setLoading, setOrder, link: "getDinnerTable" })
                                 }
                                 else {
                                   alert("Xóa thất bại")
@@ -109,4 +111,4 @@ function AdminListStaff(props) {
   }
 }
 
-export default AdminListStaff;
+export default AdminListDinnerTable;

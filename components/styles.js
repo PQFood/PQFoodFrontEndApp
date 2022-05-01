@@ -251,6 +251,13 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         borderRadius: 30,
         marginVertical: 10,
+    },
+    textHeader: {
+        textAlign: "center",
+        marginVertical: 10,
+        fontSize: 17,
+        fontWeight: "bold",
+        color: "#ff3300"
     }
 
 });
