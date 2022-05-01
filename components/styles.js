@@ -250,6 +250,7 @@ const styles = StyleSheet.create({
         marginHorizontal: windowWidth*0.12,
         backgroundColor: "white",
         borderRadius: 30,
+        marginVertical: 10,
     }
 
 });

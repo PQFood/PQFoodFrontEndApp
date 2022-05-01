@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { Picker, Text, View, TouchableOpacity, SafeAreaView, TextInput, Alert, ScrollView } from 'react-native';
-
+import { Text, View, TouchableOpacity, SafeAreaView, TextInput, Alert, ScrollView } from 'react-native';
+import {Picker} from '@react-native-picker/picker';
 import axios from 'axios';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
@@ -30,12 +30,46 @@ function AdminAddStaff(props) {
 
 
     const CheckFormAddStaff = Yup.object().shape({
-        password: Yup.string()
+        name: Yup
+            .string()
+            .required('Vui lòng nhập họ tên nhân viên!'),
+        phoneNumber: Yup
+            .string()
+            .max(11, 'Số điện thoại quá dài!')
+            .required('Vui lòng nhập vào số điện thoại!')
+            .matches(/^(0)[1-9][0-9]{8,9}$/, "Số điện thoại không hợp lệ!"),
+        address: Yup
+            .string()
+            .required('Vui lòng nhập vào địa chỉ!'),
+        userName: Yup
+            .string()
+            .required('Vui lòng nhập vào tên đăng nhập!')
+            .test('userName', 'Tên đăng nhập đã tồn tại', (userName) => {
+                return new Promise((resolve, reject) => {
+                    axios({
+                        method: 'get',
+                        url: '/admin/checkStaffExist',
+                        params: {
+                            userName: userName
+                        }
+                    })
+                        .then(response => {
+                            resolve(response.data)
+                        })
+                        .catch(error => {
+                            resolve(false)
+                            console.log(error)
+                        })
+                })
+            }),
+        password: Yup
+            .string()
             .required('Vui lòng nhập vào mật khẩu mới!')
             .min(6, 'Mật khẩu quá ngắn!')
             .max(14, 'Mật khẩu quá dài!')
             .matches(/^(?=.*[A-Za-z])(?=.*[0-9])[A-Za-z0-9]{6,15}$/, "Mật khẩu từ 6 - 15 kí tự bao gồm chữ và số!"),
-        rePassword: Yup.string()
+        rePassword: Yup
+            .string()
             .required('Vui lòng nhập lại mật khẩu mới!')
             .oneOf([Yup.ref('password')], 'Mật khẩu nhập lại không đúng!')
     });
@@ -43,7 +77,7 @@ function AdminAddStaff(props) {
     return (
         <ScrollView>
             <Formik
-                enableReinitialize={true}
+                enableReinitialize={false}
                 initialValues={{
                     name: '',
                     phoneNumber: '',
@@ -54,9 +88,27 @@ function AdminAddStaff(props) {
                     rePassword: ''
                 }}
                 validationSchema={CheckFormAddStaff}
+                validateOnChange={false}
                 onSubmit={(values) => {
-                    console.log(values)
-                    alert("smksm")
+                    axios({
+                        method: 'post',
+                        url: '/admin/addStaff',
+                        data: {
+                            name: values.name,
+                            phoneNumber: values.phoneNumber,
+                            address: values.address,
+                            position: values.position,
+                            userName: values.userName,
+                            password: values.password,
+                        }
+                    })
+                        .then(response => {
+                            if(response.data === "ok") showToast("Thêm nhân viên thành công")
+                            else showToast("Thêm nhân viên thất bại")
+                        })
+                        .catch(error => {
+                            console.log(error)
+                        })
                 }}
 
             >
@@ -101,7 +153,7 @@ function AdminAddStaff(props) {
                             <View style={styles.pickerPositon}>
                                 <Picker
                                     selectedValue={selectedValue}
-                                    style={{width: 150,}}
+                                    style={{ width: 150, }}
                                     onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
                                 >
                                     <Picker.Item label="Phục vụ" value="Phục vụ" />
