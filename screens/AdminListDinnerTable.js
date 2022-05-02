@@ -62,13 +62,13 @@ function AdminListDinnerTable(props) {
               return (
                 <RenderDinnerTableAdmin
                   item={item}
-                  NavigationEditStaff = {()=>{
-                    navigation.navigate("AdminEditStaff",{userName:item.userName} )
+                  NavigationEditDinnerTable = {()=>{
+                    navigation.navigate("AdminEditDinnerTable",{slug:item.slug} )
                   }}
                   btnCancel={() => {
                     Alert.alert(
                       "Cảnh báo",
-                      "Bạn có chắc muốn xóa nhân viên này?",
+                      "Bạn có chắc muốn xóa bàn ăn này?",
                       [
                         {
                           text: "Bỏ qua",
@@ -77,9 +77,9 @@ function AdminListDinnerTable(props) {
                           text: "Xác nhận", onPress: () => {
                             axios({
                               method: 'post',
-                              url: '/admin/deleteStaff',
+                              url: '/admin/deleteDinnerTable',
                               data: {
-                                slug: item.userName
+                                slug: item.slug
                               }
                             })
                               .then(response => {

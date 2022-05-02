@@ -59,6 +59,8 @@ import AdminListStaff from './screens/AdminListStaff';
 import AdminEditStaff from './screens/AdminEditStaff';
 import AdminListDinnerTable from './screens/AdminListDinnerTable';
 import AdminAddDinnerTable from './screens/AdminAddDinnerTable';
+import AdminEditDinnerTable from './screens/AdminEditDinnerTable';
+
 
 function Navigation(props) {
 
@@ -208,6 +210,33 @@ function Navigation(props) {
         )
     }
 
+    const AdminManageMenu = () => {
+        return (
+            <Tab.Navigator
+                screenOptions={({ route }) => ({
+                    tabBarIcon: ({ focused, color, size }) => {
+                        if (route.name === 'AdminListDinnerTable') {
+                            return <FontAwesome5 name="hamburger" size={size + 5} color={color} />
+                        } else if (route.name === 'AdminAddDinnerTable') {
+                            return <FontAwesome5 name="coffee" size={size + 5} color={color} />
+                        } else if (route.name === 'AdminListDinnerTable1') {
+                            return <FontAwesome5 name="trash" size={size + 5} color={color} />
+                        } else if (route.name === 'AdminListDinnerTable2') {
+                            return <Entypo name="add-to-list" size={size + 5} color={color} />
+                        }
+                    },
+                    tabBarActiveTintColor: 'tomato',
+                    tabBarInactiveTintColor: 'gray',
+                })}
+            >
+                <Tab.Screen name="AdminListDinnerTable" component={AdminListDinnerTable} options={{ title: "Thức ăn", headerShown: false, tabBarLabelStyle: { fontSize: 14, marginBottom: 2 } }} />
+                <Tab.Screen name="AdminAddDinnerTable" component={AdminAddDinnerTable} options={{ title: "Thức uống", headerShown: false, tabBarLabelStyle: { fontSize: 14, marginBottom: 2 } }} />
+                <Tab.Screen name="AdminListDinnerTable1" component={AdminListDinnerTable} options={{ title: "Thùng rác", headerShown: false, tabBarLabelStyle: { fontSize: 14, marginBottom: 2 } }} />
+                <Tab.Screen name="AdminListDinnerTable2" component={AdminListDinnerTable} options={{ title: "Thêm", headerShown: false, tabBarLabelStyle: { fontSize: 14, marginBottom: 2 } }} />
+            </Tab.Navigator>
+        )
+    }
+
     //home admin
     const HomeAdminDrawer = () => {
         return (
@@ -216,6 +245,7 @@ function Navigation(props) {
                 <Drawer.Screen name="OrderCurrentTab" component={OrderCurrentTab} options={{ title: "Hóa đơn hiện tại", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: ({ focused, size, color }) => (<FontAwesome5 name="money-bill" size={20} color="black" />) }} />
                 <Drawer.Screen name="AdminManageStaff" component={AdminManageStaff} options={{ title: "Quản lý nhân viên", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: ({ focused, size, color }) => (<Ionicons name="person" size={24} color="black" />) }} />
                 <Drawer.Screen name="AdminManageDinnerTable" component={AdminManageDinnerTable} options={{ title: "Quản lý bàn ăn", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: ({ focused, size, color }) => (<FontAwesome5 name="object-group" size={24} color="black" />) }} />
+                <Drawer.Screen name="AdminManageMenu" component={AdminManageMenu} options={{ title: "Quản lý thực đơn", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: ({ focused, size, color }) => (<MaterialIcons name="restaurant-menu" size={24} color="black" />) }} />
 
 
                 <Drawer.Screen name="HistoryOrderDrawer" component={HistoryOrderTab} options={{ title: "Lịch sử hóa đơn", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: ({ focused, size, color }) => (<FontAwesome5 name="history" size={24} color="black" />) }} />
@@ -263,6 +293,7 @@ function Navigation(props) {
                 <Stack.Screen name="AdminDetailOrder" component={AdminDetailOrder} options={{ title: "Chi Tiết Hóa Đơn", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
                 <Stack.Screen name="AdminDetailHistotyBookShip" component={AdminDetailHistotyBookShip} options={{ title: "Chi Tiết Hóa Đơn", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
                 <Stack.Screen name="AdminEditStaff" component={AdminEditStaff} options={{ title: "Cập nhật thông tin nhân viên", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
+                <Stack.Screen name="AdminEditDinnerTable" component={AdminEditDinnerTable} options={{ title: "Cập nhật thông tin bàn ăn", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
 
 
 

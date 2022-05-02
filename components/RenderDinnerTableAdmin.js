@@ -9,7 +9,7 @@ const windowHeight = Dimensions.get('window').height;
 import moment from 'moment';
 import styles from './styles';
 
-const RenderDinnerTableAdmin = ({ item, btnCancel, NavigationEditStaff }) => {
+const RenderDinnerTableAdmin = ({ item, btnCancel, NavigationEditDinnerTable }) => {
     return (
         <>
             <View style={styles.adminOrder}>
@@ -23,7 +23,7 @@ const RenderDinnerTableAdmin = ({ item, btnCancel, NavigationEditStaff }) => {
                 <View style={[styles.flexBetweenRow]}>
                     <TouchableOpacity
                         style={styles.btnDetail}
-                        onPress={NavigationEditStaff}
+                        onPress={NavigationEditDinnerTable}
                     >
                         <Text>Cập nhật</Text>
                     </TouchableOpacity>

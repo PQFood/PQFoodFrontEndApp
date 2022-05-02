@@ -5,20 +5,24 @@ import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Entypo } from '@expo/vector-icons';
-import { useIsFocused } from '@react-navigation/native'
 import showToast from '../components/ShowToast';
 import { useToast } from "react-native-toast-notifications";
 import styles from '../components/styles';
+import AdminUseGetDinnerTable from '../hooks/AdminUseGetDinnerTable';
 
-function AdminAddDinnerTable(props) {
+function AdminEditDinnerTable(props) {
 
 
-    const { navigation } = props;
-    const isFocused = useIsFocused()
+    const { navigation, route } = props;
+    const [loading,setLoading] = useState(true)
+    const [dinnerTable,setDinnerTable] = useState(true)
+    const slug = route.params.slug
+
     const toast = useToast();
-
+    useEffect(()=>{
+        AdminUseGetDinnerTable({setLoading, setDinnerTable, slug})
+        // console.log(typeof(dinnerTable.quantity+''))
+    },[])
 
 
     const CheckFormAddDinnerTable = Yup.object().shape({
@@ -37,25 +41,26 @@ function AdminAddDinnerTable(props) {
             <Formik
                 enableReinitialize={true}
                 initialValues={{
-                    name: '',
-                    quantity: '1',
-                    description: '',
+                    name: dinnerTable.name,
+                    quantity: dinnerTable.quantity+'',
+                    description: dinnerTable.description,
                 }}
                 validationSchema={CheckFormAddDinnerTable}
                 // validateOnChange={false}
                 onSubmit={(values, { resetForm }) => {
                     axios({
                         method: 'post',
-                        url: '/admin/addDinnerTable',
+                        url: '/admin/editDinnerTable',
                         data: {
                             name: values.name,
                             quantity: values.quantity,
                             description: values.description,
+                            slug: slug
                         }
                     })
                         .then(response => {
-                            if (response.data === "ok") showToast("Thêm bàn ăn thành công")
-                            else showToast("Thêm bàn ăn thất bại")
+                            if (response.data === "ok") showToast("Cập nhật bàn ăn thành công")
+                            else showToast("Cập nhật bàn ăn thất bại")
                             resetForm()
                             navigation.navigate('AdminListDinnerTable')
                         })
@@ -110,7 +115,7 @@ function AdminAddDinnerTable(props) {
                             <TouchableOpacity
                                 onPress={handleSubmit}
                             >
-                                <Text style={styles.btnConfirmForm}>Thêm</Text>
+                                <Text style={styles.btnConfirmForm}>Cập nhật</Text>
                             </TouchableOpacity>
                         </View>
                     </SafeAreaView>
@@ -126,4 +131,4 @@ function AdminAddDinnerTable(props) {
 
 
 
-export default AdminAddDinnerTable;
+export default AdminEditDinnerTable;
