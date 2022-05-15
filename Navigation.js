@@ -60,7 +60,7 @@ import AdminEditStaff from './screens/AdminEditStaff';
 import AdminListDinnerTable from './screens/AdminListDinnerTable';
 import AdminAddDinnerTable from './screens/AdminAddDinnerTable';
 import AdminEditDinnerTable from './screens/AdminEditDinnerTable';
-
+import AdminAddFoodMenu from './screens/AdminAddFoodMenu';
 
 function Navigation(props) {
 
@@ -221,7 +221,7 @@ function Navigation(props) {
                             return <FontAwesome5 name="coffee" size={size + 5} color={color} />
                         } else if (route.name === 'AdminListDinnerTable1') {
                             return <FontAwesome5 name="trash" size={size + 5} color={color} />
-                        } else if (route.name === 'AdminListDinnerTable2') {
+                        } else if (route.name === 'AdminAddFoodMenu') {
                             return <Entypo name="add-to-list" size={size + 5} color={color} />
                         }
                     },
@@ -232,7 +232,7 @@ function Navigation(props) {
                 <Tab.Screen name="AdminListDinnerTable" component={AdminListDinnerTable} options={{ title: "Thức ăn", headerShown: false, tabBarLabelStyle: { fontSize: 14, marginBottom: 2 } }} />
                 <Tab.Screen name="AdminAddDinnerTable" component={AdminAddDinnerTable} options={{ title: "Thức uống", headerShown: false, tabBarLabelStyle: { fontSize: 14, marginBottom: 2 } }} />
                 <Tab.Screen name="AdminListDinnerTable1" component={AdminListDinnerTable} options={{ title: "Thùng rác", headerShown: false, tabBarLabelStyle: { fontSize: 14, marginBottom: 2 } }} />
-                <Tab.Screen name="AdminListDinnerTable2" component={AdminListDinnerTable} options={{ title: "Thêm", headerShown: false, tabBarLabelStyle: { fontSize: 14, marginBottom: 2 } }} />
+                <Tab.Screen name="AdminAddFoodMenu" component={AdminAddFoodMenu} options={{ title: "Thêm", headerShown: false, tabBarLabelStyle: { fontSize: 14, marginBottom: 2 } }} />
             </Tab.Navigator>
         )
     }
@@ -258,7 +258,7 @@ function Navigation(props) {
 
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName='HomeAdmin'>
+            <Stack.Navigator initialRouteName='Login'>
                 <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
                 <Stack.Screen name="HomeAdmin" component={HomeAdminDrawer} options={{ headerShown: false }} />
                 <Stack.Screen name="HomeShipper" component={HomeShipperDrawer} options={{ headerShown: false }} />

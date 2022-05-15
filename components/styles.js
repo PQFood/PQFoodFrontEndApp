@@ -258,6 +258,16 @@ const styles = StyleSheet.create({
         fontSize: 17,
         fontWeight: "bold",
         color: "#ff3300"
+    },
+    uploadImage:{
+        width: windowWidth*0.85,
+        borderRadius: 30,
+        backgroundColor: "white",
+        height: 50,
+        marginHorizontal: 50,
+        marginVertical: 10,
+        alignItems: "center",
+        justifyContent: "center"
     }
 
 });
