@@ -61,6 +61,11 @@ import AdminListDinnerTable from './screens/AdminListDinnerTable';
 import AdminAddDinnerTable from './screens/AdminAddDinnerTable';
 import AdminEditDinnerTable from './screens/AdminEditDinnerTable';
 import AdminAddFoodMenu from './screens/AdminAddFoodMenu';
+import AdminListFood from './screens/AdminListFood';
+import AdminEditFoodMenu from './screens/AdminEditFoodMenu';
+import AdminListDrink from './screens/AdminListDrink';
+import AdminBinMenu from './screens/AdminBinMenu';
+
 
 function Navigation(props) {
 
@@ -215,11 +220,11 @@ function Navigation(props) {
             <Tab.Navigator
                 screenOptions={({ route }) => ({
                     tabBarIcon: ({ focused, color, size }) => {
-                        if (route.name === 'AdminListDinnerTable') {
+                        if (route.name === 'AdminListFood') {
                             return <FontAwesome5 name="hamburger" size={size + 5} color={color} />
-                        } else if (route.name === 'AdminAddDinnerTable') {
+                        } else if (route.name === 'AdminListDrink') {
                             return <FontAwesome5 name="coffee" size={size + 5} color={color} />
-                        } else if (route.name === 'AdminListDinnerTable1') {
+                        } else if (route.name === 'AdminBinMenu') {
                             return <FontAwesome5 name="trash" size={size + 5} color={color} />
                         } else if (route.name === 'AdminAddFoodMenu') {
                             return <Entypo name="add-to-list" size={size + 5} color={color} />
@@ -229,10 +234,34 @@ function Navigation(props) {
                     tabBarInactiveTintColor: 'gray',
                 })}
             >
-                <Tab.Screen name="AdminListDinnerTable" component={AdminListDinnerTable} options={{ title: "Thức ăn", headerShown: false, tabBarLabelStyle: { fontSize: 14, marginBottom: 2 } }} />
-                <Tab.Screen name="AdminAddDinnerTable" component={AdminAddDinnerTable} options={{ title: "Thức uống", headerShown: false, tabBarLabelStyle: { fontSize: 14, marginBottom: 2 } }} />
-                <Tab.Screen name="AdminListDinnerTable1" component={AdminListDinnerTable} options={{ title: "Thùng rác", headerShown: false, tabBarLabelStyle: { fontSize: 14, marginBottom: 2 } }} />
+                <Tab.Screen name="AdminListFood" component={AdminListFood} options={{ title: "Thức ăn", headerShown: false, tabBarLabelStyle: { fontSize: 14, marginBottom: 2 } }} />
+                <Tab.Screen name="AdminListDrink" component={AdminListDrink} options={{ title: "Thức uống", headerShown: false, tabBarLabelStyle: { fontSize: 14, marginBottom: 2 } }} />
+                <Tab.Screen name="AdminBinMenu" component={AdminBinMenu} options={{ title: "Thùng rác", headerShown: false, tabBarLabelStyle: { fontSize: 14, marginBottom: 2 } }} />
                 <Tab.Screen name="AdminAddFoodMenu" component={AdminAddFoodMenu} options={{ title: "Thêm", headerShown: false, tabBarLabelStyle: { fontSize: 14, marginBottom: 2 } }} />
+            </Tab.Navigator>
+        )
+    }
+
+    const AdminRevenueDrawer = () => {
+        return (
+            <Tab.Navigator
+                screenOptions={({ route }) => ({
+                    tabBarIcon: ({ focused, color, size }) => {
+                        if (route.name === 'AdminListFood') {
+                            return <FontAwesome5 name="dollar-sign" size={size + 5} color={color} />
+                        } else if (route.name === 'AdminListDrink') {
+                            return <AntDesign name="linechart" size={size+5} color={color} />
+                        } else if (route.name === 'AdminBinMenu') {
+                            return <FontAwesome name="bar-chart-o" size={size + 5} color={color} />
+                        }
+                    },
+                    tabBarActiveTintColor: 'tomato',
+                    tabBarInactiveTintColor: 'gray',
+                })}
+            >
+                <Tab.Screen name="AdminListFood" component={AdminListFood} options={{ title: "Ngày", headerShown: false, tabBarLabelStyle: { fontSize: 14, marginBottom: 2 } }} />
+                <Tab.Screen name="AdminListDrink" component={AdminListDrink} options={{ title: "Tuần", headerShown: false, tabBarLabelStyle: { fontSize: 14, marginBottom: 2 } }} />
+                <Tab.Screen name="AdminBinMenu" component={AdminBinMenu} options={{ title: "Tháng", headerShown: false, tabBarLabelStyle: { fontSize: 14, marginBottom: 2 } }} />
             </Tab.Navigator>
         )
     }
@@ -250,6 +279,8 @@ function Navigation(props) {
 
                 <Drawer.Screen name="HistoryOrderDrawer" component={HistoryOrderTab} options={{ title: "Lịch sử hóa đơn", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: ({ focused, size, color }) => (<FontAwesome5 name="history" size={24} color="black" />) }} />
 
+                <Drawer.Screen name="AdminRevenueDrawer" component={AdminRevenueDrawer} options={{ title: "Thống kê doanh thu", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: ({ focused, size, color }) => (<FontAwesome5 name="dollar-sign" size={24} color="black" />) }} />
+
                 <Drawer.Screen name="WaiterChangePassword" component={WaiterChangePassword} options={{ title: "Đổi mật khẩu", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: (focused, size, color) => (<MaterialCommunityIcons name="key-change" size={24} color="black" />) }} />
                 <Drawer.Screen name="LogOut" component={LogOut} options={{ title: "Đăng xuất", headerShown: false, drawerIcon: ({ focused, size, color }) => (<Entypo name="log-out" size={24} color="black" />) }} />
             </Drawer.Navigator>
@@ -258,7 +289,7 @@ function Navigation(props) {
 
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName='Login'>
+            <Stack.Navigator initialRouteName='HomeAdmin'>
                 <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
                 <Stack.Screen name="HomeAdmin" component={HomeAdminDrawer} options={{ headerShown: false }} />
                 <Stack.Screen name="HomeShipper" component={HomeShipperDrawer} options={{ headerShown: false }} />
@@ -294,6 +325,7 @@ function Navigation(props) {
                 <Stack.Screen name="AdminDetailHistotyBookShip" component={AdminDetailHistotyBookShip} options={{ title: "Chi Tiết Hóa Đơn", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
                 <Stack.Screen name="AdminEditStaff" component={AdminEditStaff} options={{ title: "Cập nhật thông tin nhân viên", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
                 <Stack.Screen name="AdminEditDinnerTable" component={AdminEditDinnerTable} options={{ title: "Cập nhật thông tin bàn ăn", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
+                <Stack.Screen name="AdminEditFoodMenu" component={AdminEditFoodMenu} options={{ title: "Cập nhật thông tin thực đơn", headerTitleAlign: "center", headerStyle: { backgroundColor: '#ffcc66' }, }} />
 
 
 

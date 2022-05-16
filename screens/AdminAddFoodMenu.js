@@ -24,10 +24,11 @@ function AdminAddFoodMenu(props) {
     const toast = useToast();
     const [image, setImage] = useState(null);
 
+
     const handleUpdata = (photo) => {
         const data = new FormData()
         data.append('file', photo)
-        data.append("upload_preset", "upload_image")
+        data.append("upload_preset", "pqfood")
         data.append("cloud_name", "pqshop")
         fetch("https://api.cloudinary.com/v1_1/pqshop/image/upload", {
             method: 'POST',
@@ -38,8 +39,8 @@ function AdminAddFoodMenu(props) {
             }
         }).then(res => res.json())
             .then(data => {
+                // console.log(data)
                 setImage(data.url)
-                console.log(data)
             }).catch(err => {
                 Alert.alert("Error While Uploading")
             })
@@ -55,16 +56,16 @@ function AdminAddFoodMenu(props) {
             quality: 1,
         });
 
-        console.log(result);
-        
+        // console.log(result);
+
 
         if (!result.cancelled) {
             let newFile = {
-                uri:result.uri,
-                type:`test/${result.uri.split(".")[1]}`,
-                name:`test.${result.uri.split(".")[1]}`};
+                uri: result.uri,
+                type: `test/${result.uri.split(".")[1]}`,
+                name: `test.${result.uri.split(".")[1]}`
+            };
             handleUpdata(newFile)
-            // setImage(result.uri);
         }
     };
 
@@ -92,32 +93,33 @@ function AdminAddFoodMenu(props) {
                 initialValues={{
                     nameFood: '',
                     price: '',
-                    classify: 'Thức ăn',
+                    classify: '1',
                     description: '',
                 }}
                 validationSchema={CheckFormAddDinnerTable}
 
                 onSubmit={(values, { resetForm }) => {
-                    // axios({
-                    //     method: 'post',
-                    //     url: '/admin/addFoodMenu',
-                    //     data: {
-                    //         image: image,
-                    //         description: values.description,
-                    //     }
-                    // })
-                    //     .then(response => {
-                    //         if (response.data === "ok") showToast("Thêm bàn ăn thành công")
-                    //         else showToast("Thêm bàn ăn thất bại")
-                    //         resetForm()
-                    //         // navigation.navigate('AdminListDinnerTable')
-                    //     })
-                    //     .catch(error => {
-                    //         console.log(error)
-                    //     })
-                    // handleUpdata(image)
+                    axios({
+                        method: 'post',
+                        url: '/admin/addFoodMenu',
+                        data: {
+                            image: image,
+                            description: values.description,
+                            name: values.nameFood,
+                            price: values.price,
+                            classify: values.classify,
+                        }
+                    })
+                        .then(response => {
+                            if (response.data === "ok") showToast("Thêm thực đơn thành công")
+                            else showToast("Thêm thực đơn thất bại")
+                            resetForm()
+                            navigation.navigate('AdminListFood')
+                        })
+                        .catch(error => {
+                            console.log(error)
+                        })
                 }}
-            // handleUpdata(image)
 
             >
                 {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
@@ -165,18 +167,27 @@ function AdminAddFoodMenu(props) {
                                     style={{ width: 150, }}
                                     onValueChange={handleChange('classify')}
                                 >
-                                    <Picker.Item label="Thức ăn" value="Thức ăn" />
-                                    <Picker.Item label="Thức uống" value="Thức uống" />
+                                    <Picker.Item label="Thức ăn" value="1" />
+                                    <Picker.Item label="Thức uống" value="2" />
 
                                 </Picker>
                             </View>
 
                             <TextInput
-                                style={styles.inputText}
-                                placeholder="Mô tả"
+                                style={{
+                                    width: windowWidth * 0.85,
+                                    borderRadius: 30,
+                                    backgroundColor: "white",
+                                    marginHorizontal: 50,
+                                    marginVertical: 10,
+                                    textAlign: "center"
+                                }}
+                                multiline
+                                numberOfLines={5}
                                 onChangeText={handleChange('description')}
                                 onBlur={handleBlur('description')}
                                 value={values.description}
+                                placeholder="Mô tả"
                             />
                             {errors.description && touched.description ? (
                                 <Text style={{ color: 'red', textAlign: "center" }}>{errors.description}</Text>
