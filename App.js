@@ -1,8 +1,4 @@
 import React from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { ScrollView, StyleSheet, Text, View, SafeAreaView } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Navigation from './Navigation'
 import 'react-native-gesture-handler'
 import axios from 'axios';
@@ -10,7 +6,7 @@ import { Dimensions } from 'react-native';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 import { MaterialIcons } from '@expo/vector-icons';
-axios.defaults.baseURL = 'http://192.168.1.9:8002';
+axios.defaults.baseURL = 'http://192.168.1.175:8002';
 import { ToastProvider } from 'react-native-toast-notifications'
 import Constants from 'expo-constants';
 

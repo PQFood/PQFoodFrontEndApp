@@ -30,7 +30,7 @@ function ChefChangeQuantityWarehouse(props) {
             .number()
             .typeError("Vui lòng nhập vào số!")
             .required('Vui lòng nhập vào số lượng!')
-            .min(0, "Nhở hơn")
+            .min(0, "Lỗi! Nhỏ hơn 0 rồi!")
     });
 
     const getOneWarehouse = () => {
