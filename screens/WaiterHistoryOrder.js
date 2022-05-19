@@ -17,14 +17,14 @@ function WaiterHistoryOrder(props) {
   const { navigation, route } = props;
   const [quantity, setQuantity] = useState(1)
   const [orderHistory, setOrderHistory] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [full, setFull] = useState(false)
   const [refreshing, setRefreshing] = React.useState(false);
   const isFocused = useIsFocused()
   const [search, setSearch] = useState('')
   const [isSearch, setIsSearch] = useState(false)
 
-  const getHistoryOrder = (quantity) => {
+  const getHistoryOrder = () => {
     axios({
       method: 'get',
       url: '/waiter/getHistoryOrder',
@@ -43,7 +43,7 @@ function WaiterHistoryOrder(props) {
   }
 
   useEffect(() => {
-    getHistoryOrder(quantity)
+    getHistoryOrder()
     setSearch('')
     setIsSearch(false)
   }, [isFocused, quantity])
@@ -54,7 +54,7 @@ function WaiterHistoryOrder(props) {
 
   const onRefresh = () => {
     setQuantity(1)
-    getHistoryOrder(quantity);
+    getHistoryOrder();
     setRefreshing(true);
     setSearch('')
     setIsSearch(false)
@@ -126,7 +126,7 @@ function WaiterHistoryOrder(props) {
               <FontAwesome name="search" size={24} color="white" />
             </TouchableOpacity>
           </View>
-          {orderHistory.length > 0 ? (
+          {/* {orderHistory.length > 0 ? ( */}
             <>
               <FlatList
                 refreshControl={
@@ -184,7 +184,7 @@ function WaiterHistoryOrder(props) {
                 }
               />
             </>
-          ) : (
+          {/* ) : (
             <ScrollView
               refreshControl={
                 <RefreshControl
@@ -198,7 +198,7 @@ function WaiterHistoryOrder(props) {
                 Không có kết quả tìm kiếm!
               </Text>
             </ScrollView>
-          )}
+          )} */}
         </View>
       </>
     );
