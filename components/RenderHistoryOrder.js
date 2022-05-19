@@ -23,7 +23,7 @@ const RenderHistoryOrder = ({ item }) => {
           suffix={' đ'}
           renderText={value => <Text style={styles.textBold}>{value}</Text>}
         />
-        <Text>{moment(item.updatedAt).format("LT,L")}</Text>
+        <Text>{moment(item.updatedAt).format("LT,DD/MM/YYYY")}</Text>
       </View>
     </View>
 

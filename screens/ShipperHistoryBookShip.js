@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, RefreshControl, BackHandler, Alert } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, RefreshControl, TextInput, Alert } from 'react-native';
 import { useToast } from "react-native-toast-notifications";
 import axios from 'axios';
 import { useIsFocused } from '@react-navigation/native'
@@ -9,8 +9,10 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 import styles from '../components/stylesShipper';
 import CurrencyFormat from 'react-currency-format';
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import RenderBookShipElement from '../components/RenderBookShipElement';
+import UseGetShipSearch from '../hooks/UseGetShipSearch';
+import { ScrollView } from 'react-native-gesture-handler';
 
 function ShipperHistoryBookShip(props) {
 
@@ -23,6 +25,8 @@ function ShipperHistoryBookShip(props) {
   const [loading, setLoading] = useState(true)
   const [quantity, setQuantity] = useState(1)
   const [full, setFull] = useState(false)
+  const [search, setSearch] = useState('')
+  const [isSearch, setIsSearch] = useState(false)
 
   const getOrderShip = () => {
     axios({
@@ -44,7 +48,9 @@ function ShipperHistoryBookShip(props) {
 
   useEffect(() => {
     getOrderShip()
-  }, [isFocused,quantity])
+    setSearch('')
+    setIsSearch(false)
+  }, [isFocused, quantity])
 
 
   const wait = (timeout) => {
@@ -54,6 +60,8 @@ function ShipperHistoryBookShip(props) {
   const onRefresh = () => {
     getOrderShip();
     setRefreshing(true);
+    setSearch('')
+    setIsSearch(false)
     wait(1200).then(() => setRefreshing(false));
   };
 
@@ -70,7 +78,7 @@ function ShipperHistoryBookShip(props) {
       <RenderBookShipElement
         item={item}
         onPress={() => {
-          navigation.navigate("ShipperDetailHistotyBookShip",{orderId: item.orderId})
+          navigation.navigate("ShipperDetailHistotyBookShip", { orderId: item.orderId })
         }}
         backgroundColor={{ backgroundColor }}
       />
@@ -87,54 +95,106 @@ function ShipperHistoryBookShip(props) {
     return (
       <>
         <View style={styles.container}>
-          <FlatList
-            refreshControl={
-              <RefreshControl
-                refreshing={refreshing}
-                onRefresh={onRefresh}
-                colors={["#ffcc66", "green", "blue"]}
+          <View style={{ marginTop: 16, marginBottom: 8, flexDirection: "row", alignItems: "center" }}>
+            <TextInput
+              style={{
+                backgroundColor: "white",
+                width: windowWidth * 0.6,
+                height: 45,
+                borderRadius: 140,
+                textAlign: "center",
+                marginRight: 10
+              }}
+              placeholder="Tìm kiếm"
+              onChangeText={(text) => { setSearch(text) }}
+              value={search}
+            />
+            <TouchableOpacity
+              onPress={() => {
+                UseGetShipSearch({ search, setBookShip, setIsSearch })
+              }}
+              style={{
+                backgroundColor: "#ff6600",
+                padding: 8
+              }}
+              disabled={search ? false : true}
+            >
+              <FontAwesome name="search" size={24} color="white" />
+            </TouchableOpacity>
+          </View>
+          {bookShip.length > 0 ? (
+            <>
+              <FlatList
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                    colors={["#ffcc66", "green", "blue"]}
+                  />
+                }
+                data={bookShip}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.orderId}
+                ListFooterComponent={
+                  <>
+                    {(quantity < 5 && !full) ? (
+                      <>
+                      {isSearch ? (null) : (
+                        <TouchableOpacity
+                        onPress={() => {
+                          setQuantity(quantity + 1)
+                        }}
+                        style={{
+                          backgroundColor: "#66ccff",
+                          alignItems: "center",
+                          marginHorizontal: windowWidth * 0.3,
+                          paddingVertical: windowHeight * 0.01,
+                          borderRadius: 10,
+                        }}
+                      >
+                        <Text style={{ fontSize: 16 }}><AntDesign name="downcircle" size={16} color="black" />   Xem thêm</Text>
+                      </TouchableOpacity>
+                      )}
+                      </>
+                    ) : (
+                      <TouchableOpacity
+                        onPress={() => {
+                          setQuantity(1)
+                        }}
+                        style={{
+                          backgroundColor: "#ffcc66",
+                          alignItems: "center",
+                          marginHorizontal: windowWidth * 0.3,
+                          paddingVertical: windowHeight * 0.01,
+                          borderRadius: 10,
+                        }}
+                      >
+                        <Text style={{ fontSize: 16 }}><AntDesign name="upcircle" size={16} color="black" />  Ẩn bớt</Text>
+                      </TouchableOpacity>
+                    )}
+
+                  </>
+                }
               />
-            }
-            data={bookShip}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.orderId}
-            ListFooterComponent = {
-              <>
-              {(quantity < 5 && !full) ? (
-                <TouchableOpacity
-                onPress={()=>{
-                  setQuantity(quantity+1)
-                }}
-                style={{
-                  backgroundColor: "#66ccff",
-                  alignItems: "center",
-                  marginHorizontal: windowWidth*0.3,
-                  paddingVertical: windowHeight*0.01,
-                  borderRadius: 10,
-                }}
+            </>
+          ) : (
+            <>
+              <ScrollView
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                    colors={["#ffcc66", "green", "blue"]}
+                  />
+                }
               >
-                <Text style={{fontSize: 16}}><AntDesign name="downcircle" size={16} color="black" />   Xem thêm</Text>
-              </TouchableOpacity>
-              ) : (
-                <TouchableOpacity
-                onPress={()=>{
-                  setQuantity(1)
-                }}
-                style={{
-                  backgroundColor: "#ffcc66",
-                  alignItems: "center",
-                  marginHorizontal: windowWidth*0.3,
-                  paddingVertical: windowHeight*0.01,
-                  borderRadius: 10,
-                }}
-              >
-                <Text style={{fontSize: 16}}><AntDesign name="upcircle" size={16} color="black" />  Ẩn bớt</Text>
-              </TouchableOpacity>
-              )}
-              
-              </>
-            }
-          />
+                <Text style={{ fontSize: 20, color: "#ff6600", marginTop: 16 }}>
+                  Không có kết quả tìm kiếm!
+                </Text>
+              </ScrollView>
+            </>
+          )}
+
         </View>
       </>
     );

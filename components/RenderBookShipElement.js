@@ -25,7 +25,7 @@ const RenderBookShipElement = ({ item, onPress, backgroundColor }) => {
             </View>
             <View style={styles.flexBetweenRow}>
                 <Text style={styles.textSize}>Địa chỉ: {item.address}</Text>
-                <Text>{moment(item.updatedAt).format("LT,L")}</Text>
+                <Text>{moment(item.updatedAt).format("LT,DD/MM/YYYY")}</Text>
             </View>
 
         </TouchableOpacity>
