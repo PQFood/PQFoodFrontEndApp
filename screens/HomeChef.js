@@ -7,6 +7,7 @@ import { io } from "socket.io-client";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import URL from '../components/UrlSocketIO';
 import showToast from '../components/ShowToast';
+import LoadingComponent from '../components/Loading';
 
 function HomeChef(props) {
 
@@ -20,6 +21,7 @@ function HomeChef(props) {
   const [refreshing, setRefreshing] = useState(false);
   const [socketShip, setSocketShip] = useState(null)
   const [socketId, setSocketId] = useState(null)
+  const [loading, setLoading] = useState(true)
 
   const getdinnerTable = () => {
     axios({
@@ -28,6 +30,7 @@ function HomeChef(props) {
     })
       .then(response => {
         setDinnerTable(response.data)
+        setLoading(false)
       })
       .catch(error => {
         console.log(error)
@@ -74,7 +77,7 @@ function HomeChef(props) {
     try {
       let socketIdStore = await AsyncStorage.getItem('socketId')
       if (socketId === null || socketId !== socketIdStore) {
-        if (user !== ""){
+        if (user !== "") {
           await socketShip?.emit("newUser", { userName: user, position: 4 })
           await socket?.emit("newUser", { userName: user, position: 2 })
           await setSocketId("home")
@@ -271,28 +274,37 @@ function HomeChef(props) {
     );
   };
 
-  return (
-    <>
+  if (loading) {
+    return (
+      <LoadingComponent />
+    )
+  }
+  else {
+    return (
+      <>
 
-      <View style={styles.container}>
-        <FlatList
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-              colors={["#ffcc66", "green", "blue"]}
-            />
-          }
-          data={dinnerTable}
-          numColumns={2}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.slug}
-        />
+        <View style={styles.container}>
+          <FlatList
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                colors={["#ffcc66", "green", "blue"]}
+              />
+            }
+            data={dinnerTable}
+            numColumns={2}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.slug}
+          />
 
-      </View>
-    </>
+        </View>
+      </>
 
-  );
+    );
+  }
+
+
 
 }
 

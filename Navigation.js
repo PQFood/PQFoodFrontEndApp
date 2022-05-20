@@ -69,6 +69,8 @@ import AdminListWarehouse from './screens/AdminListWarehouse';
 import AdminAddWareHouse from './screens/AdminAddWareHouse';
 import AdminEditWarehouse from './screens/AdminEditWarehouse';
 import AdminRevenueDay from './screens/AdminRevenueDay';
+import AdminRevenueWeek from './screens/AdminRevenueWeek';
+import AdminRevenueMonth from './screens/AdminRevenueMonth';
 
 
 function Navigation(props) {
@@ -274,9 +276,9 @@ function Navigation(props) {
                     tabBarIcon: ({ focused, color, size }) => {
                         if (route.name === 'AdminRevenueDay') {
                             return <FontAwesome5 name="dollar-sign" size={size + 5} color={color} />
-                        } else if (route.name === 'AdminListDrink') {
+                        } else if (route.name === 'AdminRevenueWeek') {
                             return <AntDesign name="linechart" size={size+5} color={color} />
-                        } else if (route.name === 'AdminBinMenu') {
+                        } else if (route.name === 'AdminRevenueMonth') {
                             return <FontAwesome name="bar-chart-o" size={size + 5} color={color} />
                         }
                     },
@@ -285,8 +287,8 @@ function Navigation(props) {
                 })}
             >
                 <Tab.Screen name="AdminRevenueDay" component={AdminRevenueDay} options={{ title: "Ngày", headerShown: false, tabBarLabelStyle: { fontSize: 14, marginBottom: 2 } }} />
-                <Tab.Screen name="AdminListDrink" component={AdminListDrink} options={{ title: "Tuần", headerShown: false, tabBarLabelStyle: { fontSize: 14, marginBottom: 2 } }} />
-                <Tab.Screen name="AdminBinMenu" component={AdminBinMenu} options={{ title: "Tháng", headerShown: false, tabBarLabelStyle: { fontSize: 14, marginBottom: 2 } }} />
+                <Tab.Screen name="AdminRevenueWeek" component={AdminRevenueWeek} options={{ title: "Tuần", headerShown: false, tabBarLabelStyle: { fontSize: 14, marginBottom: 2 } }} />
+                <Tab.Screen name="AdminRevenueMonth" component={AdminRevenueMonth} options={{ title: "Tháng", headerShown: false, tabBarLabelStyle: { fontSize: 14, marginBottom: 2 } }} />
             </Tab.Navigator>
         )
     }
@@ -311,7 +313,7 @@ function Navigation(props) {
 
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName='Login'>
+            <Stack.Navigator initialRouteName='HomeAdmin'>
                 <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
                 <Stack.Screen name="HomeAdmin" component={HomeAdminDrawer} options={{ headerShown: false }} />
                 <Stack.Screen name="HomeShipper" component={HomeShipperDrawer} options={{ headerShown: false }} />
