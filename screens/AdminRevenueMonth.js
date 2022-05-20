@@ -28,23 +28,21 @@ function AdminRevenueMonth(props) {
   const [text, setText] = useState(moment(date).format("DD-MM-YYYY"))
 
   const [show, setShow] = useState(false);
-  const [arrTotal, setArrTotal] = useState(null)
-  const [totalWeek, setTotalWeek] = useState(0)
-  const [arrDay, setArrDay] = useState(null)
+  const [totalYear, setTotalyear] = useState(0)
+  const [arrMonth, setArrMonth] = useState(null)
   const [loading, setLoading] = useState(true)
 
   const getRevenueWeek = (selectedDate) => {
     axios({
       method: 'get',
-      url: '/admin/weekRevenue',
+      url: '/admin/monthRevenue',
       params: {
         timeRevenue: selectedDate
       }
     })
       .then(response => {
-        setArrTotal(response.data.arrTotal)
-        setArrDay(response.data.arrDay)
-        setTotalWeek(response.data.totalWeek)
+        setArrMonth(response.data.arrMonth)
+        setTotalyear(response.data.totalYear)
         setLoading(false)
       })
       .catch(error => {
@@ -76,13 +74,13 @@ function AdminRevenueMonth(props) {
   else {
     return (
       <View style={styles.container}>
-        <Text style={{fontWeight: "bold", fontSize: 15}}>Biểu đồ thống kê doanh thu tuần</Text>
+        <Text style={{fontWeight: "bold", fontSize: 15}}>Biểu đồ thống kê doanh thu tháng</Text>
         <LineChart
           data={{
-            labels: arrDay,
+            labels: [1,2,3,4,5,6,7,8,9,10,11,12],
             datasets: [
               {
-                data: arrTotal
+                data: arrMonth
               }
             ]
           }}
@@ -116,7 +114,7 @@ function AdminRevenueMonth(props) {
 
         <View>
         <CurrencyFormat
-            value={totalWeek}
+            value={totalYear}
             displayType={'text'}
             thousandSeparator={true}
             suffix={' đ'}
@@ -142,7 +140,7 @@ function AdminRevenueMonth(props) {
             <Text
               style={{ fontSize: 16 }}
             >
-              Chọn ngày
+              Chọn năm
             </Text>
           </TouchableOpacity>
           <Text style={{ fontSize: 15, marginHorizontal: windowWidth * 0.3 }}>{text}</Text>

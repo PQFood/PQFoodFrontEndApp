@@ -71,7 +71,7 @@ import AdminEditWarehouse from './screens/AdminEditWarehouse';
 import AdminRevenueDay from './screens/AdminRevenueDay';
 import AdminRevenueWeek from './screens/AdminRevenueWeek';
 import AdminRevenueMonth from './screens/AdminRevenueMonth';
-
+import AdminChangePassword from './screens/AdminChangePassword';
 
 function Navigation(props) {
 
@@ -303,9 +303,11 @@ function Navigation(props) {
                 <Drawer.Screen name="AdminManageDinnerTable" component={AdminManageDinnerTable} options={{ title: "Quản lý bàn ăn", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: ({ focused, size, color }) => (<FontAwesome5 name="object-group" size={24} color="black" />) }} />
                 <Drawer.Screen name="AdminManageMenu" component={AdminManageMenu} options={{ title: "Quản lý thực đơn", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: ({ focused, size, color }) => (<MaterialIcons name="restaurant-menu" size={24} color="black" />) }} />
                 <Drawer.Screen name="AdminWarehouseDrawer" component={AdminWarehouseDrawer} options={{ title: "Quản lý kho", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: ({ focused, size, color }) => (<FontAwesome5 name="warehouse" size={20} color="black" />) }} />
+                <Drawer.Screen name="ShipperHistoryBookShip" component={ShipperHistoryBookShip} options={{ title: "Lịch sử đơn ship", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: ({ focused, size, color }) => (<FontAwesome5 name="history" size={24} color="black" />) }} />
+                
                 <Drawer.Screen name="HistoryOrderDrawer" component={HistoryOrderTab} options={{ title: "Lịch sử hóa đơn", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: ({ focused, size, color }) => (<FontAwesome5 name="history" size={26} color="black" />) }} />
                 <Drawer.Screen name="AdminRevenueDrawer" component={AdminRevenueDrawer} options={{ title: "Thống kê doanh thu", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: ({ focused, size, color }) => (<FontAwesome5 name="dollar-sign" size={28} color="black" />) }} />
-                <Drawer.Screen name="WaiterChangePassword" component={WaiterChangePassword} options={{ title: "Đổi mật khẩu", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: (focused, size, color) => (<MaterialCommunityIcons name="key-change" size={24} color="black" />) }} />
+                <Drawer.Screen name="AdminChangePassword" component={AdminChangePassword} options={{ title: "Đổi mật khẩu", headerStyle: { backgroundColor: '#ffcc66', }, headerTitleAlign: "center", drawerIcon: (focused, size, color) => (<MaterialCommunityIcons name="key-change" size={24} color="black" />) }} />
                 <Drawer.Screen name="LogOut" component={LogOut} options={{ title: "Đăng xuất", headerShown: false, drawerIcon: ({ focused, size, color }) => (<Entypo name="log-out" size={24} color="black" />) }} />
             </Drawer.Navigator>
         );
@@ -313,7 +315,7 @@ function Navigation(props) {
 
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName='HomeAdmin'>
+            <Stack.Navigator initialRouteName='Login'>
                 <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
                 <Stack.Screen name="HomeAdmin" component={HomeAdminDrawer} options={{ headerShown: false }} />
                 <Stack.Screen name="HomeShipper" component={HomeShipperDrawer} options={{ headerShown: false }} />
