@@ -4,6 +4,8 @@ import { Dimensions } from 'react-native';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 import styles from './styles';
+import moment from 'moment';
+
 
 const RenderHistoryBookTable = ({ item }) => {
   return (
@@ -13,7 +15,7 @@ const RenderHistoryBookTable = ({ item }) => {
           {item.name}
         </Text>
         <Text style={[styles.textConfirmBookTable]}>
-          {item.time}
+          {moment(item.time).format("LT,L")}
         </Text>
       </View>
       <View style={styles.flexBetweenRow} >

@@ -92,6 +92,7 @@ function WaiterDetailOrder(props) {
                   renderItem={RenderStaff}
                   keyExtractor={(item) => item.id}
                   ListFooterComponent={
+                    <>
                     <TextInput
                       style={styles.noteStyle}
                       multiline
@@ -100,6 +101,8 @@ function WaiterDetailOrder(props) {
                       editable={false}
                       selectTextOnFocus={false}
                     />
+                    <Text style={{textAlign: "center", color: "#ff6600", fontSize: 16, marginTop: 8, fontWeight: "bold" }}>{order.state}</Text>
+                    </>
                   }
                 />
               </>

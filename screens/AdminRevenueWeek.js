@@ -76,7 +76,7 @@ function AdminRevenueWeek(props) {
   else {
     return (
       <View style={styles.container}>
-        <Text style={{fontWeight: "bold", fontSize: 15}}>Biểu đồ thống kê doanh thu tuần</Text>
+        <Text style={{ fontWeight: "bold", fontSize: 15 }}>Biểu đồ thống kê doanh thu tuần</Text>
         <LineChart
           data={{
             labels: arrDay,
@@ -87,9 +87,10 @@ function AdminRevenueWeek(props) {
             ]
           }}
           width={windowWidth * 0.95} // from react-native
-          height={windowHeight*0.45}
+          height={windowHeight * 0.45}
           // yAxisLabel="$"
           yAxisSuffix="đ"
+
           yAxisInterval={1} // optional, defaults to 1
           chartConfig={{
             // backgroundColor: "#3399ff",
@@ -112,10 +113,11 @@ function AdminRevenueWeek(props) {
             marginVertical: 8,
             borderRadius: 8,
           }}
+
         />
 
-        <View>
-        <CurrencyFormat
+        < View >
+          <CurrencyFormat
             value={totalWeek}
             displayType={'text'}
             thousandSeparator={true}
@@ -128,7 +130,7 @@ function AdminRevenueWeek(props) {
             }]}>Doanh thu tuần: {value}</Text>}
           />
           <TouchableOpacity
-            onPress={()=>{
+            onPress={() => {
               setShow(true)
             }}
             style={{
@@ -146,7 +148,7 @@ function AdminRevenueWeek(props) {
             </Text>
           </TouchableOpacity>
           <Text style={{ fontSize: 15, marginHorizontal: windowWidth * 0.3 }}>{text}</Text>
-        </View>
+        </View >
 
         {show && (
           <DateTimePicker
@@ -157,7 +159,7 @@ function AdminRevenueWeek(props) {
           />
         )}
 
-      </View>
+      </View >
     );
 
   }

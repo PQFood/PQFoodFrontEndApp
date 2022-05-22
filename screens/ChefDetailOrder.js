@@ -113,6 +113,7 @@ function ChefDetailOrder(props) {
             keyExtractor={(item) => item.slug}
           />
         </View>
+
         <View style={styles.footer}>
           <View style={styles.footer2}>
             <Text style={styles.textBold}>Tổng Tiền: </Text>
@@ -151,14 +152,21 @@ function ChefDetailOrder(props) {
                   })
               }}
             >
-              <Text style={[styles.textBold, styles.btnFooter]}>Xác nhận</Text>
+              <Text style={[styles.textBold, styles.btnFooter3Item]}>Xác nhận</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('ChefNotification', { nameTable: route.params.nameTable, slug: route.params.slug, user: user, name: name, socket: socket })
+              }}
+            >
+              <Text style={[styles.textBold, styles.btnFooter3Item]}>Thông báo</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
                 setModalVisible(true)
               }}
             >
-              <Text style={[styles.textBold, styles.btnFooter]}>Hủy</Text>
+              <Text style={[styles.textBold, styles.btnFooter3Item]}>Hủy</Text>
             </TouchableOpacity>
           </View>
         </View>
