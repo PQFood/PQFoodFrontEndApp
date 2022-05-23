@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Text, View, Button } from 'react-native';
 import { Dimensions } from 'react-native';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 import styles from './styles';
+import moment from 'moment'
 
 const RenderBookTable = ({ item, nameBtn,cancelBook, confirmBook }) => {
+
     return (
       <View style={[styles.bookTableConfirm,{width: windowWidth*0.9}]}>
         <View style={styles.flexBetweenRow}>
