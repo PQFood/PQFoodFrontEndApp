@@ -28,8 +28,8 @@ function AdminAddFoodMenu(props) {
     const handleUpdata = (photo) => {
         const data = new FormData()
         data.append('file', photo)
-        data.append("upload_preset", "pqfood")
-        data.append("cloud_name", "pqshop")
+        data.append("upload_preset", "name_upload_preset")
+        data.append("cloud_name", "cloud_name")
         fetch("https://api.cloudinary.com/v1_1/pqshop/image/upload", {
             method: 'POST',
             body: data,
